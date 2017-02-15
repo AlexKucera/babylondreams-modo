@@ -1,8 +1,8 @@
-babylondreams_kit
-=================
+babylondreams
+=============
 
 .. toctree::
    :maxdepth: 4
 
-   babylondreams_kit
+   babylondreams
    bd_tools

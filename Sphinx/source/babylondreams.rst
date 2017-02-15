@@ -1,17 +1,17 @@
-babylondreams_kit package
-=========================
+babylondreams package
+=====================
 
 Subpackages
 -----------
 
 .. toctree::
 
-    babylondreams_kit.commander
+    babylondreams.commander
 
 Module contents
 ---------------
 
-.. automodule:: babylondreams_kit
+.. automodule:: babylondreams
     :members:
     :undoc-members:
     :show-inheritance:

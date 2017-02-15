@@ -1,11 +1,11 @@
 babylondreams.commander package
-===================================
+===============================
 
 Submodules
 ----------
 
 babylondreams.commander.Commander module
---------------------------------------------
+----------------------------------------
 
 .. automodule:: babylondreams.commander.Commander
     :members:
@@ -13,7 +13,7 @@ babylondreams.commander.Commander module
     :show-inheritance:
 
 babylondreams.commander.MeshEditor module
----------------------------------------------
+-----------------------------------------
 
 .. automodule:: babylondreams.commander.MeshEditor
     :members:
@@ -21,7 +21,7 @@ babylondreams.commander.MeshEditor module
     :show-inheritance:
 
 babylondreams.commander.Var module
---------------------------------------
+----------------------------------
 
 .. automodule:: babylondreams.commander.Var
     :members:
