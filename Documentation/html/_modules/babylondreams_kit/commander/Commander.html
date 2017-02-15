@@ -1,0 +1,641 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>babylondreams_kit.commander.Commander &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> BabylonDreams modo Pipeline
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">BabylonDreams modo Pipeline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>babylondreams_kit.commander.Commander</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for babylondreams_kit.commander.Commander</h1><div class="highlight"><pre>
+<span></span><span class="c1"># python</span>
+
+<span class="kn">import</span> <span class="nn">lx</span><span class="o">,</span> <span class="nn">lxu</span><span class="o">,</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">lxifc</span> <span class="k">import</span> <span class="n">UIValueHints</span><span class="p">,</span> <span class="n">Visitor</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">ior</span>
+<span class="kn">from</span> <span class="nn">Var</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="CommanderClass"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass">[docs]</a><span class="k">class</span> <span class="nc">CommanderClass</span><span class="p">(</span><span class="n">lxu</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">BasicCommand</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper for lxu.command.BasicCommand. Improves and simplifies common</span>
+<span class="sd">    command UI implementations, like popups, sPresetText fields, and</span>
+<span class="sd">    Form Command Lists. Allows for virtually any type of command.</span>
+
+<span class="sd">    See README.md for more examples.</span>
+
+<span class="sd">    Example::</span>
+
+<span class="sd">        # Extend the commander.CommandClass</span>
+<span class="sd">        class MyGreatCommandClass(commander.CommandClass):</span>
+
+<span class="sd">            # Optional method returns any command argument definitions</span>
+
+<span class="sd">            commander_arguments(self):</span>
+<span class="sd">                return[{</span>
+<span class="sd">                    commander.NAME: &#39;myStringArgument&#39;,</span>
+<span class="sd">                    commander.DATATYPE: &#39;string&#39;</span>
+<span class="sd">                }]</span>
+
+<span class="sd">            # Required method contains the actual command code.</span>
+<span class="sd">            # Note: traceback is included by default; no need to add.</span>
+
+<span class="sd">            commander_execute(self):</span>
+<span class="sd">                args = commander_args()</span>
+<span class="sd">                lx.out(args[&#39;myStringArgument&#39;])</span>
+
+<span class="sd">        # Bless the class as normal.</span>
+<span class="sd">        lx.bless(MyGreatCommandClass, &quot;myGreatCommand&quot;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Since we run our own __init__(), we need to explicitly run the</span>
+        <span class="c1"># base class&#39;s __init__() as well.</span>
+        <span class="n">lxu</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">BasicCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># NOTE re: default argument values.</span>
+
+        <span class="c1"># When a command is run for the first time, MODO presents the user</span>
+        <span class="c1"># with a dialog containing blank fields for each argument. After first</span>
+        <span class="c1"># run, the command will remember the previous values used.</span>
+
+        <span class="c1"># In many cases, however, you may want to present a new user with sensible</span>
+        <span class="c1"># default values for arguments--not the blank fields provided by default.</span>
+        <span class="c1"># To this end, you can use the cmd_DialogInit() method. Define your</span>
+        <span class="c1"># defaults there, and MODO will always present the user with those</span>
+        <span class="c1"># defaults.</span>
+
+        <span class="c1"># But there&#39;s a problem: you can&#39;t have it both ways. Either you use</span>
+        <span class="c1"># cmd_DialogInit() to set the same default values every time the command</span>
+        <span class="c1"># is run, or you remember the last values and use those. You can&#39;t</span>
+        <span class="c1"># have a default value for first run, and then remember recent values</span>
+        <span class="c1"># thereafter.</span>
+
+        <span class="c1"># And yes, you sort of can by testing for dyna_IsSet(), but no. You can&#39;t.</span>
+        <span class="c1"># Not for popups. Popups with dynamic contents will always default to</span>
+        <span class="c1"># blank &quot;...&quot;, no matter what you do.</span>
+
+        <span class="c1"># The commander workaround is to store our own argument default values</span>
+        <span class="c1"># in a class variable called _commander_stored_values. We then manually</span>
+        <span class="c1"># use the stored values in cmd_DialogInit(), and viola! Sensible</span>
+        <span class="c1"># default values that also remember recently-used values... even for</span>
+        <span class="c1"># popups menus. Yay.</span>
+
+        <span class="c1"># So here we go. If _commander_stored_values hasn&#39;t been initilized yet,</span>
+        <span class="c1"># we need to initialize it. (And no, you can&#39;t just put it outside of</span>
+        <span class="c1"># __init__() just below the class declaration, lest your sublcasses</span>
+        <span class="c1"># start trying to use each other&#39;s default arguments. Trust me.)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_commander_stored_values</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commander_default_values_init</span><span class="p">()</span>
+
+        <span class="c1"># Loop through command arguments defined in commander_arguments()</span>
+        <span class="c1"># and initialize.</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">argument</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()):</span>
+
+            <span class="c1"># Arguments need a valid name and datatype. Without those, we die.</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">argument</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">DATATYPE</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">e_FAILED</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">argument</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">NAME</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">e_FAILED</span>
+
+            <span class="n">datatype</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="s1">&#39;sTYPE_&#39;</span> <span class="o">+</span> <span class="n">argument</span><span class="p">[</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">datatype</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">e_FAILED</span>
+
+            <span class="c1"># Add the argument as normal.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dyna_Add</span><span class="p">(</span><span class="n">argument</span><span class="p">[</span><span class="n">NAME</span><span class="p">],</span> <span class="n">datatype</span><span class="p">)</span>
+
+            <span class="c1"># If this is the first time running the command, the class variable</span>
+            <span class="c1"># _commander_stored_values will be empty. In that case, populate it.</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_commander_stored_values</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commander_default_values_set</span><span class="p">(</span><span class="n">argument</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUE</span><span class="p">))</span>
+
+            <span class="c1"># If a list of flags is included in the argument, set them.</span>
+            <span class="n">flags</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">argument</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">FLAGS</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="s1">&#39;fCMDARG_&#39;</span> <span class="o">+</span> <span class="n">flag</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="n">flags</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">basic_SetFlags</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">reduce</span><span class="p">(</span><span class="n">ior</span><span class="p">,</span> <span class="n">flags</span><span class="p">))</span>
+
+        <span class="c1"># CommandClass can implement the commander_notifiers() method to update</span>
+        <span class="c1"># FormCommandLists and Popups. If implemented, add the notifiers.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">not_svc</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">NotifySys</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notifier_tuples</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_notifiers</span><span class="p">()])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">notifier_tuples</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CommanderClass.commander_arguments"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.commander_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">commander_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;To be overridden by subclasses.</span>
+<span class="sd">        Should return a list of dictionaries, one for each argument.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="CommanderClass.commander_notifiers"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.commander_notifiers">[docs]</a>    <span class="k">def</span> <span class="nf">commander_notifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;To be overridden by subclasses.</span>
+<span class="sd">        Should return a list of tuples, e</span>
+<span class="sd">        [(&#39;notifier.editAction&#39;,&#39;&#39;), (&quot;select.event&quot;, &quot;item +ldt&quot;), (&quot;tagger.notifier&quot;, &quot;&quot;)]&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="CommanderClass.commander_execute"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.commander_execute">[docs]</a>    <span class="k">def</span> <span class="nf">commander_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;To be overridden by subclasses.</span>
+<span class="sd">        This is the main command execution code. It is already wrapped in</span>
+<span class="sd">        a try/except statement with traceback, so you don&#39;t need to add that.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CommanderClass.commander_default_values_init"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.commander_default_values_init">[docs]</a>    <span class="k">def</span> <span class="nf">commander_default_values_init</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the class variable _commander_stored_values.</span>
+<span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_commander_stored_values</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CommanderClass.commander_default_values_set"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.commander_default_values_set">[docs]</a>    <span class="k">def</span> <span class="nf">commander_default_values_set</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add an argument to the class variable _commander_stored_values.</span>
+<span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_commander_stored_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CommanderClass.commander_arg_value"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.commander_arg_value">[docs]</a>    <span class="k">def</span> <span class="nf">commander_arg_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a command argument value by index.</span>
+<span class="sd">        If no argument value exists, returns the default parameter.</span>
+
+<span class="sd">        NOTE: The commander_args() method is simpler to use than this method.</span>
+<span class="sd">        You should probably use that one unless you have a reason to find a specific</span>
+<span class="sd">        argument by index.</span>
+
+<span class="sd">        :param index: (int) index of argument to retrieve</span>
+<span class="sd">        :param default: value to return if argument is not set</span>
+<span class="sd">        :returns: argument value (str, int, float, or boolean as appropriate)&quot;&quot;&quot;</span>
+
+        <span class="c1"># If no value is set, return the default.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_IsSet</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">default</span>
+
+        <span class="c1"># If it&#39;s a string, use dyna_String to grab it.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">sTYPE_STRINGs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_String</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="c1"># If the value is a vector, use dyna_String to grab it, then parse it</span>
+        <span class="c1"># into a list of float vlues.</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">sTYPE_STRING_vectors</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_String</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)]</span>
+
+        <span class="c1"># If the value is an integer, use dyna_Int to grab it.</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">sTYPE_INTEGERs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_Int</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="c1"># If the value is a float, use dyna_Float to grab it.</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span> <span class="ow">in</span> <span class="n">sTYPE_FLOATs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_Float</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="c1"># If the value is a boolean, use dyna_Bool to grab it.</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">sTYPE_BOOLEANs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_Bool</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="c1"># If something bonkers is going on, use the default.</span>
+        <span class="k">return</span> <span class="n">default</span></div>
+
+<div class="viewcode-block" id="CommanderClass.commander_args"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.commander_args">[docs]</a>    <span class="k">def</span> <span class="nf">commander_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dictionary of arguments in name:value pairs.&quot;&quot;&quot;</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">())):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">i</span><span class="p">][</span><span class="n">NAME</span><span class="p">]</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arg_value</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">args</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">args</span></div>
+
+<div class="viewcode-block" id="CommanderClass.cmd_NotifyAddClient"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.cmd_NotifyAddClient">[docs]</a>    <span class="k">def</span> <span class="nf">cmd_NotifyAddClient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add notifier clients as needed.</span>
+<span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tup</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notifier_tuples</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">not_svc</span><span class="o">.</span><span class="n">Spawn</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notifier_tuples</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">notifier_tuples</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">AddClient</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CommanderClass.cmd_NotifyRemoveClient"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.cmd_NotifyRemoveClient">[docs]</a>    <span class="k">def</span> <span class="nf">cmd_NotifyRemoveClient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove notifier clients as needed.</span>
+<span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tup</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notifier_tuples</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">RemoveClient</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CommanderClass.cmd_Flags"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.cmd_Flags">[docs]</a>    <span class="k">def</span> <span class="nf">cmd_Flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set command flags. This method can be overridden if special flags</span>
+<span class="sd">        are needed.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">fCMD_POSTCMD</span> <span class="o">|</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">fCMD_MODEL</span> <span class="o">|</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">fCMD_UNDO</span></div>
+
+<div class="viewcode-block" id="CommanderClass.arg_UIHints"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.arg_UIHints">[docs]</a>    <span class="k">def</span> <span class="nf">arg_UIHints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">hints</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds pretty labels to arguments in command dialogs. If no label parameter</span>
+<span class="sd">        is explicitly included, we create a pseudo-label by capitalizing the</span>
+<span class="sd">        argument name and replacing underscores with spaces.</span>
+
+<span class="sd">        Labels can either be literal strings or method/function objects. In the</span>
+<span class="sd">        latter case, the method or function will be called when needed.</span>
+
+<span class="sd">        If any popup fields of type sPresetText are present,</span>
+<span class="sd">        adds the appropriate hint.</span>
+
+<span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+            <span class="c1"># If an explicit label is provided, use it.</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABEL</span><span class="p">)</span>
+
+            <span class="c1"># If not, make a pretty version of the arg name.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">NAME</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+
+            <span class="c1"># Labels can be functions. If so, run the function to get the string.</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="p">()</span>
+
+            <span class="c1"># Apply the label.</span>
+            <span class="n">hints</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+
+            <span class="c1"># If the popup type is sPresetText, apply the appropriate class.</span>
+            <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUES_LIST_TYPE</span><span class="p">)</span> <span class="o">==</span> <span class="n">sPresetText</span><span class="p">:</span>
+                <span class="n">hints</span><span class="o">.</span><span class="n">Class</span><span class="p">(</span><span class="s2">&quot;sPresetText&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CommanderClass.arg_UIValueHints"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.arg_UIValueHints">[docs]</a>    <span class="k">def</span> <span class="nf">arg_UIValueHints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Popups and sPresetText arguments fire this method whenever</span>
+<span class="sd">        they update. Note that the &#39;hints&#39; parameter can be a literal list</span>
+<span class="sd">        or tuple, but can also be a method or function.</span>
+
+<span class="sd">        For dynamic lists,</span>
+<span class="sd">        be sure to pass in the generator method or function object itself,</span>
+<span class="sd">        not its result. (i.e. pass in &#39;myGreatFunction&#39;, NOT &#39;myGreatFunction()&#39;)</span>
+
+<span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">arg</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">arg_data</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># Try to grab the values_list for the argument.</span>
+            <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUES_LIST</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">arg_data</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUES_LIST</span><span class="p">)</span>
+
+            <span class="c1"># If our values_list is empty, don&#39;t bother.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">arg_data</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="c1"># If the values_list is a list/tuple, use it as-is.</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg_data</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">arg_data</span>
+
+            <span class="c1"># If the values_list is a method/function, fire it and use the result.</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg_data</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">):</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">arg_data</span><span class="p">()</span>
+
+            <span class="c1"># In some rare cases you may want to manually instantiate your own</span>
+            <span class="c1"># popup class as a subclass of UIValueHints. In those cases, we</span>
+            <span class="c1"># ignore the below and just use yours.</span>
+            <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">arg_data</span><span class="p">,</span> <span class="n">UIValueHints</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">arg_data</span><span class="p">()</span>
+
+            <span class="c1"># If values is None or &quot;&quot; or someother nonsense, return an empty list.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># Argument can be a normal popup, an sPresetText popup, or a</span>
+            <span class="c1"># Form Command List. We&#39;ll need to return a different class</span>
+            <span class="c1"># depending on the &#39;values_list_type&#39;.</span>
+
+            <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUES_LIST_TYPE</span><span class="p">)</span> <span class="o">==</span> <span class="n">POPUP</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">PopupClass</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUES_LIST_TYPE</span><span class="p">)</span> <span class="o">==</span> <span class="n">sPresetText</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">PopupClass</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUES_LIST_TYPE</span><span class="p">)</span> <span class="o">==</span> <span class="n">FCL</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">FormCommandListClass</span><span class="p">(</span><span class="n">values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CommanderClass.cmd_DialogInit"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.cmd_DialogInit">[docs]</a>    <span class="k">def</span> <span class="nf">cmd_DialogInit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets default values for arguments in command dialogs as</span>
+<span class="sd">        explained in __init__() above. If you change this, you run the risk</span>
+<span class="sd">        of causing the universe to implode on itself.</span>
+
+<span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">argument</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()):</span>
+
+            <span class="c1"># If we already have a value, use it.</span>
+            <span class="c1"># This is especially important when a command is run with args</span>
+            <span class="c1"># via command line or form button.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_IsSet</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_String</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">datatype</span> <span class="o">=</span> <span class="n">argument</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">DATATYPE</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">stored_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commander_stored_values</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+            <span class="n">default_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUE</span><span class="p">)</span>
+
+            <span class="c1"># If there&#39;s no default and nothing stored, we&#39;re done here.</span>
+            <span class="k">if</span> <span class="n">default_value</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stored_value</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># The correct attr_Set... method depends on datatype.</span>
+
+            <span class="k">if</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="n">sTYPE_STRINGs</span> <span class="o">+</span> <span class="n">sTYPE_STRING_vectors</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">attr_SetString</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">stored_value</span><span class="p">))</span>
+
+            <span class="k">elif</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="n">sTYPE_INTEGERs</span> <span class="o">+</span> <span class="n">sTYPE_BOOLEANs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">attr_SetInt</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">stored_value</span><span class="p">))</span>
+
+            <span class="k">elif</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="n">sTYPE_FLOATs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">attr_SetFlt</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">stored_value</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CommanderClass.basic_Execute"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.basic_Execute">[docs]</a>    <span class="k">def</span> <span class="nf">basic_Execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stores recent command values for next run and wraps commander_execute</span>
+<span class="sd">        in a try/except statement with traceback.</span>
+
+<span class="sd">        Do NOT override this method. Use commander_execute() instead.</span>
+
+<span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">argument</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_commander_stored_values</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arg_value</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commander_execute</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="CommanderClass.cmd_Query"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.CommanderClass.cmd_Query">[docs]</a>    <span class="k">def</span> <span class="nf">cmd_Query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">,</span><span class="n">vaQuery</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a value when a queriable argument is queried. If the argument</span>
+<span class="sd">        is queriable, is not a Form Command List, and has a recent value, the query</span>
+<span class="sd">        will return the most recent value.</span>
+
+<span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
+
+        <span class="n">va</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">ValueArray</span><span class="p">()</span>
+        <span class="n">va</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vaQuery</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">is_query</span> <span class="o">=</span> <span class="s1">&#39;query&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">FLAGS</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">is_not_fcl</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUES_LIST_TYPE</span><span class="p">)</span> <span class="o">!=</span> <span class="n">FCL</span>
+            <span class="n">has_recent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commander_stored_values</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">is_query</span> <span class="ow">and</span> <span class="n">is_not_fcl</span> <span class="ow">and</span> <span class="n">has_recent_value</span><span class="p">:</span>
+                <span class="n">va</span><span class="o">.</span><span class="n">AddString</span><span class="p">(</span><span class="n">has_recent_value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">OK</span></div></div>
+
+
+<div class="viewcode-block" id="FormCommandListClass"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.FormCommandListClass">[docs]</a><span class="k">class</span> <span class="nc">FormCommandListClass</span><span class="p">(</span><span class="n">UIValueHints</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Special class for creating Form Command Lists. This is instantiated</span>
+<span class="sd">    by CommanderClass objects if an FCL argument provided.</span>
+
+<span class="sd">    Expects a list of valid MODO commands to be provided to init.</span>
+
+<span class="sd">    NOTE: Any invalid command will crash MODO.</span>
+
+<span class="sd">    You should never need to touch this.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_items</span> <span class="o">=</span> <span class="n">items</span>
+
+<div class="viewcode-block" id="FormCommandListClass.uiv_Flags"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.FormCommandListClass.uiv_Flags">[docs]</a>    <span class="k">def</span> <span class="nf">uiv_Flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">fVALHINT_FORM_COMMAND_LIST</span></div>
+
+<div class="viewcode-block" id="FormCommandListClass.uiv_FormCommandListCount"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.FormCommandListClass.uiv_FormCommandListCount">[docs]</a>    <span class="k">def</span> <span class="nf">uiv_FormCommandListCount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FormCommandListClass.uiv_FormCommandListByIndex"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.FormCommandListClass.uiv_FormCommandListByIndex">[docs]</a>    <span class="k">def</span> <span class="nf">uiv_FormCommandListByIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="PopupClass"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.PopupClass">[docs]</a><span class="k">class</span> <span class="nc">PopupClass</span><span class="p">(</span><span class="n">UIValueHints</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Special class for creating popups and sPresetText fields. Accepts</span>
+<span class="sd">    either a simple list of values, or a list of (ugly, pretty) tuples:</span>
+
+<span class="sd">    [1, 2, 3]</span>
+<span class="sd">    or</span>
+<span class="sd">    [(1, &quot;The Number One&quot;), (2, &quot;The Number Two&quot;), (3, &quot;The Number Three&quot;)]</span>
+
+<span class="sd">    You should never need to touch this.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_internal</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_user</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># If we have items to add to the lists, add them.</span>
+        <span class="k">if</span> <span class="n">items</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+
+                <span class="c1"># If the list item is a list or tuple, assume the format (ugly, pretty)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_internal</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+                <span class="c1"># Otherwise just use the value for both Ugly and Pretty</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_internal</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+
+<div class="viewcode-block" id="PopupClass.uiv_Flags"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.PopupClass.uiv_Flags">[docs]</a>    <span class="k">def</span> <span class="nf">uiv_Flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">fVALHINT_POPUPS</span></div>
+
+<div class="viewcode-block" id="PopupClass.uiv_PopCount"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.PopupClass.uiv_PopCount">[docs]</a>    <span class="k">def</span> <span class="nf">uiv_PopCount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_internal</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PopupClass.uiv_PopUserName"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.PopupClass.uiv_PopUserName">[docs]</a>    <span class="k">def</span> <span class="nf">uiv_PopUserName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PopupClass.uiv_PopInternalName"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.Commander.PopupClass.uiv_PopInternalName">[docs]</a>    <span class="k">def</span> <span class="nf">uiv_PopInternalName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_internal</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alexander Kucera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

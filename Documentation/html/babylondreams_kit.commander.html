@@ -1,0 +1,596 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>babylondreams_kit.commander package &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> BabylonDreams modo Pipeline
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">babylondreams_kit.commander package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-babylondreams_kit.commander.Commander">babylondreams_kit.commander.Commander module</a></li>
+<li><a class="reference internal" href="#module-babylondreams_kit.commander.MeshEditor">babylondreams_kit.commander.MeshEditor module</a></li>
+<li><a class="reference internal" href="#module-babylondreams_kit.commander.Var">babylondreams_kit.commander.Var module</a></li>
+<li><a class="reference internal" href="#module-babylondreams_kit.commander">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">BabylonDreams modo Pipeline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>babylondreams_kit.commander package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/babylondreams_kit.commander.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="babylondreams-kit-commander-package">
+<h1>babylondreams_kit.commander package<a class="headerlink" href="#babylondreams-kit-commander-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-babylondreams_kit.commander.Commander">
+<span id="babylondreams-kit-commander-commander-module"></span><h2>babylondreams_kit.commander.Commander module<a class="headerlink" href="#module-babylondreams_kit.commander.Commander" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass">
+<em class="property">class </em><code class="descclassname">babylondreams_kit.commander.Commander.</code><code class="descname">CommanderClass</code><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">lxu.command.BasicCommand</span></code></p>
+<p>Wrapper for lxu.command.BasicCommand. Improves and simplifies common
+command UI implementations, like popups, sPresetText fields, and
+Form Command Lists. Allows for virtually any type of command.</p>
+<p>See README.md for more examples.</p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Extend the commander.CommandClass</span>
+<span class="k">class</span> <span class="nc">MyGreatCommandClass</span><span class="p">(</span><span class="n">commander</span><span class="o">.</span><span class="n">CommandClass</span><span class="p">):</span>
+
+    <span class="c1"># Optional method returns any command argument definitions</span>
+
+    <span class="n">commander_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">[{</span>
+            <span class="n">commander</span><span class="o">.</span><span class="n">NAME</span><span class="p">:</span> <span class="s1">&#39;myStringArgument&#39;</span><span class="p">,</span>
+            <span class="n">commander</span><span class="o">.</span><span class="n">DATATYPE</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span>
+        <span class="p">}]</span>
+
+    <span class="c1"># Required method contains the actual command code.</span>
+    <span class="c1"># Note: traceback is included by default; no need to add.</span>
+
+    <span class="n">commander_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">commander_args</span><span class="p">()</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;myStringArgument&#39;</span><span class="p">])</span>
+
+<span class="c1"># Bless the class as normal.</span>
+<span class="n">lx</span><span class="o">.</span><span class="n">bless</span><span class="p">(</span><span class="n">MyGreatCommandClass</span><span class="p">,</span> <span class="s2">&quot;myGreatCommand&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.arg_UIHints">
+<code class="descname">arg_UIHints</code><span class="sig-paren">(</span><em>index</em>, <em>hints</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.arg_UIHints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.arg_UIHints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds pretty labels to arguments in command dialogs. If no label parameter
+is explicitly included, we create a pseudo-label by capitalizing the
+argument name and replacing underscores with spaces.</p>
+<p>Labels can either be literal strings or method/function objects. In the
+latter case, the method or function will be called when needed.</p>
+<p>If any popup fields of type sPresetText are present,
+adds the appropriate hint.</p>
+<p>You should never need to touch this.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.arg_UIValueHints">
+<code class="descname">arg_UIValueHints</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.arg_UIValueHints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.arg_UIValueHints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Popups and sPresetText arguments fire this method whenever
+they update. Note that the &#8216;hints&#8217; parameter can be a literal list
+or tuple, but can also be a method or function.</p>
+<p>For dynamic lists,
+be sure to pass in the generator method or function object itself,
+not its result. (i.e. pass in &#8216;myGreatFunction&#8217;, NOT &#8216;myGreatFunction()&#8217;)</p>
+<p>You should never need to touch this.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.basic_Execute">
+<code class="descname">basic_Execute</code><span class="sig-paren">(</span><em>msg</em>, <em>flags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.basic_Execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.basic_Execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores recent command values for next run and wraps commander_execute
+in a try/except statement with traceback.</p>
+<p>Do NOT override this method. Use commander_execute() instead.</p>
+<p>You should never need to touch this.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.cmd_DialogInit">
+<code class="descname">cmd_DialogInit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.cmd_DialogInit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.cmd_DialogInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets default values for arguments in command dialogs as
+explained in __init__() above. If you change this, you run the risk
+of causing the universe to implode on itself.</p>
+<p>You should never need to touch this.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.cmd_Flags">
+<code class="descname">cmd_Flags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.cmd_Flags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.cmd_Flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set command flags. This method can be overridden if special flags
+are needed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.cmd_NotifyAddClient">
+<code class="descname">cmd_NotifyAddClient</code><span class="sig-paren">(</span><em>argument</em>, <em>object</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.cmd_NotifyAddClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.cmd_NotifyAddClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add notifier clients as needed.
+You should never need to touch this.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.cmd_NotifyRemoveClient">
+<code class="descname">cmd_NotifyRemoveClient</code><span class="sig-paren">(</span><em>object</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.cmd_NotifyRemoveClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.cmd_NotifyRemoveClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove notifier clients as needed.
+You should never need to touch this.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.cmd_Query">
+<code class="descname">cmd_Query</code><span class="sig-paren">(</span><em>index</em>, <em>vaQuery</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.cmd_Query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.cmd_Query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a value when a queriable argument is queried. If the argument
+is queriable, is not a Form Command List, and has a recent value, the query
+will return the most recent value.</p>
+<p>You should never need to touch this.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.commander_arg_value">
+<code class="descname">commander_arg_value</code><span class="sig-paren">(</span><em>index</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.commander_arg_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.commander_arg_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a command argument value by index.
+If no argument value exists, returns the default parameter.</p>
+<p>NOTE: The commander_args() method is simpler to use than this method.
+You should probably use that one unless you have a reason to find a specific
+argument by index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>index</strong> &#8211; (int) index of argument to retrieve</li>
+<li><strong>default</strong> &#8211; value to return if argument is not set</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">argument value (str, int, float, or boolean as appropriate)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.commander_args">
+<code class="descname">commander_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.commander_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.commander_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of arguments in name:value pairs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.commander_arguments">
+<code class="descname">commander_arguments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.commander_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.commander_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be overridden by subclasses.
+Should return a list of dictionaries, one for each argument.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.commander_default_values_init">
+<em class="property">classmethod </em><code class="descname">commander_default_values_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.commander_default_values_init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.commander_default_values_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the class variable _commander_stored_values.
+You should never need to touch this.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.commander_default_values_set">
+<em class="property">classmethod </em><code class="descname">commander_default_values_set</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.commander_default_values_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.commander_default_values_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an argument to the class variable _commander_stored_values.
+You should never need to touch this.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.commander_execute">
+<code class="descname">commander_execute</code><span class="sig-paren">(</span><em>msg</em>, <em>flags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.commander_execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.commander_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be overridden by subclasses.
+This is the main command execution code. It is already wrapped in
+a try/except statement with traceback, so you don&#8217;t need to add that.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.CommanderClass.commander_notifiers">
+<code class="descname">commander_notifiers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#CommanderClass.commander_notifiers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.CommanderClass.commander_notifiers" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be overridden by subclasses.
+Should return a list of tuples, e
+[(&#8216;notifier.editAction&#8217;,&#8217;&#8216;), (&#8220;select.event&#8221;, &#8220;item +ldt&#8221;), (&#8220;tagger.notifier&#8221;, &#8220;&#8221;)]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="babylondreams_kit.commander.Commander.FormCommandListClass">
+<em class="property">class </em><code class="descclassname">babylondreams_kit.commander.Commander.</code><code class="descname">FormCommandListClass</code><span class="sig-paren">(</span><em>items</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#FormCommandListClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.FormCommandListClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">lxifc.UIValueHints</span></code></p>
+<p>Special class for creating Form Command Lists. This is instantiated
+by CommanderClass objects if an FCL argument provided.</p>
+<p>Expects a list of valid MODO commands to be provided to init.</p>
+<p>NOTE: Any invalid command will crash MODO.</p>
+<p>You should never need to touch this.</p>
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.FormCommandListClass.uiv_Flags">
+<code class="descname">uiv_Flags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#FormCommandListClass.uiv_Flags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.FormCommandListClass.uiv_Flags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.FormCommandListClass.uiv_FormCommandListByIndex">
+<code class="descname">uiv_FormCommandListByIndex</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#FormCommandListClass.uiv_FormCommandListByIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.FormCommandListClass.uiv_FormCommandListByIndex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.FormCommandListClass.uiv_FormCommandListCount">
+<code class="descname">uiv_FormCommandListCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#FormCommandListClass.uiv_FormCommandListCount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.FormCommandListClass.uiv_FormCommandListCount" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="babylondreams_kit.commander.Commander.PopupClass">
+<em class="property">class </em><code class="descclassname">babylondreams_kit.commander.Commander.</code><code class="descname">PopupClass</code><span class="sig-paren">(</span><em>items</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#PopupClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.PopupClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">lxifc.UIValueHints</span></code></p>
+<p>Special class for creating popups and sPresetText fields. Accepts
+either a simple list of values, or a list of (ugly, pretty) tuples:</p>
+<p>[1, 2, 3]
+or
+[(1, &#8220;The Number One&#8221;), (2, &#8220;The Number Two&#8221;), (3, &#8220;The Number Three&#8221;)]</p>
+<p>You should never need to touch this.</p>
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.PopupClass.uiv_Flags">
+<code class="descname">uiv_Flags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#PopupClass.uiv_Flags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.PopupClass.uiv_Flags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.PopupClass.uiv_PopCount">
+<code class="descname">uiv_PopCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#PopupClass.uiv_PopCount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.PopupClass.uiv_PopCount" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.PopupClass.uiv_PopInternalName">
+<code class="descname">uiv_PopInternalName</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#PopupClass.uiv_PopInternalName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.PopupClass.uiv_PopInternalName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.Commander.PopupClass.uiv_PopUserName">
+<code class="descname">uiv_PopUserName</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/Commander.html#PopupClass.uiv_PopUserName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.Commander.PopupClass.uiv_PopUserName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-babylondreams_kit.commander.MeshEditor">
+<span id="babylondreams-kit-commander-mesheditor-module"></span><h2>babylondreams_kit.commander.MeshEditor module<a class="headerlink" href="#module-babylondreams_kit.commander.MeshEditor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass">
+<em class="property">class </em><code class="descclassname">babylondreams_kit.commander.MeshEditor.</code><code class="descname">MeshEditorClass</code><span class="sig-paren">(</span><em>args=None</em>, <em>mesh_edit_flags=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.do_mesh_edit">
+<code class="descname">do_mesh_edit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.do_mesh_edit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.do_mesh_edit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.do_mesh_read">
+<code class="descname">do_mesh_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.do_mesh_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.do_mesh_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_active_polys">
+<code class="descname">get_active_polys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.get_active_polys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_active_polys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_active_polys_by_island">
+<code class="descname">get_active_polys_by_island</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.get_active_polys_by_island"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_active_polys_by_island" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_selected_polys">
+<code class="descname">get_selected_polys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.get_selected_polys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_selected_polys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_selected_polys_by_flood">
+<code class="descname">get_selected_polys_by_flood</code><span class="sig-paren">(</span><em>i_POLYTAG=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.get_selected_polys_by_flood"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_selected_polys_by_flood" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_selected_polys_by_island">
+<code class="descname">get_selected_polys_by_island</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.get_selected_polys_by_island"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_selected_polys_by_island" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.mesh_edit">
+<code class="descname">mesh_edit</code><span class="sig-paren">(</span><em>read_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.mesh_edit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.mesh_edit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adapted from James O&#8217;Hare&#8217;s excellent code: <a class="reference external" href="https://gist.github.com/Farfarer/31148a78f392a831239d9b018b90330c">https://gist.github.com/Farfarer/31148a78f392a831239d9b018b90330c</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.mesh_edit_action">
+<code class="descname">mesh_edit_action</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.mesh_edit_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.mesh_edit_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.MeshEditorClass.mesh_read_action">
+<code class="descname">mesh_read_action</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#MeshEditorClass.mesh_read_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.MeshEditorClass.mesh_read_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByConnectedClass">
+<em class="property">class </em><code class="descclassname">babylondreams_kit.commander.MeshEditor.</code><code class="descname">PolysByConnectedClass</code><span class="sig-paren">(</span><em>polygon</em>, <em>edge</em>, <em>mark_mode_valid</em>, <em>mark_mode_checked</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByConnectedClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">lxifc.Visitor</span></code></p>
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.getIslands">
+<code class="descname">getIslands</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByConnectedClass.getIslands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.getIslands" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.getPolyIDs">
+<code class="descname">getPolyIDs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByConnectedClass.getPolyIDs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.getPolyIDs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByConnectedClass.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.vis_Evaluate">
+<code class="descname">vis_Evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByConnectedClass.vis_Evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.vis_Evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByIslandClass">
+<em class="property">class </em><code class="descclassname">babylondreams_kit.commander.MeshEditor.</code><code class="descname">PolysByIslandClass</code><span class="sig-paren">(</span><em>polygon</em>, <em>point</em>, <em>mark</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByIslandClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByIslandClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">lxifc.Visitor</span></code></p>
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByIslandClass.vis_Evaluate">
+<code class="descname">vis_Evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByIslandClass.vis_Evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByIslandClass.vis_Evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass">
+<em class="property">class </em><code class="descclassname">babylondreams_kit.commander.MeshEditor.</code><code class="descname">PolysByTagFloodClass</code><span class="sig-paren">(</span><em>polygon</em>, <em>edge</em>, <em>mark_mode_valid</em>, <em>i_POLYTAG</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByTagFloodClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">lxifc.Visitor</span></code></p>
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass.getPolyIDs">
+<code class="descname">getPolyIDs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByTagFloodClass.getPolyIDs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass.getPolyIDs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByTagFloodClass.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass.vis_Evaluate">
+<code class="descname">vis_Evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysByTagFloodClass.vis_Evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass.vis_Evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysClass">
+<em class="property">class </em><code class="descclassname">babylondreams_kit.commander.MeshEditor.</code><code class="descname">PolysClass</code><span class="sig-paren">(</span><em>polygon</em>, <em>edge</em>, <em>mark_mode_valid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">lxifc.Visitor</span></code></p>
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysClass.getPolyIDs">
+<code class="descname">getPolyIDs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysClass.getPolyIDs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysClass.getPolyIDs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysClass.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysClass.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysClass.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.PolysClass.vis_Evaluate">
+<code class="descname">vis_Evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#PolysClass.vis_Evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.PolysClass.vis_Evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="babylondreams_kit.commander.MeshEditor.SetMarksClass">
+<em class="property">class </em><code class="descclassname">babylondreams_kit.commander.MeshEditor.</code><code class="descname">SetMarksClass</code><span class="sig-paren">(</span><em>acc</em>, <em>mark</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#SetMarksClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.SetMarksClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">lxifc.Visitor</span></code></p>
+<dl class="method">
+<dt id="babylondreams_kit.commander.MeshEditor.SetMarksClass.vis_Evaluate">
+<code class="descname">vis_Evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams_kit/commander/MeshEditor.html#SetMarksClass.vis_Evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams_kit.commander.MeshEditor.SetMarksClass.vis_Evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-babylondreams_kit.commander.Var">
+<span id="babylondreams-kit-commander-var-module"></span><h2>babylondreams_kit.commander.Var module<a class="headerlink" href="#module-babylondreams_kit.commander.Var" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-babylondreams_kit.commander">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-babylondreams_kit.commander" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alexander Kucera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

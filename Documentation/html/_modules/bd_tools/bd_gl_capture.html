@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bd_tools.bd_gl_capture &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> BabylonDreams modo Pipeline
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">BabylonDreams modo Pipeline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>bd_tools.bd_gl_capture</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bd_tools.bd_gl_capture</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+<span class="c1"># Alexander Kucera</span>
+<span class="c1"># babylondreams.de</span>
+
+<span class="c1"># Description</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">Allows opening an OpenGL window of defined dimensions for size accurate OpenGL Previews.</span>
+
+<span class="sd">Inspired by a function in Adam O&#39;Hern&#39;s excellent RenderMonkey 2 kit.</span>
+<span class="sd">http://www.mechanicalcolor.com/modo-kits/render-monkey</span>
+
+<span class="sd">Release Notes:</span>
+
+<span class="sd">V0.1 Initial Release - 2016-11-23</span>
+<span class="sd">v0.2 Trigger GL Recording and close the window after recording has finished - 2016-11-24</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">lx</span>
+
+
+<span class="c1"># FUNCTIONS -----------------------------------------------</span>
+
+
+<div class="viewcode-block" id="restoreSelection"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_gl_capture.restoreSelection">[docs]</a><span class="k">def</span> <span class="nf">restoreSelection</span><span class="p">(</span><span class="n">listSelections</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Used together with:</span>
+
+<span class="sd">    global save_selection</span>
+<span class="sd">    save_selection = lx.evalN(&quot;query sceneservice selection ? all&quot;)</span>
+
+<span class="sd">    to save and later restore a selection in modo with</span>
+
+<span class="sd">    bd_utils.restoreSelection(save_selection)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># lx.out(listSelections)</span>
+        <span class="n">first</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">listSelections</span><span class="p">:</span>
+            <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="s2">&quot;Restoring Selection: &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">first</span><span class="p">:</span>
+                <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;select.item {</span><span class="si">%s</span><span class="s2">} set&quot;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;select.item {</span><span class="si">%s</span><span class="s2">} add&quot;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;layout.createOrClose EventLog &quot;Event Log_layout&quot; &#39;</span>
+                <span class="s1">&#39;title:@macros.layouts@EventLog@ width:600 height:600 persistent:true &#39;</span>
+                <span class="s1">&#39;open:true&#39;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="s2">&quot;ERROR restoreSelection failed with &quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="get_ids"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_gl_capture.get_ids">[docs]</a><span class="k">def</span> <span class="nf">get_ids</span><span class="p">(</span><span class="n">itemtype</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a list of item IDs of type &#39;type&#39;</span>
+<span class="sd">    Returns a list of item IDs or None if there are no items of the specified</span>
+<span class="sd">    type or if there&#39;s an error. Error printed is to Event log.</span>
+<span class="sd">    type - the type of item to be returned (mesh, camera etc)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">itemlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">numitems</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;!!query sceneservice &#39;</span> <span class="o">+</span> <span class="n">itemtype</span> <span class="o">+</span> <span class="s1">&#39;.N ?&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">numitems</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">numitems</span><span class="p">):</span>
+                <span class="n">itemlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;query sceneservice &#39;</span> <span class="o">+</span> <span class="n">itemtype</span> <span class="o">+</span> <span class="s1">&#39;.ID ? </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">))</span>
+            <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="s2">&quot;Found &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numitems</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">itemtype</span> <span class="o">+</span> <span class="s2">&quot;s: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">itemlist</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">itemlist</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;layout.createOrClose EventLog &quot;Event Log_layout&quot; &#39;</span>
+                <span class="s1">&#39;title:@macros.layouts@EventLog@ width:600 height:600 persistent:true &#39;</span>
+                <span class="s1">&#39;open:true&#39;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="s2">&quot;ERROR get_ids(&quot;</span> <span class="o">+</span> <span class="n">itemtype</span> <span class="o">+</span> <span class="s2">&quot;) failed with &quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<span class="c1"># END FUNCTIONS -----------------------------------------------</span>
+
+<span class="c1"># MAIN PROGRAM --------------------------------------------</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_gl_capture.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.defNew gl_viewport_size integer momentary&quot;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def gl_viewport_size username &quot;Open New GL View&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def gl_viewport_size dialogname &quot;Which resolution do you need to open?&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.def gl_viewport_size list Full;Half;Quarter;Tenth&quot;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def gl_viewport_size listnames &quot;100%;50%;25%;10%&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value gl_viewport_size&quot;</span><span class="p">)</span>
+
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value gl_viewport_size ?&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Full&quot;</span><span class="p">:</span>
+        <span class="n">percent</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Half&quot;</span><span class="p">:</span>
+        <span class="n">percent</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Quarter&quot;</span><span class="p">:</span>
+        <span class="n">percent</span> <span class="o">=</span> <span class="mf">0.25</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Tenth&quot;</span><span class="p">:</span>
+        <span class="n">percent</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">percent</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.defNew gl_type integer momentary&quot;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def gl_type username &quot;GL Recording Type&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def gl_type dialogname &quot;Do you want to capture a movie or an image sequence?&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.def gl_type list movie;image&quot;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def gl_type listnames &quot;Movie;Image Sequence&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value gl_type&quot;</span><span class="p">)</span>
+
+    <span class="n">gl_type</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value gl_type ?&quot;</span><span class="p">)</span>
+
+    <span class="n">all_cameras</span> <span class="o">=</span> <span class="n">get_ids</span><span class="p">(</span><span class="s2">&quot;camera&quot;</span><span class="p">)</span>
+    <span class="n">render_camera</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;render.camera ?&quot;</span><span class="p">)</span>
+
+    <span class="nb">list</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">render_camera</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+    <span class="n">listnames</span><span class="o">=</span><span class="s2">&quot;Render Camera;&quot;</span>
+
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_cameras</span><span class="p">:</span>
+
+        <span class="nb">list</span> <span class="o">+=</span> <span class="n">x</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+        <span class="n">listnames</span> <span class="o">+=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;query sceneservice item.name ? </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+
+    <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">listnames</span><span class="p">)</span>
+
+
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.defNew viewport_cam integer momentary&quot;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def viewport_cam username &quot;Pick Viewport Camera&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def viewport_cam dialogname &quot;Which camera do you want to capture?&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.def viewport_cam list &quot;</span> <span class="o">+</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def viewport_cam listnames &quot;&#39;</span> <span class="o">+</span> <span class="n">listnames</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value viewport_cam&quot;</span><span class="p">)</span>
+
+    <span class="n">capture_camera</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value viewport_cam ?&quot;</span><span class="p">)</span>
+    <span class="n">capture_camera_name</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;query sceneservice item.name ? </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">capture_camera</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">capture_camera</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">capture_camera_name</span><span class="p">)</span>
+
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.defNew shading_style integer momentary&quot;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def shading_style username &quot;Pick Viewport Shading&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def shading_style dialogname &quot;Which Shading Style do you want?&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.def shading_style list gnzgl;advgl;texmod;tex;shade;vmap;sket;wire;shd1;shd2;shd3&quot;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def shading_style listnames &quot;Advanced;Default;Texture Shaded;Texture;Shaded;Vertex Map;Solid;Wireframe;Gooch Toon Shading;Cel Shading;Reflection&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value shading_style&quot;</span><span class="p">)</span>
+
+    <span class="n">shading_style</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value shading_style ?&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get selection</span>
+    <span class="n">save_selection</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">evalN</span><span class="p">(</span><span class="s2">&quot;query sceneservice selection ? all&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get Render Resolution</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;select.item Render&quot;</span><span class="p">)</span>
+    <span class="n">resX</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;item.channel resX ?&quot;</span><span class="p">))</span>
+    <span class="n">resY</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;item.channel resY ?&quot;</span><span class="p">))</span>
+
+    <span class="n">newResX</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resX</span> <span class="o">*</span> <span class="n">percent</span><span class="p">)</span>
+    <span class="n">newResY</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resY</span> <span class="o">*</span> <span class="n">percent</span><span class="p">)</span>
+
+    <span class="c1"># Restore selection</span>
+    <span class="n">restoreSelection</span><span class="p">(</span><span class="n">save_selection</span><span class="p">)</span>
+
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;layout.create </span><span class="si">%s</span><span class="s1"> width:</span><span class="si">%s</span><span class="s1"> height:</span><span class="si">%s</span><span class="s1"> style:palette&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">capture_camera_name</span><span class="p">,</span> <span class="n">newResX</span><span class="p">,</span> <span class="n">newResY</span><span class="p">))</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;viewport.restore base.3DSceneView false 3Dmodel&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.bgEnvironment background solid&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showGrid false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.projection cam&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.controls false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showLights false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showCameras false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showLocators false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showTextureLocators false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showBackdrop false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showSelections false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.fillSelected false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.outlineSelected false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showSelectionRollover false&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.shadingStyle &#39;</span> <span class="o">+</span> <span class="n">shading_style</span> <span class="o">+</span> <span class="s1">&#39; active&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.wireframeOverlay none active&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.cameraItem &#39;</span> <span class="o">+</span> <span class="n">capture_camera</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.shadingStyle &#39;</span> <span class="o">+</span> <span class="n">shading_style</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.sameAsActive true&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">shading_style</span> <span class="o">==</span> <span class="s2">&quot;gnzgl&quot;</span><span class="p">:</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.showGnzFSAA x9&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.setGnzTransparency correct&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.setGnzSSReflections blurry&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.setGnzDitherMode ordered&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.showGnzSSAO true&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.GnzVisOverride all&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.showGnzShadows true&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.useGnzNormalMaps true&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.useGnzBumpMaps true&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.setGnzVisibility render&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.setGnzLighting sceneIBLLights&quot;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.setGnzBackground environment&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">gl_type</span> <span class="o">==</span> <span class="s2">&quot;movie&quot;</span><span class="p">:</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;gl.capture&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gl_type</span> <span class="o">==</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;gl.capture seq:true&quot;</span><span class="p">)</span>
+
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;layout.closeWindow&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># END MAIN PROGRAM -----------------------------------------------</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Argument parsing is available through the </span>
+        <span class="c1"># lx.arg and lx.args methods. lx.arg returns </span>
+        <span class="c1"># the raw argument string that was passed into </span>
+        <span class="c1"># the script. lx.args parses the argument string </span>
+        <span class="c1"># and returns an array of arguments for easier </span>
+        <span class="c1"># processing.</span>
+
+        <span class="n">argsAsString</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">arg</span><span class="p">()</span>
+        <span class="n">argsAsTuple</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">args</span><span class="p">()</span>
+
+        <span class="n">main</span><span class="p">()</span>
+
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alexander Kucera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

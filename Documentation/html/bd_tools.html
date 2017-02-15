@@ -1,0 +1,240 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bd_tools package &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> BabylonDreams modo Pipeline
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">bd_tools package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-bd_tools.bd_gl_capture">bd_tools.bd_gl_capture module</a></li>
+<li><a class="reference internal" href="#module-bd_tools">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">BabylonDreams modo Pipeline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>bd_tools package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/bd_tools.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bd-tools-package">
+<h1>bd_tools package<a class="headerlink" href="#bd-tools-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-bd_tools.bd_gl_capture">
+<span id="bd-tools-bd-gl-capture-module"></span><h2>bd_tools.bd_gl_capture module<a class="headerlink" href="#module-bd_tools.bd_gl_capture" title="Permalink to this headline">¶</a></h2>
+<p>Allows opening an OpenGL window of defined dimensions for size accurate OpenGL Previews.</p>
+<p>Inspired by a function in Adam O&#8217;Hern&#8217;s excellent RenderMonkey 2 kit.
+<a class="reference external" href="http://www.mechanicalcolor.com/modo-kits/render-monkey">http://www.mechanicalcolor.com/modo-kits/render-monkey</a></p>
+<p>Release Notes:</p>
+<p>V0.1 Initial Release - 2016-11-23
+v0.2 Trigger GL Recording and close the window after recording has finished - 2016-11-24</p>
+<dl class="function">
+<dt id="bd_tools.bd_gl_capture.get_ids">
+<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">get_ids</code><span class="sig-paren">(</span><em>itemtype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#get_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.get_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of item IDs of type &#8216;type&#8217;
+Returns a list of item IDs or None if there are no items of the specified
+type or if there&#8217;s an error. Error printed is to Event log.
+type - the type of item to be returned (mesh, camera etc)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bd_tools.bd_gl_capture.main">
+<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bd_tools.bd_gl_capture.restoreSelection">
+<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">restoreSelection</code><span class="sig-paren">(</span><em>listSelections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#restoreSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.restoreSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used together with:</p>
+<p>global save_selection
+save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
+<p>to save and later restore a selection in modo with</p>
+<p>bd_utils.restoreSelection(save_selection)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-bd_tools">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bd_tools" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alexander Kucera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

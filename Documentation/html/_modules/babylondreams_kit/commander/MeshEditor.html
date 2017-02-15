@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>babylondreams_kit.commander.MeshEditor &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> BabylonDreams modo Pipeline
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">BabylonDreams modo Pipeline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>babylondreams_kit.commander.MeshEditor</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for babylondreams_kit.commander.MeshEditor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">lx</span><span class="o">,</span> <span class="nn">lxu</span><span class="o">,</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">lxifc</span> <span class="k">import</span> <span class="n">UIValueHints</span><span class="p">,</span> <span class="n">Visitor</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">ior</span>
+
+<div class="viewcode-block" id="MeshEditorClass"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass">[docs]</a><span class="k">class</span> <span class="nc">MeshEditorClass</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mesh_edit_flags</span> <span class="o">=</span> <span class="p">[]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_edit_flags</span> <span class="o">=</span> <span class="n">mesh_edit_flags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_accessor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meshmap_accessor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">point_accessor</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="MeshEditorClass.mesh_edit_action"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.mesh_edit_action">[docs]</a>    <span class="k">def</span> <span class="nf">mesh_edit_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="MeshEditorClass.mesh_read_action"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.mesh_read_action">[docs]</a>    <span class="k">def</span> <span class="nf">mesh_read_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="MeshEditorClass.do_mesh_edit"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.do_mesh_edit">[docs]</a>    <span class="k">def</span> <span class="nf">do_mesh_edit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_edit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MeshEditorClass.do_mesh_read"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.do_mesh_read">[docs]</a>    <span class="k">def</span> <span class="nf">do_mesh_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_edit</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshEditorClass.mesh_edit"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.mesh_edit">[docs]</a>    <span class="k">def</span> <span class="nf">mesh_edit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">read_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adapted from James O&#39;Hare&#39;s excellent code: https://gist.github.com/Farfarer/31148a78f392a831239d9b018b90330c&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">read_only</span><span class="p">:</span>
+            <span class="n">scan_allocate</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">f_LAYERSCAN_ACTIVE</span> <span class="o">|</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">f_LAYERSCAN_MARKPOLYS</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">read_only</span><span class="p">:</span>
+            <span class="n">scan_allocate</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">f_LAYERSCAN_EDIT</span>
+
+        <span class="n">layer_svc</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">Layer</span> <span class="p">()</span>
+        <span class="n">layer_scan</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">LayerScan</span> <span class="p">(</span><span class="n">layer_svc</span><span class="o">.</span><span class="n">ScanAllocate</span> <span class="p">(</span><span class="n">scan_allocate</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">Mesh</span> <span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">layer_scan</span><span class="o">.</span><span class="n">test</span> <span class="p">():</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">xrange</span> <span class="p">(</span><span class="n">layer_scan</span><span class="o">.</span><span class="n">Count</span> <span class="p">()):</span>
+            <span class="k">if</span> <span class="n">read_only</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">Mesh</span> <span class="p">(</span><span class="n">layer_scan</span><span class="o">.</span><span class="n">MeshBase</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">read_only</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">Mesh</span> <span class="p">(</span><span class="n">layer_scan</span><span class="o">.</span><span class="n">MeshEdit</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">test</span> <span class="p">():</span>
+                <span class="k">continue</span>
+
+            <span class="n">polygon_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">PolygonCount</span> <span class="p">()</span>
+            <span class="k">if</span> <span class="n">polygon_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">Polygon</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">PolygonAccessor</span> <span class="p">())</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">test</span> <span class="p">():</span>
+                <span class="k">continue</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">edge_accessor</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">Edge</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">EdgeAccessor</span> <span class="p">())</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_accessor</span><span class="o">.</span><span class="n">test</span> <span class="p">():</span>
+                <span class="k">continue</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">point_accessor</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">Point</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">PointAccessor</span> <span class="p">())</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_accessor</span><span class="o">.</span><span class="n">test</span> <span class="p">():</span>
+                <span class="k">continue</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">meshmap_accessor</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">MeshMap</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">MeshMapAccessor</span> <span class="p">())</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshmap_accessor</span><span class="o">.</span><span class="n">test</span> <span class="p">():</span>
+                <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">read_only</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mesh_read_action</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">read_only</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mesh_edit_action</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">())</span>
+                <span class="k">break</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_edit_flags</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">read_only</span><span class="p">:</span>
+                <span class="n">layer_scan</span><span class="o">.</span><span class="n">SetMeshChange</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">reduce</span><span class="p">(</span><span class="n">ior</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_edit_flags</span><span class="p">))</span>
+
+        <span class="n">layer_scan</span><span class="o">.</span><span class="n">Apply</span> <span class="p">()</span></div>
+
+<div class="viewcode-block" id="MeshEditorClass.get_active_polys_by_island"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_active_polys_by_island">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_polys_by_island</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mark_mode_checked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="s1">&#39;user0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">mark_mode_unchecked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;user0&#39;</span><span class="p">)</span>
+
+        <span class="n">visClear</span> <span class="o">=</span> <span class="n">SetMarksClass</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="p">,</span> <span class="n">mark_mode_unchecked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">Enumerate</span> <span class="p">(</span><span class="n">mark_mode_checked</span><span class="p">,</span> <span class="n">visClear</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">visIslands</span> <span class="o">=</span> <span class="n">PolysByIslandClass</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_accessor</span><span class="p">,</span> <span class="n">mark_mode_checked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">Enumerate</span> <span class="p">(</span><span class="n">mark_mode_unchecked</span><span class="p">,</span> <span class="n">visIslands</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">visIslands</span><span class="o">.</span><span class="n">islands</span></div>
+
+<div class="viewcode-block" id="MeshEditorClass.get_active_polys"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_active_polys">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_polys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mark_mode_selected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_SELECT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">mark_mode_valid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;hide lock&#39;</span><span class="p">)</span>
+
+        <span class="n">visitor</span> <span class="o">=</span> <span class="n">PolysClass</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_accessor</span><span class="p">,</span> <span class="n">mark_mode_valid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">Enumerate</span> <span class="p">(</span><span class="n">mark_mode_selected</span><span class="p">,</span> <span class="n">visitor</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">getPolyIDs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MeshEditorClass.get_selected_polys_by_island"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_selected_polys_by_island">[docs]</a>    <span class="k">def</span> <span class="nf">get_selected_polys_by_island</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mark_mode_toCheck</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_SELECT</span><span class="p">,</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_USER_0</span><span class="p">)</span>
+        <span class="n">mark_mode_valid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span> <span class="p">((</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_USER_0</span><span class="p">,</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_HIDE</span><span class="p">,</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_LOCK</span><span class="p">)))</span>
+        <span class="n">mark_mode_checked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_USER_0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">mark_mode_clearChecked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_USER_0</span><span class="p">)</span>
+
+        <span class="c1"># Wipe any existing user0 marks on the polygons, just so they don&#39;t interfere with our marks.</span>
+        <span class="n">visClear</span> <span class="o">=</span> <span class="n">SetMarksClass</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="p">,</span> <span class="n">mark_mode_clearChecked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">Enumerate</span> <span class="p">(</span><span class="n">mark_mode_checked</span><span class="p">,</span> <span class="n">visClear</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">visitor</span> <span class="o">=</span> <span class="n">PolysByConnectedClass</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_accessor</span><span class="p">,</span> <span class="n">mark_mode_valid</span><span class="p">,</span> <span class="n">mark_mode_checked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">Enumerate</span> <span class="p">(</span><span class="n">mark_mode_toCheck</span><span class="p">,</span> <span class="n">visitor</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">getIslands</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MeshEditorClass.get_selected_polys_by_flood"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_selected_polys_by_flood">[docs]</a>    <span class="k">def</span> <span class="nf">get_selected_polys_by_flood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_POLYTAG</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">i_POLYTAG_MATERIAL</span><span class="p">):</span>
+        <span class="n">mark_mode_selected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_SELECT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">mark_mode_valid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;hide lock&#39;</span><span class="p">)</span>
+
+        <span class="n">visitor</span> <span class="o">=</span> <span class="n">PolysByTagFloodClass</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_accessor</span><span class="p">,</span> <span class="n">mark_mode_valid</span><span class="p">,</span> <span class="n">i_POLYTAG</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">Enumerate</span> <span class="p">(</span><span class="n">mark_mode_selected</span><span class="p">,</span> <span class="n">visitor</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">getPolyIDs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MeshEditorClass.get_selected_polys"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.MeshEditorClass.get_selected_polys">[docs]</a>    <span class="k">def</span> <span class="nf">get_selected_polys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mark_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_svc</span><span class="o">.</span><span class="n">ModeCompose</span> <span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sMARK_SELECT</span><span class="p">,</span> <span class="s1">&#39;hide lock&#39;</span><span class="p">)</span>
+        <span class="n">selectedPolygons</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">polyCount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">PolygonCount</span> <span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">polyCount</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">SelectByIndex</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">TestMarks</span> <span class="p">(</span><span class="n">mark_mode</span><span class="p">):</span>
+                <span class="n">selectedPolygons</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_accessor</span><span class="o">.</span><span class="n">ID</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">selectedPolygons</span></div></div>
+
+<div class="viewcode-block" id="SetMarksClass"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.SetMarksClass">[docs]</a><span class="k">class</span> <span class="nc">SetMarksClass</span><span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="n">mark</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acc</span> <span class="o">=</span> <span class="n">acc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mark</span> <span class="o">=</span> <span class="n">mark</span>
+
+<div class="viewcode-block" id="SetMarksClass.vis_Evaluate"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.SetMarksClass.vis_Evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">vis_Evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acc</span><span class="o">.</span><span class="n">SetMarks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mark</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="PolysClass"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysClass">[docs]</a><span class="k">class</span> <span class="nc">PolysClass</span> <span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">mark_mode_valid</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span> <span class="o">=</span> <span class="n">polygon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge</span> <span class="o">=</span> <span class="n">edge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mark_mode_valid</span> <span class="o">=</span> <span class="n">mark_mode_valid</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span>
+
+<div class="viewcode-block" id="PolysClass.reset"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysClass.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span></div>
+
+<div class="viewcode-block" id="PolysClass.getPolyIDs"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysClass.getPolyIDs">[docs]</a>    <span class="k">def</span> <span class="nf">getPolyIDs</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span></div>
+
+<div class="viewcode-block" id="PolysClass.vis_Evaluate"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysClass.vis_Evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">vis_Evaluate</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">ID</span><span class="p">())</span></div></div>
+
+<div class="viewcode-block" id="PolysByConnectedClass"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass">[docs]</a><span class="k">class</span> <span class="nc">PolysByConnectedClass</span> <span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">mark_mode_valid</span><span class="p">,</span> <span class="n">mark_mode_checked</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span> <span class="o">=</span> <span class="n">polygon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge</span> <span class="o">=</span> <span class="n">edge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mark_mode_valid</span> <span class="o">=</span> <span class="n">mark_mode_valid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mark_mode_checked</span> <span class="o">=</span> <span class="n">mark_mode_checked</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">islands</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="PolysByConnectedClass.reset"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">islands</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="PolysByConnectedClass.getPolyIDs"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.getPolyIDs">[docs]</a>    <span class="k">def</span> <span class="nf">getPolyIDs</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span>
+            <span class="k">for</span> <span class="n">island</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">islands</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">island</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span></div>
+
+<div class="viewcode-block" id="PolysByConnectedClass.getIslands"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.getIslands">[docs]</a>    <span class="k">def</span> <span class="nf">getIslands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">islands</span></div>
+
+<div class="viewcode-block" id="PolysByConnectedClass.vis_Evaluate"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByConnectedClass.vis_Evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">vis_Evaluate</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">inner_list</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span>
+        <span class="n">outer_list</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span>
+
+        <span class="n">this_polygon_ID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">ID</span> <span class="p">()</span>
+
+        <span class="n">outer_list</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="n">this_polygon_ID</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">outer_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">polygon_ID</span> <span class="o">=</span> <span class="n">outer_list</span><span class="o">.</span><span class="n">pop</span> <span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">Select</span> <span class="p">(</span><span class="n">polygon_ID</span><span class="p">)</span>
+            <span class="n">inner_list</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="n">polygon_ID</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">SetMarks</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mark_mode_checked</span><span class="p">)</span>
+
+            <span class="n">num_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">VertexCount</span> <span class="p">()</span>
+            <span class="n">polygon_points</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">VertexByIndex</span> <span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xrange</span> <span class="p">(</span><span class="n">num_points</span><span class="p">)]</span>
+
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xrange</span> <span class="p">(</span><span class="n">num_points</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="o">.</span><span class="n">SelectEndpoints</span> <span class="p">(</span><span class="n">polygon_points</span><span class="p">[</span><span class="n">p</span><span class="p">],</span> <span class="n">polygon_points</span><span class="p">[(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">num_points</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">xrange</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="o">.</span><span class="n">PolygonCount</span> <span class="p">()):</span>
+                    <span class="n">edge_polygon_ID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="o">.</span><span class="n">PolygonByIndex</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">edge_polygon_ID</span> <span class="o">!=</span> <span class="n">polygon_ID</span> <span class="ow">and</span> <span class="n">edge_polygon_ID</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inner_list</span> <span class="ow">and</span> <span class="n">edge_polygon_ID</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">outer_list</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">Select</span> <span class="p">(</span><span class="n">edge_polygon_ID</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">TestMarks</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mark_mode_valid</span><span class="p">):</span>
+                            <span class="n">outer_list</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="n">edge_polygon_ID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">islands</span><span class="o">.</span><span class="n">append</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">inner_list</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="PolysByTagFloodClass"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass">[docs]</a><span class="k">class</span> <span class="nc">PolysByTagFloodClass</span> <span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">mark_mode_valid</span><span class="p">,</span> <span class="n">i_POLYTAG</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span> <span class="o">=</span> <span class="n">polygon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge</span> <span class="o">=</span> <span class="n">edge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mark_mode_valid</span> <span class="o">=</span> <span class="n">mark_mode_valid</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">StringTag</span> <span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">set</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_POLYTAG</span> <span class="o">=</span> <span class="n">i_POLYTAG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tagValues</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="PolysByTagFloodClass.reset"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span></div>
+
+<div class="viewcode-block" id="PolysByTagFloodClass.getPolyIDs"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass.getPolyIDs">[docs]</a>    <span class="k">def</span> <span class="nf">getPolyIDs</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span></div>
+
+<div class="viewcode-block" id="PolysByTagFloodClass.vis_Evaluate"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByTagFloodClass.vis_Evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">vis_Evaluate</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">inner_list</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span>
+        <span class="n">outer_list</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span>
+
+        <span class="n">this_polygon_ID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">ID</span> <span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tagValues</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tagValues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">Get</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_POLYTAG</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tagValues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tagValues</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tagValues</span><span class="p">:</span>
+            <span class="n">tagValues</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tagValues</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">tagValues</span> <span class="o">=</span> <span class="n">tagValues</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">this_polygon_ID</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">outer_list</span><span class="p">:</span>
+            <span class="n">outer_list</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="n">this_polygon_ID</span><span class="p">)</span>
+
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">outer_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">polygon_ID</span> <span class="o">=</span> <span class="n">outer_list</span><span class="o">.</span><span class="n">pop</span> <span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">Select</span> <span class="p">(</span><span class="n">polygon_ID</span><span class="p">)</span>
+                <span class="n">inner_list</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="n">polygon_ID</span><span class="p">)</span>
+
+                <span class="n">num_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">VertexCount</span> <span class="p">()</span>
+                <span class="n">polygon_points</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">VertexByIndex</span> <span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xrange</span> <span class="p">(</span><span class="n">num_points</span><span class="p">)]</span>
+
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xrange</span> <span class="p">(</span><span class="n">num_points</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="o">.</span><span class="n">SelectEndpoints</span> <span class="p">(</span><span class="n">polygon_points</span><span class="p">[</span><span class="n">p</span><span class="p">],</span> <span class="n">polygon_points</span><span class="p">[(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">num_points</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="o">.</span><span class="n">test</span> <span class="p">():</span>
+                        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">xrange</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="o">.</span><span class="n">PolygonCount</span> <span class="p">()):</span>
+                            <span class="n">edge_polygon_ID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="o">.</span><span class="n">PolygonByIndex</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">edge_polygon_ID</span> <span class="o">!=</span> <span class="n">polygon_ID</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">edge_polygon_ID</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">outer_list</span> <span class="ow">and</span> <span class="n">edge_polygon_ID</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inner_list</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">Select</span> <span class="p">(</span><span class="n">edge_polygon_ID</span><span class="p">)</span>
+
+                                    <span class="n">tagString</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">Get</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_POLYTAG</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="ow">not</span> <span class="n">tagString</span><span class="p">:</span>
+                                        <span class="n">tagString</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+                                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">TestMarks</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mark_mode_valid</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tagString</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tagValues</span><span class="p">))):</span>
+                                        <span class="n">outer_list</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="n">edge_polygon_ID</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygonIDs</span><span class="o">.</span><span class="n">update</span> <span class="p">(</span><span class="n">inner_list</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="PolysByIslandClass"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByIslandClass">[docs]</a><span class="k">class</span> <span class="nc">PolysByIslandClass</span> <span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">mark</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span> <span class="o">=</span> <span class="n">polygon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mark</span> <span class="o">=</span> <span class="n">mark</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">islands</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="PolysByIslandClass.vis_Evaluate"><a class="viewcode-back" href="../../../babylondreams_kit.commander.html#babylondreams_kit.commander.MeshEditor.PolysByIslandClass.vis_Evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">vis_Evaluate</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">inner</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span>
+        <span class="n">outer</span> <span class="o">=</span> <span class="nb">set</span> <span class="p">()</span>
+
+        <span class="n">outer</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">ID</span> <span class="p">())</span>
+
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">outer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">polygon_ID</span> <span class="o">=</span> <span class="n">outer</span><span class="o">.</span><span class="n">pop</span> <span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">Select</span> <span class="p">(</span><span class="n">polygon_ID</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">SetMarks</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mark</span><span class="p">)</span>
+            <span class="n">inner</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="n">polygon_ID</span><span class="p">)</span>
+
+            <span class="n">num_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">VertexCount</span> <span class="p">()</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">xrange</span> <span class="p">(</span><span class="n">num_points</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">Select</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">VertexByIndex</span> <span class="p">(</span><span class="n">v</span><span class="p">))</span>
+                <span class="n">num_polys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">PolygonCount</span> <span class="p">()</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xrange</span> <span class="p">(</span><span class="n">num_polys</span><span class="p">):</span>
+                    <span class="n">vert_polygon_ID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="o">.</span><span class="n">PolygonByIndex</span> <span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">vert_polygon_ID</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">:</span>
+                        <span class="n">outer</span><span class="o">.</span><span class="n">add</span> <span class="p">(</span><span class="n">vert_polygon_ID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">islands</span><span class="o">.</span><span class="n">append</span> <span class="p">(</span><span class="n">inner</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alexander Kucera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
