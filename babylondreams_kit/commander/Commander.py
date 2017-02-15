@@ -5,39 +5,39 @@ from lxifc import UIValueHints, Visitor
 from operator import ior
 from Var import *
 
+
 class CommanderClass(lxu.command.BasicCommand):
 
-    """Wrapper for lxu.command.BasicCommand. Improves and simplifies common
+    """
+    Wrapper for lxu.command.BasicCommand. Improves and simplifies common
     command UI implementations, like popups, sPresetText fields, and
     Form Command Lists. Allows for virtually any type of command.
 
     See README.md for more examples.
 
-    Example:
-    ****************
+    Example::
 
-    # Extend the commander.CommandClass
-    class MyGreatCommandClass(commander.CommandClass):
+        # Extend the commander.CommandClass
+        class MyGreatCommandClass(commander.CommandClass):
 
-        # Optional method returns any command argument definitions
+            # Optional method returns any command argument definitions
 
-        commander_arguments(self):
-            return[{
-                commander.NAME: 'myStringArgument',
-                commander.DATATYPE: 'string'
-            }]
+            commander_arguments(self):
+                return[{
+                    commander.NAME: 'myStringArgument',
+                    commander.DATATYPE: 'string'
+                }]
 
-        # Required method contains the actual command code.
-        # Note: traceback is included by default; no need to add.
+            # Required method contains the actual command code.
+            # Note: traceback is included by default; no need to add.
 
-        commander_execute(self):
-            args = commander_args()
-            lx.out(args['myStringArgument'])
+            commander_execute(self):
+                args = commander_args()
+                lx.out(args['myStringArgument'])
 
-    # Bless the class as normal.
-    lx.bless(MyGreatCommandClass, "myGreatCommand")
+        # Bless the class as normal.
+        lx.bless(MyGreatCommandClass, "myGreatCommand")
 
-    ****************
     """
 
     def __init__(self):

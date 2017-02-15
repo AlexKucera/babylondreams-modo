@@ -83,8 +83,11 @@
           
             
             
-                <!-- Local TOC -->
-                <div class="local-toc"></div>
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">babylondreams_kit</a></li>
+</ul>
+
             
           
         </div>
@@ -158,14 +161,18 @@
 
 <div class="viewcode-block" id="restoreSelection"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_gl_capture.restoreSelection">[docs]</a><span class="k">def</span> <span class="nf">restoreSelection</span><span class="p">(</span><span class="n">listSelections</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Used together with:</span>
+<span class="sd">    Saves a selection for later use.</span>
 
-<span class="sd">    global save_selection</span>
-<span class="sd">    save_selection = lx.evalN(&quot;query sceneservice selection ? all&quot;)</span>
+<span class="sd">    Example:</span>
 
-<span class="sd">    to save and later restore a selection in modo with</span>
+<span class="sd">        global save_selection</span>
+<span class="sd">        save_selection = lx.evalN(&quot;query sceneservice selection ? all&quot;)</span>
 
-<span class="sd">    bd_utils.restoreSelection(save_selection)</span>
+<span class="sd">    To restore a selection later:</span>
+
+<span class="sd">        bd_utils.restoreSelection(save_selection)</span>
+
+
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
