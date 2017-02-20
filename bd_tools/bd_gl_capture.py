@@ -216,6 +216,10 @@ def main():
     if gl_type == "image":
         lx.eval("gl.capture seq:true")
 
+    """
+    TODO: !gl.capture seq:true filename:/Users/alex/Documents/Untitled.jpg frameS:1001 frameE:1250 autoPlay:false
+    """
+
     lx.eval("layout.closeWindow")
 
 
