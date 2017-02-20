@@ -5,7 +5,7 @@
 
 # Description
 """
-babylondreams - bd_dissolve_group
+babylondreams - bd_helpers
 
 Release Notes:
 
@@ -19,11 +19,35 @@ import traceback
 
 
 # FUNCTIONS -----------------------------------------------
+def selected(num=1):
+    """
+
+    Returns: A list of last N selected items. If the minimum number of selected items is not selected a warning dialog pops up.
+
+    """
+    scene = modo.Scene()
+    selected = scene.selected
+
+    if len(selected) < num:
+
+        if num == 1:
+            filler = "item"
+        else:
+            filler = "items"
+
+        modo.dialogs.alert("Warning", "Please select at least one {0}.".format(filler), dtype='warning')
+
+    if len(selected) > num:
+        selected = selected[-num:]
+
+    return selected
+
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
 def main():
-    scene = modo.Scene()
+
+    print("Please call a function. This is just a helper module.")
 
 
 # END MAIN PROGRAM -----------------------------------------------

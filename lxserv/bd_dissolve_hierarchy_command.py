@@ -3,7 +3,7 @@
 
 """
 
-babylondreams - bd_command_dissolve_group
+babylondreams - bd_command_dissolve_hierarchy
 
 Release Notes:
 
@@ -13,9 +13,9 @@ V0.1 Initial Release - 2017-02-20
 
 import babylondreams
 import lx
-import modo
 
-from bd_tools import bd_dissolve_group
+from bd_tools import bd_dissolve_hierarchy
+
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -30,16 +30,11 @@ __status__ = "Development"
 class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
-    def commander_arguments(self):
-        return [
-            arg_commander
-        ]
-
     def commander_execute(self, msg, flags):
-        dish1 = self.commander_arg_value(0)
-        dish2 = self.commander_arg_value(1)
 
-        modo.dialogs.alert("breakfast", ' and '.join([dish1, dish2]))
+        reload(bd_dissolve_hierarchy)
+
+        bd_dissolve_hierarchy.main()
 
 
-lx.bless(CommandClass, 'bd.command')
+lx.bless(CommandClass, 'bd.dissolve_hierarchy')
