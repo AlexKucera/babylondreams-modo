@@ -7,10 +7,16 @@ Welcome to BabylonDreams modo Pipeline Kit's documentation!
 ===========================================================
 
 .. toctree::
-	:maxdepth: 4
-	:caption: Contents:	
-	
-	modules
+    :maxdepth: 4
+    :caption: Contents:
+
+    modules
+
+Commander Help: https://github.com/adamohern/commander
+
+TD SDK: http://modo.sdk.thefoundry.co.uk//td-sdk/
+
+Full SDK: http://sdk.luxology.com/wiki/Main_Page
 
 The BabylonDreams modo Pipeline kit contains scripts, configs and functions to make working in modo smoother.
 
