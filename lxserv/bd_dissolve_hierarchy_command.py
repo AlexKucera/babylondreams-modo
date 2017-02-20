@@ -7,6 +7,13 @@ babylondreams - bd_command_dissolve_hierarchy
 
 Release Notes:
 
+    The command creates an easily animatable setup to dissolve/fade a hierarchy of items. By selecting the
+    parent item and running the command a few things happen:
+
+    1. A group with the whole item hierarchy gets created
+    2. A shader setup gets created and put at the top of the shader tree
+    3. The shader setup gets linked to the group
+
 V0.1 Initial Release - 2017-02-20
 
 """
