@@ -154,7 +154,6 @@
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">lx</span>
-<span class="kn">import</span> <span class="nn">modo</span>
 
 
 <span class="c1"># FUNCTIONS -----------------------------------------------</span>
@@ -162,18 +161,14 @@
 
 <div class="viewcode-block" id="restoreSelection"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_gl_capture.restoreSelection">[docs]</a><span class="k">def</span> <span class="nf">restoreSelection</span><span class="p">(</span><span class="n">listSelections</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Saves a selection for later use.</span>
+<span class="sd">    Used together with:</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    global save_selection</span>
+<span class="sd">    save_selection = lx.evalN(&quot;query sceneservice selection ? all&quot;)</span>
 
-<span class="sd">        global save_selection</span>
-<span class="sd">        save_selection = lx.evalN(&quot;query sceneservice selection ? all&quot;)</span>
+<span class="sd">    to save and later restore a selection in modo with</span>
 
-<span class="sd">    To restore a selection later:</span>
-
-<span class="sd">        bd_utils.restoreSelection(save_selection)</span>
-
-
+<span class="sd">    bd_utils.restoreSelection(save_selection)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -261,18 +256,15 @@
     <span class="n">all_cameras</span> <span class="o">=</span> <span class="n">get_ids</span><span class="p">(</span><span class="s2">&quot;camera&quot;</span><span class="p">)</span>
     <span class="n">render_camera</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;render.camera ?&quot;</span><span class="p">)</span>
 
-    <span class="nb">list</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">render_camera</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
-    <span class="n">listnames</span><span class="o">=</span><span class="s2">&quot;Render Camera;&quot;</span>
-
+    <span class="nb">list</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">render_camera</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+    <span class="n">listnames</span> <span class="o">=</span> <span class="s2">&quot;Render Camera;&quot;</span>
 
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_cameras</span><span class="p">:</span>
-
         <span class="nb">list</span> <span class="o">+=</span> <span class="n">x</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
         <span class="n">listnames</span> <span class="o">+=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;query sceneservice item.name ? </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
 
     <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">listnames</span><span class="p">)</span>
-
 
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.defNew viewport_cam integer momentary&quot;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def viewport_cam username &quot;Pick Viewport Camera&quot;&#39;</span><span class="p">)</span>
@@ -290,7 +282,8 @@
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def shading_style username &quot;Pick Viewport Shading&quot;&#39;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def shading_style dialogname &quot;Which Shading Style do you want?&quot;&#39;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.def shading_style list gnzgl;advgl;texmod;tex;shade;vmap;sket;wire;shd1;shd2;shd3&quot;</span><span class="p">)</span>
-    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;user.def shading_style listnames &quot;Advanced;Default;Texture Shaded;Texture;Shaded;Vertex Map;Solid;Wireframe;Gooch Toon Shading;Cel Shading;Reflection&quot;&#39;</span><span class="p">)</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span>
+        <span class="s1">&#39;user.def shading_style listnames &quot;Advanced;Default;Texture Shaded;Texture;Shaded;Vertex Map;Solid;Wireframe;Gooch Toon Shading;Cel Shading;Reflection&quot;&#39;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value shading_style&quot;</span><span class="p">)</span>
 
     <span class="n">shading_style</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;user.value shading_style ?&quot;</span><span class="p">)</span>
@@ -349,12 +342,7 @@
     <span class="k">if</span> <span class="n">gl_type</span> <span class="o">==</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span>
         <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;gl.capture seq:true&quot;</span><span class="p">)</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    TODO: !gl.capture seq:true filename:/Users/alex/Documents/Untitled.jpg frameS:1001 frameE:1250 autoPlay:false</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;layout.closeWindow&quot;</span><span class="p">)</span></div>
-
 
 
 <span class="c1"># END MAIN PROGRAM -----------------------------------------------</span>
