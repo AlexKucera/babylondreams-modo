@@ -51,7 +51,7 @@ def main():
     # Generate the complete hierarchy from the parent down and add it to a group
     hierarchy = [selected[0]]
 
-    for item in selected[0].children():
+    for item in selected[0].children(recursive=True):
         hierarchy.append(item)
 
     blend_group = scene.addGroup(name='{0}_grp'.format(blend_name))
