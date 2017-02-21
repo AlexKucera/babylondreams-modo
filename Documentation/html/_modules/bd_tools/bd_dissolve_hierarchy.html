@@ -169,6 +169,7 @@
 
     <span class="c1"># Find the topmost spot below the renderOutputs</span>
     <span class="n">index</span> <span class="o">=</span> <span class="mi">10000000000000000000000</span>  <span class="c1"># Set the index to something very high so we can find the lowest index</span>
+    <span class="n">firstFrame</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">renderItem</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;first&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">/</span> <span class="n">scene</span><span class="o">.</span><span class="n">fps</span>
 
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">renderItem</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;renderOutput&quot;</span><span class="p">:</span>
@@ -184,7 +185,7 @@
     <span class="c1"># Generate the complete hierarchy from the parent down and add it to a group</span>
     <span class="n">hierarchy</span> <span class="o">=</span> <span class="p">[</span><span class="n">selected</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">children</span><span class="p">(</span><span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">hierarchy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
     <span class="n">blend_group</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">addGroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_grp&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blend_name</span><span class="p">))</span>
@@ -193,20 +194,35 @@
     <span class="c1"># Create a shading group, a shader and a constant</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="s1">&#39;mask&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_msk&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blend_name</span><span class="p">))</span>
     <span class="n">shader</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="s1">&#39;defaultShader&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_shdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blend_name</span><span class="p">))</span>
-    <span class="n">item</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_cnstnt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blend_name</span><span class="p">))</span>
+    <span class="n">constant</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_cnstnt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blend_name</span><span class="p">))</span>
 
     <span class="c1"># Parent everything to the shading group</span>
     <span class="n">shader</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-    <span class="n">item</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">constant</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">mask</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">renderItem</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">parentIndex</span><span class="p">)</span>
 
     <span class="c1"># Set the correct Shading Effect</span>
-    <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;effect&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;tranAmount&#39;</span><span class="p">)</span>
-    <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">constant</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;effect&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;tranAmount&#39;</span><span class="p">)</span>
+    <span class="n">constant</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">firstFrame</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Adjust the Item dropdown in the shading group</span>
     <span class="c1"># (yes, it is reverse, we are actually setting the input of the group to be the shading group)</span>
-    <span class="n">blend_group</span><span class="o">.</span><span class="n">itemGraph</span><span class="p">(</span><span class="s1">&#39;shadeLoc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">connectInput</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span></div>
+    <span class="n">blend_group</span><span class="o">.</span><span class="n">itemGraph</span><span class="p">(</span><span class="s1">&#39;shadeLoc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">connectInput</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+
+    <span class="c1"># Check if the Channel Set exist if not create it and add our new blend channel to it</span>
+    <span class="n">chan_set</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">getGroups</span><span class="p">(</span><span class="n">gtype</span><span class="o">=</span><span class="s1">&#39;chanset&#39;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;blend_channel_set&#39;</span><span class="p">:</span>
+            <span class="n">chan_set</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">chan_set</span><span class="p">:</span>
+        <span class="n">chan_set</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">addGroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;blend_channel_set&#39;</span><span class="p">,</span> <span class="n">gtype</span><span class="o">=</span><span class="s1">&#39;chanset&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">chan_set</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="s1">&#39;blend_channel_set&#39;</span><span class="p">)</span>
+
+    <span class="n">chan_set</span><span class="o">.</span><span class="n">addChannel</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">constant</span><span class="p">)</span></div>
+
 
 <span class="c1"># END MAIN PROGRAM -----------------------------------------------</span>
 

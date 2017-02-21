@@ -93,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_dissolve_hierarchy">bd_tools.bd_dissolve_hierarchy module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_gl_capture">bd_tools.bd_gl_capture module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_helpers">bd_tools.bd_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_transfer_anim">bd_tools.bd_transfer_anim module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools">Module contents</a></li>
 </ul>
 </li>
@@ -194,13 +195,11 @@ type - the type of item to be returned (mesh, camera etc)</p>
 <dl class="function">
 <dt id="bd_tools.bd_gl_capture.restoreSelection">
 <code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">restoreSelection</code><span class="sig-paren">(</span><em>listSelections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#restoreSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.restoreSelection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves a selection for later use.</p>
-<p class="rubric">Example</p>
+<dd><p>Used together with:</p>
 <p>global save_selection
 save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
-<p>To restore a selection later:</p>
-<blockquote>
-<div>bd_utils.restoreSelection(save_selection)</div></blockquote>
+<p>to save and later restore a selection in modo with</p>
+<p>bd_utils.restoreSelection(save_selection)</p>
 </dd></dl>
 
 </div>
@@ -216,6 +215,33 @@ save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
 <code class="descclassname">bd_tools.bd_helpers.</code><code class="descname">selected</code><span class="sig-paren">(</span><em>num=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_helpers.html#selected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_helpers.selected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns: A list of last N selected items. If the minimum number of selected items is not selected a warning dialog pops up.</p>
 </dd></dl>
+
+</div>
+<div class="section" id="module-bd_tools.bd_transfer_anim">
+<span id="bd-tools-bd-transfer-anim-module"></span><h2>bd_tools.bd_transfer_anim module<a class="headerlink" href="#module-bd_tools.bd_transfer_anim" title="Permalink to this headline">¶</a></h2>
+<p>BabylonDreams-modo-Kit - bd_transfer_anim</p>
+<dl class="docutils">
+<dt>Release Notes:</dt>
+<dd>Copy the animation from one selected item to another. It will copy all animated channels from the
+first object to the second object. Any channels that are missing on the second object will be listed
+at the end for manual fixing. Please make sure you have Warning dialogs enabled in modo, otherwise the user
+won&#8217;t get a popup dialog.</dd>
+</dl>
+<p>V0.1 Initial Release - 2017-02-13</p>
+<dl class="function">
+<dt id="bd_tools.bd_transfer_anim.channel_copy_paste">
+<code class="descclassname">bd_tools.bd_transfer_anim.</code><code class="descname">channel_copy_paste</code><span class="sig-paren">(</span><em>item_id</em>, <em>channel_name</em>, <em>cmd='copy'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_transfer_anim.html#channel_copy_paste"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_transfer_anim.channel_copy_paste" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bd_tools.bd_transfer_anim.get_channels">
+<code class="descclassname">bd_tools.bd_transfer_anim.</code><code class="descname">get_channels</code><span class="sig-paren">(</span><em>item</em>, <em>type=None</em>, <em>forbidden_channels=[]</em>, <em>isAnimated=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_transfer_anim.html#get_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_transfer_anim.get_channels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bd_tools.bd_transfer_anim.main">
+<code class="descclassname">bd_tools.bd_transfer_anim.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_transfer_anim.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_transfer_anim.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-bd_tools">

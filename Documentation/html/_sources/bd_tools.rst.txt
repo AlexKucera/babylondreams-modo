@@ -28,6 +28,14 @@ bd_tools.bd_helpers module
     :undoc-members:
     :show-inheritance:
 
+bd_tools.bd_transfer_anim module
+--------------------------------
+
+.. automodule:: bd_tools.bd_transfer_anim
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -3,8 +3,11 @@
 
 """
 
-A simple example of a blessed MODO command using the commander module.
-https://github.com/adamohern/commander for details
+babylondreams - bd_transfer_anim_command
+
+Release Notes:
+
+V0.1 Initial Release - 2017-02-21
 
 """
 
@@ -12,7 +15,7 @@ import babylondreams
 import lx
 import modo
 
-from bd_tools import bd_gl_capture
+from bd_tools import bd_transfer_anim
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -28,9 +31,8 @@ class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
     def commander_execute(self, msg, flags):
+        reload(bd_transfer_anim)
+        bd_transfer_anim.main()
 
-        reload(bd_gl_capture)
-        bd_gl_capture.main()
 
-
-lx.bless(CommandClass, 'bd.gl_capture')
+lx.bless(CommandClass, 'bd.transfer_anim')
