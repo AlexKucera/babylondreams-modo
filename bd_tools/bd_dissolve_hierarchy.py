@@ -36,6 +36,7 @@ def main():
 
     # Find the topmost spot below the renderOutputs
     index = 10000000000000000000000  # Set the index to something very high so we can find the lowest index
+    firstFrame = scene.renderItem.channel('first').get() / scene.fps
 
     for item in scene.renderItem.children():
         if item.type == "renderOutput":
@@ -51,7 +52,7 @@ def main():
     # Generate the complete hierarchy from the parent down and add it to a group
     hierarchy = [selected[0]]
 
-    for item in selected[0].children():
+    for item in selected[0].children(recursive=True):
         hierarchy.append(item)
 
     blend_group = scene.addGroup(name='{0}_grp'.format(blend_name))
@@ -60,20 +61,35 @@ def main():
     # Create a shading group, a shader and a constant
     mask = scene.addItem('mask', name='{0}_msk'.format(blend_name))
     shader = scene.addItem('defaultShader', name='{0}_shdr'.format(blend_name))
-    item = scene.addItem('constant', name='{0}_cnstnt'.format(blend_name))
+    constant = scene.addItem('constant', name='{0}_cnstnt'.format(blend_name))
 
     # Parent everything to the shading group
     shader.setParent(mask)
-    item.setParent(mask, index=0)
+    constant.setParent(mask, index=0)
     mask.setParent(scene.renderItem, index=parentIndex)
 
     # Set the correct Shading Effect
-    item.channel('effect').set('tranAmount')
-    item.channel('value').set(0)
+    constant.channel('effect').set('tranAmount')
+    constant.channel('value').set(0.0, time=firstFrame, key=True)
 
     # Adjust the Item dropdown in the shading group
     # (yes, it is reverse, we are actually setting the input of the group to be the shading group)
     blend_group.itemGraph('shadeLoc').connectInput(mask)
+
+    # Check if the Channel Set exist if not create it and add our new blend channel to it
+    chan_set = False
+    for group in scene.getGroups(gtype='chanset'):
+
+        if group.name == 'blend_channel_set':
+            chan_set = True
+
+    if not chan_set:
+        chan_set = scene.addGroup(name='blend_channel_set', gtype='chanset')
+    else:
+        chan_set = scene.item('blend_channel_set')
+
+    chan_set.addChannel('value', constant)
+
 
 # END MAIN PROGRAM -----------------------------------------------
 
