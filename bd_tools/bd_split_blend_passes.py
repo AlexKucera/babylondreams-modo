@@ -9,10 +9,15 @@ babylondreams - bd_split_blend_passes
 
 Release Notes:
 
+    TODO:
+    * https://docs.python.org/2/library/xml.etree.elementtree.html
+    * https://developer.apple.com/library/content/documentation/AppleApplications/Reference/FinalCutPro_XML/Topics/Topics.html#//apple_ref/doc/uid/TP30001149-CH294-SW19
+
 V0.1 Initial Release - 2017-02-22
 
 """
 
+import re
 import modo
 import lx
 import traceback
@@ -22,9 +27,17 @@ import traceback
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
+
+
 def main():
     scene = modo.Scene()
-    modo.dialogs.alert("Warning", "Works!", dtype='warning')
+    print("#"*10)
+    regex = re.compile('(blend_)(.*)(_cnstnt)')
+    for item in scene.items(itype='constant', superType=True):
+        match = regex.match(item.name)
+        if match:
+            print item.name
+
 
 
 # END MAIN PROGRAM -----------------------------------------------
