@@ -34,10 +34,12 @@ from bd_tools import bd_helpers
 def main():
     scene = modo.Scene()
 
-    # Find the topmost spot below the renderOutputs
+    # Initialize values
     index = 10000000000000000000000  # Set the index to something very high so we can find the lowest index
     firstFrame = scene.renderItem.channel('first').get() / scene.fps
+    dissolve_type = lx.eval("user.value bd.dissolve_type_pref ?")
 
+    # Find the topmost spot below the renderOutputs
     for item in scene.renderItem.children():
         if item.type == "renderOutput":
             if index > item.parentIndex:
@@ -69,7 +71,7 @@ def main():
     mask.setParent(scene.renderItem, index=parentIndex)
 
     # Set the correct Shading Effect
-    constant.channel('effect').set('tranAmount')
+    constant.channel('effect').set(dissolve_type)
     constant.channel('value').set(0.0, time=firstFrame, key=True)
 
     # Adjust the Item dropdown in the shading group

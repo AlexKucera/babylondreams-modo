@@ -3,13 +3,11 @@
 
 """
 
-babylondreams - bd_deinstance_command
+babylondreams - bd_fix_orphans
 
 Release Notes:
 
-    De-Instances any selected instances no matter the item type
-
-V0.1 Initial Release - 2017-02-21
+V0.1 Initial Release - 2017-02-22
 
 """
 
@@ -17,7 +15,7 @@ import babylondreams
 import lx
 import modo
 
-from bd_tools import bd_deinstance
+from bd_tools import bd_fix_orphans
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -32,11 +30,19 @@ __status__ = "Development"
 class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
+    #def commander_arguments(self):
+    #    return [
+    #         arg_commander 
+    #    ]
 
     def commander_execute(self, msg, flags):
+        # dish1 = self.commander_arg_value(0)
+        # dish2 = self.commander_arg_value(1)
 
-        reload(bd_deinstance)
-        bd_deinstance.main()
+        # modo.dialogs.alert("breakfast", ' and '.join([dish1, dish2]))
+
+        reload(bd_fix_orphans)
+        bd_fix_orphans.main()
 
 
-lx.bless(CommandClass, 'bd.deinstance')
+lx.bless(CommandClass, 'bd.bd_fix_orphans')
