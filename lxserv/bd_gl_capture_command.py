@@ -70,6 +70,7 @@ class CommandClass(babylondreams.CommanderClass):
                     * Screen Space Reflections (Off, Fast, Blurry)
                     * Dither (Off, Ordered)
                 * Inactive same as active
+                * Disable Bounding Box Display
 
         :return:
         """
