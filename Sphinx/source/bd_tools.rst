@@ -4,10 +4,26 @@ bd_tools package
 Submodules
 ----------
 
+bd_tools.bd_deinstance module
+-----------------------------
+
+.. automodule:: bd_tools.bd_deinstance
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 bd_tools.bd_dissolve_hierarchy module
 -------------------------------------
 
 .. automodule:: bd_tools.bd_dissolve_hierarchy
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bd_tools.bd_fix_orphans module
+------------------------------
+
+.. automodule:: bd_tools.bd_fix_orphans
     :members:
     :undoc-members:
     :show-inheritance:
