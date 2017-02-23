@@ -21,6 +21,7 @@ import re
 import modo
 import lx
 import traceback
+from pprint import pprint
 
 
 # FUNCTIONS -----------------------------------------------
@@ -36,7 +37,12 @@ def main():
     for item in scene.items(itype='constant', superType=True):
         match = regex.match(item.name)
         if match:
-            print item.name
+            if match.group(2) == "Teapot":
+                layer = "{0}{1}".format(match.group(1), match.group(2))
+                print layer
+                keyframe = item.channel('value').envelope.keyframes.first()
+                blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
+                pprint(blend_grp.channels())
 
 
 
