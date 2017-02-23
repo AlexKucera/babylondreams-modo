@@ -15,7 +15,7 @@ import babylondreams
 import lx
 import modo
 
-from bd_tools import bd_split_blend_passes
+from bd_tools import bd_blend_hierarchy_split_passes
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -31,8 +31,8 @@ class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
     def commander_execute(self, msg, flags):
-        reload(bd_split_blend_passes)
-        bd_split_blend_passes.main()
+        reload(bd_blend_hierarchy_split_passes)
+        bd_blend_hierarchy_split_passes.main()
 
 
-lx.bless(CommandClass, 'bd.split_blend_passes')
+lx.bless(CommandClass, 'bd.blend_hierarchy_split_passes')

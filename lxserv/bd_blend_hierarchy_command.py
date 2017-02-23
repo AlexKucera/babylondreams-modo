@@ -3,7 +3,7 @@
 
 """
 
-babylondreams - bd_command_dissolve_hierarchy
+babylondreams - bd_command_blend_hierarchy
 
 Release Notes:
 
@@ -21,7 +21,7 @@ V0.1 Initial Release - 2017-02-20
 import babylondreams
 import lx
 
-from bd_tools import bd_dissolve_hierarchy
+from bd_tools import bd_blend_hierarchy
 
 
 __author__ = "Alexander Kucera"
@@ -39,9 +39,9 @@ class CommandClass(babylondreams.CommanderClass):
 
     def commander_execute(self, msg, flags):
 
-        reload(bd_dissolve_hierarchy)
+        reload(bd_blend_hierarchy)
 
-        bd_dissolve_hierarchy.main()
+        bd_blend_hierarchy.main()
 
 
-lx.bless(CommandClass, 'bd.dissolve_hierarchy')
+lx.bless(CommandClass, 'bd.blend_hierarchy')

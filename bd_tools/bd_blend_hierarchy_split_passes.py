@@ -5,7 +5,7 @@
 
 # Description
 """
-babylondreams - bd_split_blend_passes
+babylondreams - bd_blend_hierarchy_split_passes
 
 Release Notes:
 

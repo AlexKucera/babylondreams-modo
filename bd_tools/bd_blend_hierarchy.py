@@ -5,11 +5,11 @@
 
 # Description
 """
-babylondreams - bd_dissolve_hierarchy
+babylondreams - bd_blend_hierarchy
 
 Release Notes:
 
-    The command creates an easily animatable setup to dissolve/fade a hierarchy of items. By selecting the
+    The command creates an easily animateable setup to dissolve/fade a hierarchy of items. By selecting the
     parent item and running the command a few things happen:
 
     1. A group with the whole item hierarchy gets created
@@ -37,7 +37,7 @@ def main():
     # Initialize values
     index = 10000000000000000000000  # Set the index to something very high so we can find the lowest index
     firstFrame = scene.renderItem.channel('first').get() / scene.fps
-    dissolve_type = lx.eval("user.value bd.dissolve_type_pref ?")
+    blend_type = lx.eval("user.value bd.blend_type_pref ?")
 
     # Find the topmost spot below the renderOutputs
     for item in scene.renderItem.children():
@@ -71,7 +71,7 @@ def main():
     mask.setParent(scene.renderItem, index=parentIndex)
 
     # Set the correct Shading Effect
-    constant.channel('effect').set(dissolve_type)
+    constant.channel('effect').set(blend_type)
     constant.channel('value').set(0.0, time=firstFrame, key=True)
 
     # Adjust the Item dropdown in the shading group
