@@ -17,6 +17,8 @@ import babylondreams
 import lx
 import modo
 
+from bd_tools import bd_deinstance
+
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
 __credits__ = ["Alexander Kucera"]
@@ -32,17 +34,9 @@ class CommandClass(babylondreams.CommanderClass):
 
 
     def commander_execute(self, msg, flags):
-        scene = modo.Scene()
 
-        i = 0
-        items = []
-        for item in scene.selected:
-            if item.isAnInstance:
-                item.itemGraph(graphType='source').disconnectInput(item.itemGraph(graphType='source').forward()[0])
-                i += 1
-                items.append(item.name)
-
-        print "{0} Instances de-instanced.\n{1}".format(i, items)
+        reload(bd_deinstance)
+        bd_deinstance.main()
 
 
 lx.bless(CommandClass, 'bd.deinstance')
