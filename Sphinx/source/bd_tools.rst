@@ -44,6 +44,14 @@ bd_tools.bd_helpers module
     :undoc-members:
     :show-inheritance:
 
+bd_tools.bd_reroute_instances module
+------------------------------------
+
+.. automodule:: bd_tools.bd_reroute_instances
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 bd_tools.bd_transfer_anim module
 --------------------------------
 
