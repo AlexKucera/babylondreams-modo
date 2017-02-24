@@ -49,20 +49,11 @@ class CommandClass(babylondreams.CommanderClass):
         return meshes
 
     def commander_execute(self, msg, flags):
-        scene = modo.Scene()
-        source = []
-        instances = scene.selected
-        for instance in instances:
-            if not instance.isAnInstance:
-                print "not an instance"
-                source.append(instance.name)
-        if len(source) > 0:
-            modo.dialogs.alert('Warning', 'Please select only instances.\nThe following items are no instances:\n{0}'.format(source), dtype='warning')
-        else:
-            new_source = self.commander_arg_value(0)
 
-            reload(bd_reroute_instances)
-            bd_reroute_instances.main(new_source, instances)
+        new_source = self.commander_arg_value(0)
+
+        reload(bd_reroute_instances)
+        bd_reroute_instances.main(new_source)
 
 
 lx.bless(CommandClass, 'bd.reroute_instances')

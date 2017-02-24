@@ -12,7 +12,7 @@ Release Notes:
 V0.1 Initial Release - 2017-02-23
 
 """
-
+import sys
 import modo
 import lx
 import traceback
@@ -22,23 +22,56 @@ import traceback
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
-def main(new_source, instances):
+
+
+
+def main(new_source):
+
     scene = modo.Scene()
-    new_source = scene.item(new_source)  # find the item that is using the provided ID
-    print("#"*40)
+
+    items = scene.selected
+    try:
+        new_source = scene.item(new_source)  # find the item that is using the provided ID
+    except:
+        new_source = scene.addItem('mesh', new_source)  # create empty mesh in case we don't find the new source yet
+
+    source = []
+    instances = []
+
+    # Check if we have instances selected and weed out any non-instances in the process
+    for item in items:
+        if not item.isAnInstance:
+            source.append(item.name)
+        else:
+            instances.append(item)
+
+    if len(instances) == 0:
+        modo.dialogs.alert('Error',
+                           'No Instances selected. Please select at least one instance.',
+                           dtype='error')
+        sys.exit()
+
+    # And now for the fun part
     print "selected source: {0} ({1})".format(new_source.name, new_source.id)
     for instance in instances:
-        # Transform connections first
-        #print "source items: {0}".format(instance.itemGraph('source').connectedItems)
+
+        # Re-route transform connections first
+        old_source = instance.itemGraph('source').forward()[0]
+        old_source.itemGraph('source').disconnectInput(instance)
         new_source.itemGraph('source').connectInput(instance)
-        #print "new source items: {0}".format(instance.itemGraph('source').connectedItems)
 
         # Now Mesh Connections
-        print "meshInst items: {0}".format(instance.itemGraph('meshInst').connectedItems)
+        instance.itemGraph('meshInst').disconnectInput(old_source)
         instance.itemGraph('meshInst').connectInput(new_source)
-        old_source = instance.itemGraph('meshInst').reverse()[0]
-        print "meshInst old source: {0}".format(old_source.itemGraph('meshInst').connectedItems)
-        print "new meshInst items: {0}".format(instance.itemGraph('meshInst').connectedItems)
+
+        print "re-routing {0} from {1} to {2}".format(instance.name, old_source.name, new_source.name)
+
+    if len(source) > 0:
+        modo.dialogs.alert('Warning',
+                           'The following items are no instances and were skipped:\n{0}'.format(source),
+                           dtype='warning')
+
+
 
 
 
