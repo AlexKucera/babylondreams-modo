@@ -117,7 +117,7 @@ def main(arbitrary=False, name=""):
 
             # Set the correct Shading Effect
             constant.channel('effect').set(blend_type)
-            constant.channel('value').set(0.0, time=firstFrame, key=True)
+            #constant.channel('value').set(0.0, time=firstFrame, key=True)
 
             # Adjust the Item dropdown in the shading group
             # (yes, it is reverse, we are actually setting the input of the group to be the shading group)
