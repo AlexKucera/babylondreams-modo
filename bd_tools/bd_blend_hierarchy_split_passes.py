@@ -23,6 +23,8 @@ import lx
 import traceback
 from pprint import pprint
 
+from var import *
+
 
 # FUNCTIONS -----------------------------------------------
 # END FUNCTIONS -----------------------------------------------
@@ -33,10 +35,12 @@ from pprint import pprint
 def main():
     scene = modo.Scene()
 
+    func_name = BLEND_COMMAND
+
     frame_range = modo.Scene().currentRange
     frame_range = range(frame_range[0], frame_range[1])
     fps = modo.Scene().fps
-    regex = re.compile('(blend_)(.*)(_cnstnt)')
+    regex = re.compile('({0}_)(.*)(_cnstnt)'.format(func_name))
 
     print("#"*10)
 
