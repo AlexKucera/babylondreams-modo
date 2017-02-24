@@ -84,17 +84,20 @@ def main(arbitrary=False, name=""):
     except:
         answer = "yes"
         groups = []
+        dups = []
         check = False
         for item in hierarchy:
             for group in scene.getGroups('{0}'.format(func_name)):
                 if group.hasItem(item):
                     check = True
                     groups.append(group.name)
-            if check:
-                answer = modo.dialogs.yesNo('Warning', '{0} is already in group(s) {1}. Do you still want to add it to '
-                                                       'another group?'.format(item.name, groups))
-                if answer == "no":
-                    sys.exit()
+
+            dups.append("Item: {0} - Groups: {1}".format(item.name, groups))
+
+        if check:
+
+            answer = modo.dialogs.yesNo('Warning', 'Some items are already in groups. Do you still want to add them to '
+                                                       'another group?')
 
         if answer == "no":
             None
