@@ -45,7 +45,7 @@ class CommandClass(babylondreams.CommanderClass):
         scene = modo.Scene()
         meshes = []
         for item in scene.items(itype='mesh', superType=True):
-            meshes.append((item.id, item.name))
+            meshes.append(item.name)
         return meshes
 
     def commander_execute(self, msg, flags):
