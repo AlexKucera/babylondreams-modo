@@ -9,6 +9,13 @@ babylondreams - bd_reroute_instances
 
 Release Notes:
 
+    select as many instances as you want and execute the command. it will ask you for a new mesh source.
+    pick one from the dropdown or put in a new name and an empty mesh will be created as new source.
+
+     Only works in modo 10.2v1 and lower for now.
+
+     Already bugged: http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=54793
+
 V0.1 Initial Release - 2017-02-23
 
 """
