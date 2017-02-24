@@ -36,6 +36,14 @@ def main(new_source):
 
     scene = modo.Scene()
 
+    appversion = lx.eval('query platformservice "appversion" ?')
+
+    if appversion > 1021:
+        modo.dialogs.alert('Error',
+                           'This script only works in modo 10.2v1 and below. Sorry.',
+                           dtype='error')
+        sys.exit()
+
     items = scene.selected
     try:
         new_source = scene.item(new_source)  # find the item that is using the provided ID
