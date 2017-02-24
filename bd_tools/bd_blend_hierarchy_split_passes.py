@@ -32,15 +32,23 @@ from pprint import pprint
 
 def main():
     scene = modo.Scene()
-    print("#"*10)
+
+    frame_range = modo.Scene().currentRange
+    frame_range = range(frame_range[0], frame_range[1])
+    fps = modo.Scene().fps
     regex = re.compile('(blend_)(.*)(_cnstnt)')
+
+    print("#"*10)
+
     for item in scene.items(itype='constant', superType=True):
         match = regex.match(item.name)
         if match:
             if match.group(2) == "Teapot":
                 layer = "{0}{1}".format(match.group(1), match.group(2))
                 print layer
-                keyframe = item.channel('value').envelope.keyframes.first()
+                for frame in frame_range:
+                    blend_value = {item.channel('value').get(frame / fps)
+                frozen_values = [item.channel('value').get(frame / fps) for frame in frame_range]
                 blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
                 pprint(blend_grp.channels())
 
