@@ -37,7 +37,8 @@ class CommandClass(babylondreams.CommanderClass):
                'datatype': 'string',
                'default': 'Center to BBox',
                'values_list_type': 'popup',
-               'values_list': ['Center to BBox', 'Center to Workplane', 'Center to BBox Top', 'Center to BBox Bottom',
+               #'values_list': ['Center to BBox', 'Center to Workplane', 'Center to BBox Top', 'Center to BBox Bottom',
+               'values_list': ['Center to BBox', 'Center to BBox Top', 'Center to BBox Bottom',
                                'Center to BBox Left', 'Center to BBox Right', 'Center to BBox Front',
                                'Center to BBox Back']
            },
@@ -61,7 +62,7 @@ class CommandClass(babylondreams.CommanderClass):
         elif center_action == 'Center to BBox Back':
             center_action = "center.bbox back"
         elif center_action == 'Center to Workplane':
-            center_action = 'center.matchWorkplane pos'
+            center_action = 'matchWorkplanePos'
 
         reload(bd_instance_source_center_adjust)
         bd_instance_source_center_adjust.main(center_action)
