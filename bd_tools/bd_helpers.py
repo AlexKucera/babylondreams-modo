@@ -42,3 +42,35 @@ def selected(num=1):
         selected = selected[-num:]
 
     return selected
+
+
+def restoreSelection(listSelections):
+    """
+    Used together with:
+
+    global save_selection
+    save_selection = lx.evalN("query sceneservice selection ? all")
+
+    to save and later restore a selection in modo with
+
+    bd_utils.restoreSelection(save_selection)
+
+    """
+
+    try:
+        # lx.out(listSelections)
+        first = True
+        for x in listSelections:
+            if first:
+                lx.eval("select.item {%s} set" % x)
+            else:
+                lx.eval("select.item {%s} add" % x)
+            first = False
+        print('Restored selection!')
+
+    except:
+        lx.eval('layout.createOrClose EventLog "Event Log_layout" '
+                'title:@macros.layouts@EventLog@ width:600 height:600 persistent:true '
+                'open:true')
+        lx.out("ERROR restoreSelection failed with ", sys.exc_info())
+        return None
