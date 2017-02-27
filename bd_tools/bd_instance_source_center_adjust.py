@@ -39,7 +39,7 @@ def getDifference(old, new, adjust, tolerance=0.000001):
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
-def main():
+def main(center_action):
     scene = modo.Scene()
     save_selection = lx.evalN("query sceneservice selection ? all")  # Save selection for later
     counter = False
@@ -89,7 +89,7 @@ def main():
 
                 mesh.select(replace=True)
 
-                lx.eval("center.bbox center")
+                lx.eval(center_action)
 
                 new_pos_x = mesh.position.x.get()
                 new_pos_y = mesh.position.y.get()

@@ -30,19 +30,41 @@ __status__ = "Development"
 class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
-    #def commander_arguments(self):
-    #    return [
-    #         arg_commander 
-    #    ]
+    def commander_arguments(self):
+       return [
+           {
+               'name': 'center_action',
+               'datatype': 'string',
+               'default': 'Center to BBox',
+               'values_list_type': 'popup',
+               'values_list': ['Center to BBox', 'Center to Workplane', 'Center to BBox Top', 'Center to BBox Bottom',
+                               'Center to BBox Left', 'Center to BBox Right', 'Center to BBox Front',
+                               'Center to BBox Back']
+           },
+       ]
 
     def commander_execute(self, msg, flags):
-        # dish1 = self.commander_arg_value(0)
-        # dish2 = self.commander_arg_value(1)
+        center_action = self.commander_arg_value(0)
 
-        # modo.dialogs.alert("breakfast", ' and '.join([dish1, dish2]))
+        if center_action == 'Center to BBox':
+            center_action = "center.bbox center"
+        elif center_action == 'Center to BBox Top':
+            center_action = "center.bbox top"
+        elif center_action == 'Center to BBox Bottom':
+            center_action = "center.bbox bottom"
+        elif center_action == 'Center to BBox Left':
+            center_action = "center.bbox left"
+        elif center_action == 'Center to BBox Right':
+            center_action = "center.bbox right"
+        elif center_action == 'Center to BBox Front':
+            center_action = "center.bbox front"
+        elif center_action == 'Center to BBox Back':
+            center_action = "center.bbox back"
+        elif center_action == 'Center to Workplane':
+            center_action = 'center.matchWorkplane pos'
 
         reload(bd_instance_source_center_adjust)
-        bd_instance_source_center_adjust.main()
+        bd_instance_source_center_adjust.main(center_action)
 
 
 lx.bless(CommandClass, 'bd.instance_source_center_adjust')
