@@ -175,6 +175,38 @@
         <span class="n">selected</span> <span class="o">=</span> <span class="n">selected</span><span class="p">[</span><span class="o">-</span><span class="n">num</span><span class="p">:]</span>
 
     <span class="k">return</span> <span class="n">selected</span></div>
+
+
+<div class="viewcode-block" id="restoreSelection"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.restoreSelection">[docs]</a><span class="k">def</span> <span class="nf">restoreSelection</span><span class="p">(</span><span class="n">listSelections</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Used together with:</span>
+
+<span class="sd">    global save_selection</span>
+<span class="sd">    save_selection = lx.evalN(&quot;query sceneservice selection ? all&quot;)</span>
+
+<span class="sd">    to save and later restore a selection in modo with</span>
+
+<span class="sd">    bd_utils.restoreSelection(save_selection)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># lx.out(listSelections)</span>
+        <span class="n">first</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">listSelections</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">first</span><span class="p">:</span>
+                <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;select.item {</span><span class="si">%s</span><span class="s2">} set&quot;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;select.item {</span><span class="si">%s</span><span class="s2">} add&quot;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Restored selection!&#39;</span><span class="p">)</span>
+
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;layout.createOrClose EventLog &quot;Event Log_layout&quot; &#39;</span>
+                <span class="s1">&#39;title:@macros.layouts@EventLog@ width:600 height:600 persistent:true &#39;</span>
+                <span class="s1">&#39;open:true&#39;</span><span class="p">)</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="s2">&quot;ERROR restoreSelection failed with &quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 </pre></div>
 
            </div>

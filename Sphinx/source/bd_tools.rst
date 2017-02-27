@@ -4,18 +4,26 @@ bd_tools package
 Submodules
 ----------
 
-bd_tools.bd_deinstance module
------------------------------
+bd_tools.bd_blend_hierarchy module
+----------------------------------
 
-.. automodule:: bd_tools.bd_deinstance
+.. automodule:: bd_tools.bd_blend_hierarchy
     :members:
     :undoc-members:
     :show-inheritance:
 
-bd_tools.bd_dissolve_hierarchy module
--------------------------------------
+bd_tools.bd_blend_hierarchy_split_passes module
+-----------------------------------------------
 
-.. automodule:: bd_tools.bd_dissolve_hierarchy
+.. automodule:: bd_tools.bd_blend_hierarchy_split_passes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bd_tools.bd_deinstance module
+-----------------------------
+
+.. automodule:: bd_tools.bd_deinstance
     :members:
     :undoc-members:
     :show-inheritance:
@@ -44,6 +52,14 @@ bd_tools.bd_helpers module
     :undoc-members:
     :show-inheritance:
 
+bd_tools.bd_instance_source_center_adjust module
+------------------------------------------------
+
+.. automodule:: bd_tools.bd_instance_source_center_adjust
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 bd_tools.bd_reroute_instances module
 ------------------------------------
 
@@ -56,6 +72,14 @@ bd_tools.bd_transfer_anim module
 --------------------------------
 
 .. automodule:: bd_tools.bd_transfer_anim
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bd_tools.var module
+-------------------
+
+.. automodule:: bd_tools.var
     :members:
     :undoc-members:
     :show-inheritance:

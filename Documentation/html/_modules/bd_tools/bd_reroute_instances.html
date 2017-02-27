@@ -169,6 +169,14 @@
 
     <span class="n">scene</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span>
 
+    <span class="n">appversion</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;query platformservice &quot;appversion&quot; ?&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">appversion</span> <span class="o">&gt;</span> <span class="mi">1021</span><span class="p">:</span>
+        <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;This script only works in modo 10.2v1 and below. Sorry.&#39;</span><span class="p">,</span>
+                           <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
     <span class="n">items</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">selected</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">new_source</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">new_source</span><span class="p">)</span>  <span class="c1"># find the item that is using the provided ID</span>
