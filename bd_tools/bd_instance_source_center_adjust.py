@@ -40,6 +40,8 @@ def getDifference(old, new, adjust, tolerance=0.000001):
 
 # MAIN PROGRAM --------------------------------------------
 def main(center_action):
+
+    start = bd_helpers.timer()
     scene = modo.Scene()
     save_selection = lx.evalN("query sceneservice selection ? all")  # Save selection for later
     counter = False
@@ -136,7 +138,7 @@ def main(center_action):
                                                                       name='OffsetCompensate')
 
     bd_helpers.restoreSelection(save_selection)
-
+    bd_helpers.timer(start)
     if not counter:
         print("No Meshes were selected.")
 
