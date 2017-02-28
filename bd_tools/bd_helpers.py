@@ -89,7 +89,6 @@ def timer(elapsed=0.0, name=''):
     if elapsed != 0.0:
         running_time = running_timer - elapsed
         if name is not '':
-            name = ' ' + name
-        print('Running Time{0}: {1} seconds'.format(name, running_time))
-    else:
-        return running_timer
+            name += ' '
+        print('{0}Running Time: {1:.2f} seconds'.format(name, running_time))
+    return running_timer

@@ -41,106 +41,104 @@ def getDifference(old, new, adjust, tolerance=0.000001):
 # MAIN PROGRAM --------------------------------------------
 def main(center_action):
 
-    start = bd_helpers.timer()
+    start_timer = bd_helpers.timer()
+
+    print '#' * 20
+    print 'Adjusting Instance Source Centers'
+
     scene = modo.Scene()
-    save_selection = lx.evalN("query sceneservice selection ? all")  # Save selection for later
-    counter = False
+    save_selection = scene.selected  # Save selection for later
+
+    # Weed out non-sources and find sources for any selected instances.
+    sources = []
+    already_seen = []
+    instances = {}
 
     for item in save_selection:
 
-        source = False
-        mesh = scene.item(item)
+        if item.type == "mesh":
 
-        if mesh.type != "mesh":
-            # If the selected item is not a mesh break the loop as we only want to adjust the centers of mesh items.
-            print("Not a mesh: {0}".format(item))
+            graph = item.itemGraph('meshInst').forward()  # Find any connected instances.
 
-        else:
+            if len(graph) > 0:
+                sources.append(item)
+                instances[item] = [graph]
 
-            graph = mesh.itemGraph('meshInst')
+        if item.type == "meshInst":
 
-            # Check if a mesh has any instances connected to it
+            if item in already_seen:
+                pass
+                # print('already got this source')
+            else:
+                # print('new source')
+                graph = item.itemGraph('meshInst').reverse()  # Find the source mesh
+                sources.append(graph[0])
+                already_seen.extend(graph[0].itemGraph('meshInst').forward())
+                instances[graph[0]] = [graph[0].itemGraph('meshInst').forward()]
+    sources = list(set(sources))  # Strip all duplicates
 
-            if graph.forward():
-                source = True
+    if len(sources) == 0:
 
-            if source:
+        print('No source meshes found. Please select at least one instance or source mesh.')
 
-                counter = True
+    else:
 
-                # We found instances. Now the fun begins. Grab all the instances and save positions for later
+        for mesh in sources:
 
-                mesh.select(replace=True)
-                lx.eval("select.itemInstances")
-                instances = lx.evalN("query sceneservice selection ? all")
+            print("Adjusting mesh {0} of {1}".format(sources.index(mesh), len(sources)))
 
-                instances_dict = {}
+            # We found instances. Now the fun begins. Grab all the instances and save positions for later
 
-                for instance in instances:
-                    instance_pos_x = modo.LocatorSuperType(instance).position.x.get()
-                    instance_pos_y = modo.LocatorSuperType(instance).position.y.get()
-                    instance_pos_z = modo.LocatorSuperType(instance).position.z.get()
+            instance_array = []
 
-                    instances_dict[instance] = [instance_pos_x, instance_pos_y, instance_pos_z]
+            for values in instances[mesh]:
+                for value in values:
+                    instance_array.append(value)
 
-                # Grab the source mesh's position, adjust the Center and get the new (offset) position
+            instances_dict = {}
 
-                original_pos_x = mesh.position.x.get()
-                original_pos_y = mesh.position.y.get()
-                original_pos_z = mesh.position.z.get()
+            for instance in instance_array:
+                instance_pos_x = modo.LocatorSuperType(instance).position.x.get()
+                instance_pos_y = modo.LocatorSuperType(instance).position.y.get()
+                instance_pos_z = modo.LocatorSuperType(instance).position.z.get()
 
-                mesh.select(replace=True)
+                instances_dict[instance] = [instance_pos_x, instance_pos_y, instance_pos_z]
 
-                lx.eval(center_action)
+            # Grab the source mesh's position, adjust the Center and get the new (offset) position
 
-                new_pos_x = mesh.position.x.get()
-                new_pos_y = mesh.position.y.get()
-                new_pos_z = mesh.position.z.get()
+            original_pos_x = mesh.position.x.get()
+            original_pos_y = mesh.position.y.get()
+            original_pos_z = mesh.position.z.get()
 
-                mesh.position.x.set(original_pos_x)
-                mesh.position.y.set(original_pos_y)
-                mesh.position.z.set(original_pos_z)
+            mesh.select(replace=True)
 
-                offset_pos_x = getDifference(original_pos_x, new_pos_x, original_pos_x)
-                offset_pos_y = getDifference(original_pos_y, new_pos_y, original_pos_y)
-                offset_pos_z = getDifference(original_pos_z, new_pos_z, original_pos_z)
+            lx.eval(center_action)
 
-                # modo.LocatorSuperType(mesh).transforms.insert(xfrmType='position', placement='append',
-                #                                              values=(offset_pos_x, offset_pos_y, offset_pos_z),
-                #                                              name='OffsetCompensate')
+            new_pos_x = mesh.position.x.get()
+            new_pos_y = mesh.position.y.get()
+            new_pos_z = mesh.position.z.get()
 
-                modo.LocatorSuperType(mesh).transforms.insert(xfrmType='position', placement='append',
-                                                              values=(new_pos_x, new_pos_y, new_pos_z),
-                                                              name='OffsetCompensate')
+            # Move the item back to the original position. We are using an extra position channel for the offset.
+            # This is so Instances don't need to be calculated with hard vector math.
 
-                for instance in instances:
-                    instance_pos_x = instances_dict[instance][0]
-                    instance_pos_y = instances_dict[instance][1]
-                    instance_pos_z = instances_dict[instance][2]
+            mesh.position.x.set(original_pos_x)
+            mesh.position.y.set(original_pos_y)
+            mesh.position.z.set(original_pos_z)
 
-                    new_instance_pos_x = getDifference(original_pos_x, new_pos_x, instance_pos_x)
-                    print("X\n\norig: {0}\nnew: {1}\ninst: {2}\ninst_new:{3}".format(
-                        original_pos_x, new_pos_x, instance_pos_x, new_instance_pos_x))
-                    new_instance_pos_y = getDifference(original_pos_y, new_pos_y, instance_pos_y)
-                    print("Y\n\norig: {0}\nnew: {1}\ninst: {2}\ninst_new:{3}".format(
-                        original_pos_y, new_pos_y, instance_pos_y, new_instance_pos_y))
-                    new_instance_pos_z = getDifference(original_pos_z, new_pos_z, instance_pos_z)
-                    print("Z\n\norig: {0}\nnew: {1}\ninst: {2}\ninst_new:{3}".format(
-                        original_pos_z, new_pos_z, instance_pos_z, new_instance_pos_z))
+            modo.LocatorSuperType(mesh).transforms.insert(xfrmType='position', placement='append',
+                                                          values=(new_pos_x, new_pos_y, new_pos_z),
+                                                          name='OffsetCompensate')
 
-                    # modo.LocatorSuperType(instance).position.x.set(new_instance_pos_x)
-                    # modo.LocatorSuperType(instance).position.y.set(new_instance_pos_y)
-                    # modo.LocatorSuperType(instance).position.z.set(new_instance_pos_z)
+            for instance in instance_array:
 
-                    modo.LocatorSuperType(instance).transforms.insert(xfrmType='position', placement='append',
-                                                                      values=(new_pos_x, new_pos_y,
-                                                                              new_pos_z),
-                                                                      name='OffsetCompensate')
+                modo.LocatorSuperType(instance).transforms.insert(xfrmType='position', placement='append',
+                                                                  values=(new_pos_x, new_pos_y, new_pos_z),
+                                                                  name='OffsetCompensate')
+    scene.select(save_selection)
 
-    bd_helpers.restoreSelection(save_selection)
-    bd_helpers.timer(start)
-    if not counter:
-        print("No Meshes were selected.")
+    bd_helpers.timer(start_timer, 'Overall')
+
+    print('Finished adjusting the instance centers. Adjusted {0} sources.'.format(len(sources)))
 
 
 # END MAIN PROGRAM -----------------------------------------------
