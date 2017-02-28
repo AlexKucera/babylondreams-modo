@@ -15,10 +15,11 @@ V0.1 Initial Release - 2017-02-20
 
 """
 
+import sys
 import time
-import modo
+
 import lx
-import traceback
+import modo
 
 
 def selected(num=1):
@@ -54,7 +55,7 @@ def restoreSelection(listSelections):
 
     to save and later restore a selection in modo with
 
-    bd_utils.restoreSelection(save_selection)
+    bd_helpers.restoreSelection(save_selection)
 
     """
 
@@ -75,20 +76,20 @@ def restoreSelection(listSelections):
                 'open:true')
         lx.out("ERROR restoreSelection failed with ", sys.exc_info())
         return None
-        
 
-def timer(elapsed=0, name=''):
-	"""
-	Timer function for debugging. 
-	Example:
-		start = timer()
-		timer(start, "test")
-	"""
-	timer = time.clock()
-	if elapsed > 0:
-		running = timer - elapsed
-		if name is not '':
-			name = ' ' + name
-		print('Running Time{0}: {1} seconds'.format(name, running))
-	return timer
-	
+
+def timer(elapsed=0.0, name=''):
+    """
+    Timer function for debugging.
+    Example:
+        start = bd_helpers.timer()
+        bd_helpers.timer(start, "test")
+    """
+    running_timer = time.clock()
+    if elapsed != 0.0:
+        running_time = running_timer - elapsed
+        if name is not '':
+            name = ' ' + name
+        print('Running Time{0}: {1} seconds'.format(name, running_time))
+    else:
+        return running_timer
