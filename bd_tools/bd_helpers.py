@@ -81,9 +81,13 @@ def restoreSelection(listSelections):
 def timer(elapsed=0.0, name=''):
     """
     Timer function for debugging.
+
     Example:
+
         start = bd_helpers.timer()
+
         bd_helpers.timer(start, "test")
+
     """
     running_timer = time.clock()
     if elapsed != 0.0:

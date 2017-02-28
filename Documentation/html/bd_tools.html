@@ -252,13 +252,22 @@ save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
 <p>global save_selection
 save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
 <p>to save and later restore a selection in modo with</p>
-<p>bd_utils.restoreSelection(save_selection)</p>
+<p>bd_helpers.restoreSelection(save_selection)</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="bd_tools.bd_helpers.selected">
 <code class="descclassname">bd_tools.bd_helpers.</code><code class="descname">selected</code><span class="sig-paren">(</span><em>num=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_helpers.html#selected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_helpers.selected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns: A list of last N selected items. If the minimum number of selected items is not selected a warning dialog pops up.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bd_tools.bd_helpers.timer">
+<code class="descclassname">bd_tools.bd_helpers.</code><code class="descname">timer</code><span class="sig-paren">(</span><em>elapsed=0.0</em>, <em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_helpers.html#timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_helpers.timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timer function for debugging.</p>
+<p class="rubric">Example</p>
+<p>start = bd_helpers.timer()</p>
+<p>bd_helpers.timer(start, &#8220;test&#8221;)</p>
 </dd></dl>
 
 </div>
