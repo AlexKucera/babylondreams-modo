@@ -15,6 +15,7 @@ V0.1 Initial Release - 2017-02-20
 
 """
 
+import time
 import modo
 import lx
 import traceback
@@ -74,3 +75,20 @@ def restoreSelection(listSelections):
                 'open:true')
         lx.out("ERROR restoreSelection failed with ", sys.exc_info())
         return None
+        
+
+def timer(elapsed=0, name=''):
+	"""
+	Timer function for debugging. 
+	Example:
+		start = timer()
+		timer(start, "test")
+	"""
+	timer = time.clock()
+	if elapsed > 0:
+		running = timer - elapsed
+		if name is not '':
+			name = ' ' + name
+		print('Running Time{0}: {1} seconds'.format(name, running))
+	return timer
+	
