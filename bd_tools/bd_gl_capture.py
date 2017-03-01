@@ -128,7 +128,7 @@ def main():
     all_cameras = get_ids("camera")
     render_camera = lx.eval("render.camera ?")
 
-    list=str(render_camera) + ";"
+    list='rendercam' + ";"
     listnames="Render Camera;"
 
 
@@ -149,7 +149,10 @@ def main():
     lx.eval("user.value viewport_cam")
 
     capture_camera = lx.eval("user.value viewport_cam ?")
-    capture_camera_name = lx.eval('query sceneservice item.name ? %s' % capture_camera)
+    if capture_camera == 'rendercam':
+        capture_camera_name = "RenderCam"
+    else:
+        capture_camera_name = lx.eval('query sceneservice item.name ? %s' % capture_camera)
     lx.out(capture_camera)
     lx.out(capture_camera_name)
 
@@ -193,7 +196,12 @@ def main():
     lx.eval('view3d.showSelectionRollover false')
     lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.wireframeOverlay none active')
-    lx.eval('view3d.cameraItem ' + capture_camera)
+
+    if capture_camera == 'rendercam':
+        lx.eval('view3d.renderCamera')
+    else:
+        lx.eval('view3d.cameraItem ' + capture_camera)
+
     lx.eval('view3d.shadingStyle ' + shading_style)
     lx.eval('view3d.sameAsActive true')
 
@@ -221,8 +229,6 @@ def main():
     """
 
     lx.eval("layout.closeWindow")
-
-
 
 # END MAIN PROGRAM -----------------------------------------------
 
