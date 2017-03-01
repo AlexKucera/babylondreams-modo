@@ -24,6 +24,7 @@ import traceback
 import lx
 import modo
 import bd_helpers
+from var import *
 
 # FUNCTIONS -----------------------------------------------
 
@@ -45,6 +46,7 @@ def main(center_action):
 
     print '#' * 20
     print 'Adjusting Instance Source Centers'
+    print center_action
 
     scene = modo.Scene()
     save_selection = scene.selected  # Save selection for later
@@ -112,7 +114,15 @@ def main(center_action):
 
             mesh.select(replace=True)
 
-            lx.eval(center_action)
+            if center_action == 'center.matchWorkplane pos':
+
+                lx.eval('select.convert center')
+                lx.eval(center_action)
+                lx.eval('select.type item')
+
+            else:
+
+                lx.eval(center_action)
 
             new_pos_x = mesh.position.x.get()
             new_pos_y = mesh.position.y.get()
