@@ -14,6 +14,7 @@ V0.1 Initial Release - 2017-02-27
 import babylondreams
 import lx
 import modo
+from bd_tools.var import *
 
 from bd_tools import bd_instance_source_center_adjust
 
@@ -37,32 +38,30 @@ class CommandClass(babylondreams.CommanderClass):
                'datatype': 'string',
                'default': 'Center to BBox',
                'values_list_type': 'popup',
-               #'values_list': ['Center to BBox', 'Center to Workplane', 'Center to BBox Top', 'Center to BBox Bottom',
-               'values_list': ['Center to BBox', 'Center to BBox Top', 'Center to BBox Bottom',
-                               'Center to BBox Left', 'Center to BBox Right', 'Center to BBox Front',
-                               'Center to BBox Back']
+               'values_list': [CENTER_BBOX, CENTER_WPLANE, CENTER_TOP, CENTER_BOTTOM, CENTER_LEFT,
+                               CENTER_RIGHT, CENTER_FRONT, CENTER_BACK]
            },
        ]
 
     def commander_execute(self, msg, flags):
         center_action = self.commander_arg_value(0)
 
-        if center_action == 'Center to BBox':
+        if center_action == CENTER_BBOX:
             center_action = "center.bbox center"
-        elif center_action == 'Center to BBox Top':
+        elif center_action == CENTER_TOP:
             center_action = "center.bbox top"
-        elif center_action == 'Center to BBox Bottom':
+        elif center_action == CENTER_BOTTOM:
             center_action = "center.bbox bottom"
-        elif center_action == 'Center to BBox Left':
+        elif center_action == CENTER_LEFT:
             center_action = "center.bbox left"
-        elif center_action == 'Center to BBox Right':
+        elif center_action == CENTER_RIGHT:
             center_action = "center.bbox right"
-        elif center_action == 'Center to BBox Front':
+        elif center_action == CENTER_FRONT:
             center_action = "center.bbox front"
-        elif center_action == 'Center to BBox Back':
+        elif center_action == CENTER_BACK:
             center_action = "center.bbox back"
-        elif center_action == 'Center to Workplane':
-            center_action = 'matchWorkplanePos'
+        elif center_action == CENTER_WPLANE:
+            center_action = 'center.matchWorkplane pos'
 
         reload(bd_instance_source_center_adjust)
         bd_instance_source_center_adjust.main(center_action)
