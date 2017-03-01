@@ -21,6 +21,7 @@ v0.2 Trigger GL Recording and close the window after recording has finished - 20
 import traceback
 import sys
 import lx
+import modo
 
 
 # FUNCTIONS -----------------------------------------------
@@ -28,14 +29,18 @@ import lx
 
 def restoreSelection(listSelections):
     """
-    Used together with:
+    Saves a selection for later use.
 
-    global save_selection
-    save_selection = lx.evalN("query sceneservice selection ? all")
+    Example:
 
-    to save and later restore a selection in modo with
+        global save_selection
+        save_selection = lx.evalN("query sceneservice selection ? all")
 
-    bd_utils.restoreSelection(save_selection)
+    To restore a selection later:
+
+        bd_utils.restoreSelection(save_selection)
+
+
 
     """
 
@@ -123,15 +128,18 @@ def main():
     all_cameras = get_ids("camera")
     render_camera = lx.eval("render.camera ?")
 
-    list = str(render_camera) + ";"
-    listnames = "Render Camera;"
+    list='rendercam' + ";"
+    listnames="Render Camera;"
+
 
     for x in all_cameras:
+
         list += x + ";"
         listnames += lx.eval('query sceneservice item.name ? %s' % x) + ";"
 
     lx.out(list)
     lx.out(listnames)
+
 
     lx.eval("user.defNew viewport_cam integer momentary")
     lx.eval('user.def viewport_cam username "Pick Viewport Camera"')
@@ -141,7 +149,10 @@ def main():
     lx.eval("user.value viewport_cam")
 
     capture_camera = lx.eval("user.value viewport_cam ?")
-    capture_camera_name = lx.eval('query sceneservice item.name ? %s' % capture_camera)
+    if capture_camera == 'rendercam':
+        capture_camera_name = "RenderCam"
+    else:
+        capture_camera_name = lx.eval('query sceneservice item.name ? %s' % capture_camera)
     lx.out(capture_camera)
     lx.out(capture_camera_name)
 
@@ -149,8 +160,7 @@ def main():
     lx.eval('user.def shading_style username "Pick Viewport Shading"')
     lx.eval('user.def shading_style dialogname "Which Shading Style do you want?"')
     lx.eval("user.def shading_style list gnzgl;advgl;texmod;tex;shade;vmap;sket;wire;shd1;shd2;shd3")
-    lx.eval(
-        'user.def shading_style listnames "Advanced;Default;Texture Shaded;Texture;Shaded;Vertex Map;Solid;Wireframe;Gooch Toon Shading;Cel Shading;Reflection"')
+    lx.eval('user.def shading_style listnames "Advanced;Default;Texture Shaded;Texture;Shaded;Vertex Map;Solid;Wireframe;Gooch Toon Shading;Cel Shading;Reflection"')
     lx.eval("user.value shading_style")
 
     shading_style = lx.eval("user.value shading_style ?")
@@ -186,7 +196,12 @@ def main():
     lx.eval('view3d.showSelectionRollover false')
     lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.wireframeOverlay none active')
-    lx.eval('view3d.cameraItem ' + capture_camera)
+
+    if capture_camera == 'rendercam':
+        lx.eval('view3d.renderCamera')
+    else:
+        lx.eval('view3d.cameraItem ' + capture_camera)
+
     lx.eval('view3d.shadingStyle ' + shading_style)
     lx.eval('view3d.sameAsActive true')
 
@@ -209,8 +224,11 @@ def main():
     if gl_type == "image":
         lx.eval("gl.capture seq:true")
 
-    lx.eval("layout.closeWindow")
+    """
+    TODO: !gl.capture seq:true filename:/Users/alex/Documents/Untitled.jpg frameS:1001 frameE:1250 autoPlay:false
+    """
 
+    lx.eval("layout.closeWindow")
 
 # END MAIN PROGRAM -----------------------------------------------
 
