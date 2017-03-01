@@ -90,12 +90,16 @@
 <li class="toctree-l2"><a class="reference internal" href="babylondreams.html">babylondreams package</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">bd_tools package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_blend_hierarchy">bd_tools.bd_blend_hierarchy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bd-tools-bd-blend-hierarchy-split-passes-module">bd_tools.bd_blend_hierarchy_split_passes module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_deinstance">bd_tools.bd_deinstance module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_dissolve_hierarchy">bd_tools.bd_dissolve_hierarchy module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_fix_orphans">bd_tools.bd_fix_orphans module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_gl_capture">bd_tools.bd_gl_capture module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_helpers">bd_tools.bd_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_instance_source_center_adjust">bd_tools.bd_instance_source_center_adjust module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_reroute_instances">bd_tools.bd_reroute_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_transfer_anim">bd_tools.bd_transfer_anim module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.var">bd_tools.var module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools">Module contents</a></li>
 </ul>
 </li>
@@ -152,23 +156,12 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-bd_tools.bd_deinstance">
-<span id="bd-tools-bd-deinstance-module"></span><h2>bd_tools.bd_deinstance module<a class="headerlink" href="#module-bd_tools.bd_deinstance" title="Permalink to this headline">¶</a></h2>
-<p>babylondreams - bd_deinstance</p>
-<p>Release Notes:</p>
-<p>V0.1 Initial Release - 2017-02-23</p>
-<dl class="function">
-<dt id="bd_tools.bd_deinstance.main">
-<code class="descclassname">bd_tools.bd_deinstance.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_deinstance.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_deinstance.main" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
-<div class="section" id="module-bd_tools.bd_dissolve_hierarchy">
-<span id="bd-tools-bd-dissolve-hierarchy-module"></span><h2>bd_tools.bd_dissolve_hierarchy module<a class="headerlink" href="#module-bd_tools.bd_dissolve_hierarchy" title="Permalink to this headline">¶</a></h2>
-<p>babylondreams - bd_dissolve_hierarchy</p>
+<div class="section" id="module-bd_tools.bd_blend_hierarchy">
+<span id="bd-tools-bd-blend-hierarchy-module"></span><h2>bd_tools.bd_blend_hierarchy module<a class="headerlink" href="#module-bd_tools.bd_blend_hierarchy" title="Permalink to this headline">¶</a></h2>
+<p>babylondreams - bd_blend_hierarchy</p>
 <p>Release Notes:</p>
 <blockquote>
-<div><p>The command creates an easily animatable setup to dissolve/fade a hierarchy of items. By selecting the
+<div><p>The command creates an easily animateable setup to dissolve/fade a hierarchy of items. By selecting the
 parent item and running the command a few things happen:</p>
 <ol class="arabic simple">
 <li>A group with the whole item hierarchy gets created</li>
@@ -178,8 +171,22 @@ parent item and running the command a few things happen:</p>
 </div></blockquote>
 <p>V0.1 Initial Release - 2017-02-20</p>
 <dl class="function">
-<dt id="bd_tools.bd_dissolve_hierarchy.main">
-<code class="descclassname">bd_tools.bd_dissolve_hierarchy.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_dissolve_hierarchy.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_dissolve_hierarchy.main" title="Permalink to this definition">¶</a></dt>
+<dt id="bd_tools.bd_blend_hierarchy.main">
+<code class="descclassname">bd_tools.bd_blend_hierarchy.</code><code class="descname">main</code><span class="sig-paren">(</span><em>arbitrary=False</em>, <em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_blend_hierarchy.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_blend_hierarchy.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="bd-tools-bd-blend-hierarchy-split-passes-module">
+<h2>bd_tools.bd_blend_hierarchy_split_passes module<a class="headerlink" href="#bd-tools-bd-blend-hierarchy-split-passes-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-bd_tools.bd_deinstance">
+<span id="bd-tools-bd-deinstance-module"></span><h2>bd_tools.bd_deinstance module<a class="headerlink" href="#module-bd_tools.bd_deinstance" title="Permalink to this headline">¶</a></h2>
+<p>babylondreams - bd_deinstance</p>
+<p>Release Notes:</p>
+<p>V0.1 Initial Release - 2017-02-23</p>
+<dl class="function">
+<dt id="bd_tools.bd_deinstance.main">
+<code class="descclassname">bd_tools.bd_deinstance.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_deinstance.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_deinstance.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -239,10 +246,67 @@ save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
 <div>A collection of several often used helper functions.</div></blockquote>
 <p>V0.1 Initial Release - 2017-02-20</p>
 <dl class="function">
+<dt id="bd_tools.bd_helpers.restoreSelection">
+<code class="descclassname">bd_tools.bd_helpers.</code><code class="descname">restoreSelection</code><span class="sig-paren">(</span><em>listSelections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_helpers.html#restoreSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_helpers.restoreSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used together with:</p>
+<p>global save_selection
+save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
+<p>to save and later restore a selection in modo with</p>
+<p>bd_helpers.restoreSelection(save_selection)</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="bd_tools.bd_helpers.selected">
 <code class="descclassname">bd_tools.bd_helpers.</code><code class="descname">selected</code><span class="sig-paren">(</span><em>num=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_helpers.html#selected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_helpers.selected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns: A list of last N selected items. If the minimum number of selected items is not selected a warning dialog pops up.</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="bd_tools.bd_helpers.timer">
+<code class="descclassname">bd_tools.bd_helpers.</code><code class="descname">timer</code><span class="sig-paren">(</span><em>elapsed=0.0</em>, <em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_helpers.html#timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_helpers.timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timer function for debugging.</p>
+<p class="rubric">Example</p>
+<p>start = bd_helpers.timer()</p>
+<p>bd_helpers.timer(start, &#8220;test&#8221;)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-bd_tools.bd_instance_source_center_adjust">
+<span id="bd-tools-bd-instance-source-center-adjust-module"></span><h2>bd_tools.bd_instance_source_center_adjust module<a class="headerlink" href="#module-bd_tools.bd_instance_source_center_adjust" title="Permalink to this headline">¶</a></h2>
+<p>Allows adjustments to the center of an object that is the source of a bunch of instances without the instances flying off in all directions.</p>
+<p>The basic idea is to save the source world position, then adjust the center, then get the new world position and calculate the offset. Then apply this offset to the transform of all the instances.</p>
+<p>Release Notes:</p>
+<blockquote>
+<div>Seems to work well on fresh CAD imports. Does not seem to work at all on manually created instance hierarchies. Bummer.</div></blockquote>
+<p>V0.1 Initial Release</p>
+<dl class="function">
+<dt id="bd_tools.bd_instance_source_center_adjust.getDifference">
+<code class="descclassname">bd_tools.bd_instance_source_center_adjust.</code><code class="descname">getDifference</code><span class="sig-paren">(</span><em>old</em>, <em>new</em>, <em>adjust</em>, <em>tolerance=1e-06</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_instance_source_center_adjust.html#getDifference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_instance_source_center_adjust.getDifference" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bd_tools.bd_instance_source_center_adjust.main">
+<code class="descclassname">bd_tools.bd_instance_source_center_adjust.</code><code class="descname">main</code><span class="sig-paren">(</span><em>center_action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_instance_source_center_adjust.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_instance_source_center_adjust.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-bd_tools.bd_reroute_instances">
+<span id="bd-tools-bd-reroute-instances-module"></span><h2>bd_tools.bd_reroute_instances module<a class="headerlink" href="#module-bd_tools.bd_reroute_instances" title="Permalink to this headline">¶</a></h2>
+<p>babylondreams - bd_reroute_instances</p>
+<p>Release Notes:</p>
+<blockquote>
+<div><p>select as many instances as you want and execute the command. it will ask you for a new mesh source.
+pick one from the dropdown or put in a new name and an empty mesh will be created as new source.</p>
+<blockquote>
+<div><p>Only works in modo 10.2v1 and lower for now.</p>
+<p>Already bugged: <a class="reference external" href="http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=54793">http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=54793</a></p>
+</div></blockquote>
+</div></blockquote>
+<p>V0.1 Initial Release - 2017-02-23</p>
+<dl class="function">
+<dt id="bd_tools.bd_reroute_instances.main">
+<code class="descclassname">bd_tools.bd_reroute_instances.</code><code class="descname">main</code><span class="sig-paren">(</span><em>new_source</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_reroute_instances.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_reroute_instances.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-bd_tools.bd_transfer_anim">
@@ -271,6 +335,12 @@ won&#8217;t get a popup dialog.</dd>
 <code class="descclassname">bd_tools.bd_transfer_anim.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_transfer_anim.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_transfer_anim.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</div>
+<div class="section" id="module-bd_tools.var">
+<span id="bd-tools-var-module"></span><h2>bd_tools.var module<a class="headerlink" href="#module-bd_tools.var" title="Permalink to this headline">¶</a></h2>
+<p>babylondreams - var.py</p>
+<p>Release Notes:</p>
+<p>V0.1 Initial Release - 2017-02-24</p>
 </div>
 <div class="section" id="module-bd_tools">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bd_tools" title="Permalink to this headline">¶</a></h2>
