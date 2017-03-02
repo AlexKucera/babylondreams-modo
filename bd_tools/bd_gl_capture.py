@@ -124,7 +124,7 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     if gl_recording_type == 'movie':
         filepath = '{}{}_{}.mov'.format(filepath, filename, capture_camera_name)
     else:
-        filepath = '{}{}/{}_{}.jpg'.format(filepath, filename, filename, capture_camera_name)
+        filepath = '{0}{1}{3}{1}_{2}.jpg'.format(filepath, filename, capture_camera_name, os.sep)
 
     if not os.path.exists(os.path.dirname(filepath)):
         os.makedirs(os.path.dirname(filepath))
