@@ -17,11 +17,12 @@ V0.1 Initial Release - 2016-11-23
 v0.2 Trigger GL Recording and close the window after recording has finished - 2016-11-24
 
 """
-
+import os
 import traceback
 import sys
 import lx
 import modo
+import bd_helpers
 
 
 # FUNCTIONS -----------------------------------------------
@@ -95,89 +96,50 @@ def get_ids(itemtype):
 # MAIN PROGRAM --------------------------------------------
 
 
-def main():
-    lx.eval("user.defNew gl_viewport_size integer momentary")
-    lx.eval('user.def gl_viewport_size username "Open New GL View"')
-    lx.eval('user.def gl_viewport_size dialogname "Which resolution do you need to open?"')
-    lx.eval("user.def gl_viewport_size list Full;Half;Quarter;Tenth")
-    lx.eval('user.def gl_viewport_size listnames "100%;50%;25%;10%"')
-    lx.eval("user.value gl_viewport_size")
+def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
+         filename='preview', filepath="", first_frame=1001, last_frame=1250):
 
-    mode = lx.eval("user.value gl_viewport_size ?")
+    scene = modo.Scene()
 
-    if mode == "Full":
+    if gl_recording_size == '100%':
         percent = 1.0
-    elif mode == "Half":
+    if gl_recording_size == '50%':
         percent = 0.5
-    elif mode == "Quarter":
+    if gl_recording_size == '25%':
         percent = 0.25
-    elif mode == "Tenth":
+    if gl_recording_size == '10%':
         percent = 0.1
+
+    gl_type = gl_recording_type
+
+    if viewport_camera == 'rendercam':
+        capture_camera = viewport_camera
+        capture_camera_name = scene.renderCamera.name
     else:
-        percent = 1
+        capture_camera = scene.item(viewport_camera)
+        capture_camera_name = capture_camera.name
 
-    lx.eval("user.defNew gl_type integer momentary")
-    lx.eval('user.def gl_type username "GL Recording Type"')
-    lx.eval('user.def gl_type dialogname "Do you want to capture a movie or an image sequence?"')
-    lx.eval("user.def gl_type list movie;image")
-    lx.eval('user.def gl_type listnames "Movie;Image Sequence"')
-    lx.eval("user.value gl_type")
+    shading_style = shading_style
 
-    gl_type = lx.eval("user.value gl_type ?")
-
-    all_cameras = get_ids("camera")
-    render_camera = lx.eval("render.camera ?")
-
-    list='rendercam' + ";"
-    listnames="Render Camera;"
-
-
-    for x in all_cameras:
-
-        list += x + ";"
-        listnames += lx.eval('query sceneservice item.name ? %s' % x) + ";"
-
-    lx.out(list)
-    lx.out(listnames)
-
-
-    lx.eval("user.defNew viewport_cam integer momentary")
-    lx.eval('user.def viewport_cam username "Pick Viewport Camera"')
-    lx.eval('user.def viewport_cam dialogname "Which camera do you want to capture?"')
-    lx.eval("user.def viewport_cam list " + list)
-    lx.eval('user.def viewport_cam listnames "' + listnames + '"')
-    lx.eval("user.value viewport_cam")
-
-    capture_camera = lx.eval("user.value viewport_cam ?")
-    if capture_camera == 'rendercam':
-        capture_camera_name = "RenderCam"
+    if gl_recording_type == 'movie':
+        filepath = '{}{}_{}.mov'.format(filepath, filename, capture_camera_name)
     else:
-        capture_camera_name = lx.eval('query sceneservice item.name ? %s' % capture_camera)
-    lx.out(capture_camera)
-    lx.out(capture_camera_name)
+        filepath = '{}{}/{}_{}.jpg'.format(filepath, filename, filename, capture_camera_name)
 
-    lx.eval("user.defNew shading_style integer momentary")
-    lx.eval('user.def shading_style username "Pick Viewport Shading"')
-    lx.eval('user.def shading_style dialogname "Which Shading Style do you want?"')
-    lx.eval("user.def shading_style list gnzgl;advgl;texmod;tex;shade;vmap;sket;wire;shd1;shd2;shd3")
-    lx.eval('user.def shading_style listnames "Advanced;Default;Texture Shaded;Texture;Shaded;Vertex Map;Solid;Wireframe;Gooch Toon Shading;Cel Shading;Reflection"')
-    lx.eval("user.value shading_style")
+    if not os.path.exists(os.path.dirname(filepath)):
+        os.makedirs(os.path.dirname(filepath))
 
-    shading_style = lx.eval("user.value shading_style ?")
+    first_frame = first_frame
+    last_frame = last_frame
 
-    # Get selection
-    save_selection = lx.evalN("query sceneservice selection ? all")
+    save_selection = scene.selected
 
     # Get Render Resolution
-    lx.eval("select.item Render")
-    resX = float(lx.eval("item.channel resX ?"))
-    resY = float(lx.eval("item.channel resY ?"))
+    resX = scene.renderItem.channel('resX').get()
+    resY = scene.renderItem.channel('resY').get()
 
     newResX = int(resX * percent)
     newResY = int(resY * percent)
-
-    # Restore selection
-    restoreSelection(save_selection)
 
     lx.eval('layout.create %s width:%s height:%s style:palette' % (capture_camera_name, newResX, newResY))
     lx.eval('viewport.restore base.3DSceneView false 3Dmodel')
@@ -200,7 +162,7 @@ def main():
     if capture_camera == 'rendercam':
         lx.eval('view3d.renderCamera')
     else:
-        lx.eval('view3d.cameraItem ' + capture_camera)
+        lx.eval('view3d.cameraItem ' + capture_camera_name)
 
     lx.eval('view3d.shadingStyle ' + shading_style)
     lx.eval('view3d.sameAsActive true')
@@ -220,13 +182,11 @@ def main():
         lx.eval("view3d.setGnzBackground environment")
 
     if gl_type == "movie":
-        lx.eval("gl.capture")
-    if gl_type == "image":
-        lx.eval("gl.capture seq:true")
+        gl_type = ""
+    elif gl_type == "image":
+        gl_type = 'seq:true'
 
-    """
-    TODO: !gl.capture seq:true filename:/Users/alex/Documents/Untitled.jpg frameS:1001 frameE:1250 autoPlay:false
-    """
+    lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath, first_frame, last_frame))
 
     lx.eval("layout.closeWindow")
 
