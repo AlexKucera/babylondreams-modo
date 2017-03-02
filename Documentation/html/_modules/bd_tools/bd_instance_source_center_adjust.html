@@ -157,6 +157,7 @@
 <span class="kn">import</span> <span class="nn">lx</span>
 <span class="kn">import</span> <span class="nn">modo</span>
 <span class="kn">import</span> <span class="nn">bd_helpers</span>
+<span class="kn">from</span> <span class="nn">var</span> <span class="k">import</span> <span class="o">*</span>
 
 <span class="c1"># FUNCTIONS -----------------------------------------------</span>
 
@@ -178,6 +179,7 @@
 
     <span class="nb">print</span> <span class="s1">&#39;#&#39;</span> <span class="o">*</span> <span class="mi">20</span>
     <span class="nb">print</span> <span class="s1">&#39;Adjusting Instance Source Centers&#39;</span>
+    <span class="nb">print</span> <span class="n">center_action</span>
 
     <span class="n">scene</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span>
     <span class="n">save_selection</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">selected</span>  <span class="c1"># Save selection for later</span>
@@ -245,7 +247,15 @@
 
             <span class="n">mesh</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">center_action</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">center_action</span> <span class="o">==</span> <span class="s1">&#39;center.matchWorkplane pos&#39;</span><span class="p">:</span>
+
+                <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;select.convert center&#39;</span><span class="p">)</span>
+                <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">center_action</span><span class="p">)</span>
+                <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;select.type item&#39;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">center_action</span><span class="p">)</span>
 
             <span class="n">new_pos_x</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
             <span class="n">new_pos_y</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
