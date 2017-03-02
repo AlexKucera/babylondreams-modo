@@ -149,6 +149,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">lx</span>
@@ -229,6 +230,49 @@
             <span class="n">name</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">Running Time: </span><span class="si">{1:.2f}</span><span class="s1"> seconds&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">running_time</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">running_timer</span></div>
+
+
+<div class="viewcode-block" id="walk_up"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.walk_up">[docs]</a><span class="k">def</span> <span class="nf">walk_up</span><span class="p">(</span><span class="n">bottom</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    mimic os.walk, but walk &#39;up&#39;</span>
+<span class="sd">    instead of down the directory tree</span>
+
+<span class="sd">    os.walk is an awesome generator.</span>
+<span class="sd">    However, I needed the same functionality, only I wanted to walk &#39;up&#39; the directory tree.</span>
+<span class="sd">    This allows searching for files in directories directly above a given directory.</span>
+
+<span class="sd">    via: https://gist.github.com/zdavkeos/1098474</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
+
+    <span class="n">bottom</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">bottom</span><span class="p">)</span>
+
+    <span class="c1"># get files in current dir</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">bottom</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">dirs</span><span class="p">,</span> <span class="n">nondirs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">name</span><span class="p">)):</span>
+            <span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nondirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">yield</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">nondirs</span>
+
+    <span class="n">new_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span>
+
+    <span class="c1"># see if we are at the top</span>
+    <span class="k">if</span> <span class="n">new_path</span> <span class="o">==</span> <span class="n">bottom</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">walk_up</span><span class="p">(</span><span class="n">new_path</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">x</span></div>
 </pre></div>
 
            </div>

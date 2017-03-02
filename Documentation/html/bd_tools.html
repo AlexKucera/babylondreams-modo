@@ -91,7 +91,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">bd_tools package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_blend_hierarchy">bd_tools.bd_blend_hierarchy module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#bd-tools-bd-blend-hierarchy-split-passes-module">bd_tools.bd_blend_hierarchy_split_passes module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_blend_hierarchy_split_passes">bd_tools.bd_blend_hierarchy_split_passes module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_deinstance">bd_tools.bd_deinstance module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_fix_orphans">bd_tools.bd_fix_orphans module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_gl_capture">bd_tools.bd_gl_capture module</a></li>
@@ -176,8 +176,20 @@ parent item and running the command a few things happen:</p>
 <dd></dd></dl>
 
 </div>
-<div class="section" id="bd-tools-bd-blend-hierarchy-split-passes-module">
-<h2>bd_tools.bd_blend_hierarchy_split_passes module<a class="headerlink" href="#bd-tools-bd-blend-hierarchy-split-passes-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-bd_tools.bd_blend_hierarchy_split_passes">
+<span id="bd-tools-bd-blend-hierarchy-split-passes-module"></span><h2>bd_tools.bd_blend_hierarchy_split_passes module<a class="headerlink" href="#module-bd_tools.bd_blend_hierarchy_split_passes" title="Permalink to this headline">¶</a></h2>
+<p>babylondreams - bd_blend_hierarchy_split_passes</p>
+<p>Release Notes:</p>
+<blockquote>
+<div>TODO:
+* <a class="reference external" href="https://docs.python.org/2/library/xml.etree.elementtree.html">https://docs.python.org/2/library/xml.etree.elementtree.html</a>
+* <a class="reference external" href="https://developer.apple.com/library/content/documentation/AppleApplications/Reference/FinalCutPro_XML/Topics/Topics.html#//apple_ref/doc/uid/TP30001149-CH294-SW19">https://developer.apple.com/library/content/documentation/AppleApplications/Reference/FinalCutPro_XML/Topics/Topics.html#//apple_ref/doc/uid/TP30001149-CH294-SW19</a></div></blockquote>
+<p>V0.1 Initial Release - 2017-02-22</p>
+<dl class="function">
+<dt id="bd_tools.bd_blend_hierarchy_split_passes.main">
+<code class="descclassname">bd_tools.bd_blend_hierarchy_split_passes.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_blend_hierarchy_split_passes.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_blend_hierarchy_split_passes.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-bd_tools.bd_deinstance">
 <span id="bd-tools-bd-deinstance-module"></span><h2>bd_tools.bd_deinstance module<a class="headerlink" href="#module-bd_tools.bd_deinstance" title="Permalink to this headline">¶</a></h2>
@@ -224,17 +236,19 @@ type - the type of item to be returned (mesh, camera etc)</p>
 
 <dl class="function">
 <dt id="bd_tools.bd_gl_capture.main">
-<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.main" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">main</code><span class="sig-paren">(</span><em>gl_recording_size=1.0</em>, <em>gl_recording_type='image'</em>, <em>viewport_camera='rendercam'</em>, <em>shading_style='advgl'</em>, <em>filename='preview'</em>, <em>filepath=''</em>, <em>first_frame=1001</em>, <em>last_frame=1250</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="bd_tools.bd_gl_capture.restoreSelection">
 <code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">restoreSelection</code><span class="sig-paren">(</span><em>listSelections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#restoreSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.restoreSelection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used together with:</p>
+<dd><p>Saves a selection for later use.</p>
+<p class="rubric">Example</p>
 <p>global save_selection
 save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
-<p>to save and later restore a selection in modo with</p>
-<p>bd_utils.restoreSelection(save_selection)</p>
+<p>To restore a selection later:</p>
+<blockquote>
+<div>bd_utils.restoreSelection(save_selection)</div></blockquote>
 </dd></dl>
 
 </div>
@@ -268,6 +282,17 @@ save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
 <p class="rubric">Example</p>
 <p>start = bd_helpers.timer()</p>
 <p>bd_helpers.timer(start, &#8220;test&#8221;)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bd_tools.bd_helpers.walk_up">
+<code class="descclassname">bd_tools.bd_helpers.</code><code class="descname">walk_up</code><span class="sig-paren">(</span><em>bottom</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_helpers.html#walk_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_helpers.walk_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>mimic os.walk, but walk &#8216;up&#8217;
+instead of down the directory tree</p>
+<p>os.walk is an awesome generator.
+However, I needed the same functionality, only I wanted to walk &#8216;up&#8217; the directory tree.
+This allows searching for files in directories directly above a given directory.</p>
+<p>via: <a class="reference external" href="https://gist.github.com/zdavkeos/1098474">https://gist.github.com/zdavkeos/1098474</a></p>
 </dd></dl>
 
 </div>

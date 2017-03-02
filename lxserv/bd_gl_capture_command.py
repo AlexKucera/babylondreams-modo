@@ -7,12 +7,15 @@ A simple example of a blessed MODO command using the commander module.
 https://github.com/adamohern/commander for details
 
 """
+import re
 
 import babylondreams
 import lx
 import modo
+import os
 
 from bd_tools import bd_gl_capture
+from bd_tools import bd_helpers
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -78,10 +81,10 @@ class CommandClass(babylondreams.CommanderClass):
             {
                 'name': 'gl_recording_size',
                 'label': "Recording Size (based on render size)",
-                'datatype': 'percent',
-                'default': 1.0,
+                'datatype': 'string',
+                'default': "100%",
                 'values_list_type': 'popup',
-                'values_list': [1.0, .5, .25, .1]
+                'values_list': ['100%', '50%', '25%', '10%']
             },
             {
                 'name': 'gl_recording_type',
@@ -94,7 +97,7 @@ class CommandClass(babylondreams.CommanderClass):
             {
                 'name': 'viewport_camera',
                 'datatype': 'string',
-                'default': self.renderCam(),
+                'default': 'rendercam',
                 'values_list_type': 'popup',
                 'values_list': self.get_cameras
             },
@@ -109,21 +112,30 @@ class CommandClass(babylondreams.CommanderClass):
                                 ('shd3', 'Reflection')]
             },
             {
-                'name': 'light_visibility',
-                'datatype': 'boolean',
-                'default': True
+                'name': 'file_name',
+                'datatype': 'string',
+                'default': self.capture_file(),
+                'values_list_type': 'sPresetText',
+                'values_list': self.capture_file
+            },
+            {
+                'name': 'file_path',
+                'datatype': 'string',
+                'default': self.capture_output(),
+                'values_list_type': 'sPresetText',
+                'values_list': self.capture_output
+            },
+            {
+                'name': 'first_frame',
+                'datatype': 'integer',
+                'default': self.get_range('first'),
+            },
+            {
+                'name': 'last_frame',
+                'datatype': 'integer',
+                'default': self.get_range('last'),
             },
         ]
-
-    def renderCam(self):
-        """
-
-        Returns:
-            string: Returns the render camera's ID.
-
-        """
-        scene = modo.Scene()
-        return scene.renderCamera.id
 
     def get_cameras(self):
         """
@@ -136,25 +148,66 @@ class CommandClass(babylondreams.CommanderClass):
         scene = modo.Scene()
         cameras = scene.items(itype='camera', superType=True)
 
-        all_cameras = [(scene.renderCamera, "Render Camera")]
+        all_cameras = [('rendercam', "Render Camera")]
 
         for camera in cameras:
             all_cameras.append((camera.id, camera.name))
 
         return all_cameras
 
-    def commander_execute(self, msg, flags):
-        """
+    def get_range(self, switch='first'):
+        scene = modo.Scene()
+        frame = scene.renderItem.channel(switch).get()
+        return frame
 
-        Args:
-            msg:
-            flags:
-        """
+    def capture_path(self):
+        scene = modo.Scene()
+        scene_path = scene.filename
+        if scene_path is not None:
+            file = os.path.splitext(os.path.basename(scene_path))[0]
+            dir = os.path.dirname(scene_path)
+
+            for path, directory, files in bd_helpers.walk_up(dir):
+
+                if 'img' in directory:
+
+                    output_path = '{0}/img/cg/previews/'.format(path, file)
+
+                    if not os.path.exists(output_path):
+                        os.makedirs(output_path)
+
+                    output = output_path  # '{0}{1}_preview.jpg'.format(output_path, file)
+
+        else:
+            output = ''
+            file = 'preview'
+
+        return {'output_path': output, 'filename': file}
+
+    def capture_file(self):
+        filename = self.capture_path()
+        name = [filename['filename']]
+        return name
+
+    def capture_output(self):
+        output_path = self.capture_path()
+        output = [output_path['output_path']]
+        return output
+
+    def commander_execute(self, msg, flags):
+
         gl_recording_size = self.commander_arg_value(0)
         gl_recording_type = self.commander_arg_value(1)
+        viewport_camera = self.commander_arg_value(2)
+        shading_style = self.commander_arg_value(3)
+        filename = self.commander_arg_value(4)
+        filepath = self.commander_arg_value(5)
+        first_frame = self.commander_arg_value(6)
+        last_frame = self.commander_arg_value(7)
 
         reload(bd_gl_capture)
-        bd_gl_capture.main()
+        bd_gl_capture.main(gl_recording_size, gl_recording_type, viewport_camera,
+                           shading_style, filename, filepath, first_frame, last_frame)
 
 
 lx.bless(CommandClass, 'bd.gl_capture')
