@@ -171,7 +171,7 @@ class CommandClass(babylondreams.CommanderClass):
 
                 if 'img' in directory:
 
-                    output_path = '{0}/img/cg/previews/'.format(path, file)
+                    output_path = '{0}{1}img{1}cg{1}previews{1}'.format(path, os.sep)
 
                     if not os.path.exists(output_path):
                         os.makedirs(output_path)
