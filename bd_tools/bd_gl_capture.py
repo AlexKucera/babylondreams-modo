@@ -82,7 +82,8 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
 
     lx.eval('layout.create %s width:%s height:%s style:palette' % (capture_camera_name, newResX, newResY))
     lx.eval('viewport.restore base.3DSceneView false 3Dmodel')
-    lx.eval('view3d.bgEnvironment background solid')
+    lx.eval('view3d.bgEnvironment background {0}'.format(bg_style))
+    lx.eval('view3d.bgEnvironment reflection linked')
     lx.eval('view3d.showGrid false')
     lx.eval('view3d.projection cam')
     lx.eval('view3d.controls false')

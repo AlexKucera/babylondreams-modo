@@ -113,6 +113,13 @@ class CommandClass(babylondreams.CommanderClass):
                                 ('shd3', 'Reflection')]
             },
             {
+                'name': 'gl_background',
+                'label': "GL Background",
+                'datatype': 'string',
+                'default': 'environment',
+                'values_list_type': 'popup',
+                'values_list': [('environment', 'Environment'), ('solid', 'None')]
+            },
             {
                 'name': 'replicators',
                 'datatype': 'boolean',
@@ -208,6 +215,7 @@ class CommandClass(babylondreams.CommanderClass):
         filepath = self.commander_arg_value(5)
         first_frame = self.commander_arg_value(6)
         last_frame = self.commander_arg_value(7)
+        bg_stlye = self.commander_arg_value(4)
         replicators = self.commander_arg_value(6)
 
         reload(bd_gl_capture)
