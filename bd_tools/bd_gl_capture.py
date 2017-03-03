@@ -65,6 +65,9 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     first_frame = first_frame
     last_frame = last_frame
 
+    selection = scene.selected
+    scene.deselect()  # Clears the selection so we don't get any unwanted highlighting in the recording
+
     # Get Render Resolution
     resX = scene.renderItem.channel('resX').get()
     resY = scene.renderItem.channel('resY').get()
@@ -112,6 +115,17 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
         lx.eval("view3d.setGnzLighting sceneIBLLights")
         lx.eval("view3d.setGnzBackground environment")
 
+    bbox = []
+    for item in scene.iterItemsFast(itype='mesh'):
+        if item.channel('drawShape').get() == 'custom':
+            bbox.append(item)
+            item.channel('drawShape').set('default')
+
+    for item in scene.iterItemsFast(itype='meshInst'):
+        if item.channel('drawShape').get() == 'custom':
+            bbox.append(item)
+            item.channel('drawShape').set('default')
+
     if gl_type == "movie":
         gl_type = ""
     elif gl_type == "image":
@@ -119,6 +133,11 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
 
     lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
                                                                                        first_frame, last_frame))
+
+    for item in bbox:
+        item.channel('drawShape').set('custom')
+
+    scene.select(selection)
 
     lx.eval("layout.closeWindow")
 
