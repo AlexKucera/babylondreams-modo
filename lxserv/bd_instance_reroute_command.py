@@ -15,7 +15,8 @@ import babylondreams
 import lx
 import modo
 
-from bd_tools import bd_reroute_instances
+from bd_tools import bd_instance_reroute
+from bd_tools.var import *
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -52,8 +53,8 @@ class CommandClass(babylondreams.CommanderClass):
 
         new_source = self.commander_arg_value(0)
 
-        reload(bd_reroute_instances)
-        bd_reroute_instances.main(new_source)
+        reload(bd_instance_reroute)
+        bd_instance_reroute.main(new_source)
 
 
-lx.bless(CommandClass, 'bd.reroute_instances')
+lx.bless(CommandClass, 'bd.instance_reroute')

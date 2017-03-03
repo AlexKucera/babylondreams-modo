@@ -16,6 +16,7 @@ import os
 
 from bd_tools import bd_gl_capture
 from bd_tools import bd_helpers
+from bd_tools.var import *
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -31,52 +32,6 @@ class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
     def commander_arguments(self):
-        """
-            TODO:
-                * RayGL (Off, Fast, Full)
-                * Wireframe
-                * Grid
-                * Viewport Controls and Info
-                * Onion Skinning
-                * Silhouette
-                * Topology Mode
-                * File Path
-                * Auto Versioning
-                * Replicators (None, All)
-                * GL Background (None, Gradient, Environment, Image)
-                * GL Reflection (None, Same as BG, Gradient, Environment, Image)
-                * Enable Deformers Active
-                * Item Visibility
-                    * Lights
-                    * Cameras
-                    * Locators
-                    * Texture Locators
-                    * Meshes
-                    * Instances
-                * Workplane
-                * Turn off Selections
-                * Turn off Normals
-                * Fur
-                * Displacement
-                * Use Shader Tree
-                * Advanced
-                    * Shadows
-                    * Normal Maps
-                    * Bump Maps
-                    * Lighting (Viewport, Scene, Environment, Scene + Environment)
-                    * Background (Viewport, Environment)
-                    * Display Override (None, Without Wireframe, Without Wireframe + Widgets)
-                    * Visibility (Viewport, Render)
-                    * Ambient Occlusion
-                    * AA (Off, 2xH, 2xV, 3x, 4x, 6x, 8x, 9x)
-                    * Transparency (Off, Fast, Correct)
-                    * Screen Space Reflections (Off, Fast, Blurry)
-                    * Dither (Off, Ordered)
-                * Inactive same as active
-                * Disable Bounding Box Display
-
-        :return:
-        """
         return [
             {
                 'name': 'gl_recording_size',
@@ -112,16 +67,37 @@ class CommandClass(babylondreams.CommanderClass):
                                 ('shd3', 'Reflection')]
             },
             {
+                'name': 'gl_background',
+                'label': "GL Background",
+                'datatype': 'string',
+                'default': 'environment',
+                'values_list_type': 'popup',
+                'values_list': [('environment', 'Environment'), ('solid', 'None')]
+            },
+            {
+                'name': 'ray_gl',
+                'label': "RayGL",
+                'datatype': 'string',
+                'default': 'off',
+                'values_list_type': 'popup',
+                'values_list': [('full', ' Full'), ('fast', ' Fast'), ('off', ' Off')]
+            },
+            {
+                'name': 'replicators',
+                'datatype': 'boolean',
+                'default': True
+            },
+            {
                 'name': 'file_name',
                 'datatype': 'string',
-                'default': self.capture_file(),
+                'default': 'preview',
                 'values_list_type': 'sPresetText',
                 'values_list': self.capture_file
             },
             {
                 'name': 'file_path',
                 'datatype': 'string',
-                'default': self.capture_output(),
+                'default': HOME_DIR,
                 'values_list_type': 'sPresetText',
                 'values_list': self.capture_output
             },
@@ -163,6 +139,8 @@ class CommandClass(babylondreams.CommanderClass):
     def capture_path(self):
         scene = modo.Scene()
         scene_path = scene.filename
+        output = os.path.expanduser('~')
+        file = 'preview'
         if scene_path is not None:
             file = os.path.splitext(os.path.basename(scene_path))[0]
             dir = os.path.dirname(scene_path)
@@ -177,10 +155,6 @@ class CommandClass(babylondreams.CommanderClass):
                         os.makedirs(output_path)
 
                     output = output_path  # '{0}{1}_preview.jpg'.format(output_path, file)
-
-        else:
-            output = ''
-            file = 'preview'
 
         return {'output_path': output, 'filename': file}
 
@@ -200,14 +174,17 @@ class CommandClass(babylondreams.CommanderClass):
         gl_recording_type = self.commander_arg_value(1)
         viewport_camera = self.commander_arg_value(2)
         shading_style = self.commander_arg_value(3)
-        filename = self.commander_arg_value(4)
-        filepath = self.commander_arg_value(5)
-        first_frame = self.commander_arg_value(6)
-        last_frame = self.commander_arg_value(7)
+        bg_stlye = self.commander_arg_value(4)
+        raygl = self.commander_arg_value(5)
+        replicators = self.commander_arg_value(6)
+        filename = self.commander_arg_value(7)
+        filepath = self.commander_arg_value(8)
+        first_frame = self.commander_arg_value(9)
+        last_frame = self.commander_arg_value(10)
 
         reload(bd_gl_capture)
-        bd_gl_capture.main(gl_recording_size, gl_recording_type, viewport_camera,
-                           shading_style, filename, filepath, first_frame, last_frame)
+        bd_gl_capture.main(gl_recording_size, gl_recording_type, viewport_camera, shading_style, filename, filepath,
+                           first_frame, last_frame, raygl, replicators, bg_stlye)
 
 
 lx.bless(CommandClass, 'bd.gl_capture')
