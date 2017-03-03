@@ -65,6 +65,11 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     first_frame = first_frame
     last_frame = last_frame
 
+    if replicators:
+        replicator_visibility = 'always'
+    else:
+        replicator_visibility = 'none'
+
     selection = scene.selected
     scene.deselect()  # Clears the selection so we don't get any unwanted highlighting in the recording
 
@@ -83,9 +88,14 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('view3d.controls false')
     lx.eval('view3d.showLights true')
     lx.eval('view3d.showCameras false')
-    lx.eval('view3d.showLocators false')
     lx.eval('view3d.showMeshes true')
     lx.eval('view3d.showInstances true')
+
+    if replicators:
+        lx.eval('view3d.showLocators True')
+    else:
+        lx.eval('view3d.showLocators false')
+
     lx.eval('view3d.showTextureLocators false')
     lx.eval('view3d.showPivots none')
     lx.eval('view3d.showCenters none')
@@ -105,6 +115,7 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('view3d.wireframeOverlay none active')
     lx.eval('view3d.showWireframeItemMode false')
     lx.eval('view3d.showWorkPlane no')
+    lx.eval('view3d.replicators {0}'.format(replicator_visibility))
 
     if capture_camera == 'rendercam':
         lx.eval('view3d.renderCamera')

@@ -113,6 +113,11 @@ class CommandClass(babylondreams.CommanderClass):
                                 ('shd3', 'Reflection')]
             },
             {
+            {
+                'name': 'replicators',
+                'datatype': 'boolean',
+                'default': True
+            },
                 'name': 'file_name',
                 'datatype': 'string',
                 'default': 'preview',
@@ -203,6 +208,7 @@ class CommandClass(babylondreams.CommanderClass):
         filepath = self.commander_arg_value(5)
         first_frame = self.commander_arg_value(6)
         last_frame = self.commander_arg_value(7)
+        replicators = self.commander_arg_value(6)
 
         reload(bd_gl_capture)
         bd_gl_capture.main(gl_recording_size, gl_recording_type, viewport_camera,
