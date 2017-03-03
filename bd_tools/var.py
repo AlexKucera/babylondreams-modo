@@ -13,6 +13,12 @@ V0.1 Initial Release - 2017-02-24
 
 """
 
+# Commands
+
+INSTANCE_REROUTE = 'bd.instance_reroute'
+
+# Variables
+
 BLEND_COMMAND = 'fade'
 
 CENTER_BBOX = 'Center to BBox'
