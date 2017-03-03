@@ -52,18 +52,18 @@ bd_tools.bd_helpers module
     :undoc-members:
     :show-inheritance:
 
-bd_tools.bd_instance_source_center_adjust module
-------------------------------------------------
+bd_tools.bd_instance_reroute module
+-----------------------------------
 
-.. automodule:: bd_tools.bd_instance_source_center_adjust
+.. automodule:: bd_tools.bd_instance_reroute
     :members:
     :undoc-members:
     :show-inheritance:
 
-bd_tools.bd_reroute_instances module
-------------------------------------
+bd_tools.bd_instance_source_center_adjust module
+------------------------------------------------
 
-.. automodule:: bd_tools.bd_reroute_instances
+.. automodule:: bd_tools.bd_instance_source_center_adjust
     :members:
     :undoc-members:
     :show-inheritance:
