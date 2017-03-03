@@ -16,6 +16,7 @@ import os
 
 from bd_tools import bd_gl_capture
 from bd_tools import bd_helpers
+from bd_tools.var import *
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -114,14 +115,14 @@ class CommandClass(babylondreams.CommanderClass):
             {
                 'name': 'file_name',
                 'datatype': 'string',
-                'default': self.capture_file(),
+                'default': 'preview',
                 'values_list_type': 'sPresetText',
                 'values_list': self.capture_file
             },
             {
                 'name': 'file_path',
                 'datatype': 'string',
-                'default': self.capture_output(),
+                'default': HOME_DIR,
                 'values_list_type': 'sPresetText',
                 'values_list': self.capture_output
             },
@@ -163,6 +164,8 @@ class CommandClass(babylondreams.CommanderClass):
     def capture_path(self):
         scene = modo.Scene()
         scene_path = scene.filename
+        output = os.path.expanduser('~')
+        file = 'preview'
         if scene_path is not None:
             file = os.path.splitext(os.path.basename(scene_path))[0]
             dir = os.path.dirname(scene_path)
@@ -177,10 +180,6 @@ class CommandClass(babylondreams.CommanderClass):
                         os.makedirs(output_path)
 
                     output = output_path  # '{0}{1}_preview.jpg'.format(output_path, file)
-
-        else:
-            output = ''
-            file = 'preview'
 
         return {'output_path': output, 'filename': file}
 
