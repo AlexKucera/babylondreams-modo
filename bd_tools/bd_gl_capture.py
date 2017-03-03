@@ -31,8 +31,11 @@ import modo
 
 
 def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
-         filename='preview', filepath="", first_frame=1001, last_frame=1250):
+         filename='preview', filepath="", first_frame=1001, last_frame=1250, raygl='off', replicators=False,
+         bg_style='environment'):
     scene = modo.Scene()
+
+    # Initialize main variables
 
     if gl_recording_size == '100%':
         percent = 1.0
@@ -65,6 +68,14 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     first_frame = first_frame
     last_frame = last_frame
 
+    if replicators:
+        replicator_visibility = 'always'
+    else:
+        replicator_visibility = 'none'
+
+    selection = scene.selected
+    scene.deselect()  # Clears the selection so we don't get any unwanted highlighting in the recording
+
     # Get Render Resolution
     resX = scene.renderItem.channel('resX').get()
     resY = scene.renderItem.channel('resY').get()
@@ -74,21 +85,43 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
 
     lx.eval('layout.create %s width:%s height:%s style:palette' % (capture_camera_name, newResX, newResY))
     lx.eval('viewport.restore base.3DSceneView false 3Dmodel')
-    lx.eval('view3d.bgEnvironment background solid')
+    lx.eval('view3d.bgEnvironment background {0}'.format(bg_style))
+    lx.eval('view3d.bgEnvironment reflection linked')
     lx.eval('view3d.showGrid false')
     lx.eval('view3d.projection cam')
     lx.eval('view3d.controls false')
-    lx.eval('view3d.showLights false')
+    lx.eval('view3d.showLights true')
     lx.eval('view3d.showCameras false')
-    lx.eval('view3d.showLocators false')
+    lx.eval('view3d.showMeshes true')
+    lx.eval('view3d.showInstances true')
+
+    if replicators:
+        lx.eval('view3d.showLocators True')
+    else:
+        lx.eval('view3d.showLocators false')
+
     lx.eval('view3d.showTextureLocators false')
+    lx.eval('view3d.showPivots none')
+    lx.eval('view3d.showCenters none')
     lx.eval('view3d.showBackdrop false')
     lx.eval('view3d.showSelections false')
     lx.eval('view3d.fillSelected false')
     lx.eval('view3d.outlineSelected false')
+    lx.eval('view3d.silhouette false')
+    lx.eval('view3d.onionSkin false')
+    lx.eval('view3d.enableDeformers true')
+    lx.eval('view3d.useShaderTree true')
+    lx.eval('view3d.meshSmoothing true')
+    lx.eval('view3d.drawDisp true')
+    lx.eval('view3d.drawFur true')
     lx.eval('view3d.showSelectionRollover false')
     lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.wireframeOverlay none active')
+    lx.eval('view3d.showWireframeItemMode false')
+    lx.eval('view3d.showWorkPlane no')
+    lx.eval('view3d.rayGL {0}'.format(raygl))
+    lx.eval('pref.value preview.rglQuality draft')
+    lx.eval('view3d.replicators {0}'.format(replicator_visibility))
 
     if capture_camera == 'rendercam':
         lx.eval('view3d.renderCamera')
@@ -112,6 +145,17 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
         lx.eval("view3d.setGnzLighting sceneIBLLights")
         lx.eval("view3d.setGnzBackground environment")
 
+    bbox = []
+    for item in scene.iterItemsFast(itype='mesh'):
+        if item.channel('drawShape').get() == 'custom':
+            bbox.append(item)
+            item.channel('drawShape').set('default')
+
+    for item in scene.iterItemsFast(itype='meshInst'):
+        if item.channel('drawShape').get() == 'custom':
+            bbox.append(item)
+            item.channel('drawShape').set('default')
+
     if gl_type == "movie":
         gl_type = ""
     elif gl_type == "image":
@@ -119,6 +163,11 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
 
     lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
                                                                                        first_frame, last_frame))
+
+    for item in bbox:
+        item.channel('drawShape').set('custom')
+
+    scene.select(selection)
 
     lx.eval("layout.closeWindow")
 
