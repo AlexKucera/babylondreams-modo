@@ -96,8 +96,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_fix_orphans">bd_tools.bd_fix_orphans module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_gl_capture">bd_tools.bd_gl_capture module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_helpers">bd_tools.bd_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_instance_reroute">bd_tools.bd_instance_reroute module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_instance_source_center_adjust">bd_tools.bd_instance_source_center_adjust module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_reroute_instances">bd_tools.bd_reroute_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_transfer_anim">bd_tools.bd_transfer_anim module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.var">bd_tools.var module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools">Module contents</a></li>
@@ -226,30 +226,9 @@ parent item and running the command a few things happen:</p>
 <p>V0.1 Initial Release - 2016-11-23
 v0.2 Trigger GL Recording and close the window after recording has finished - 2016-11-24</p>
 <dl class="function">
-<dt id="bd_tools.bd_gl_capture.get_ids">
-<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">get_ids</code><span class="sig-paren">(</span><em>itemtype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#get_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.get_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of item IDs of type &#8216;type&#8217;
-Returns a list of item IDs or None if there are no items of the specified
-type or if there&#8217;s an error. Error printed is to Event log.
-type - the type of item to be returned (mesh, camera etc)</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="bd_tools.bd_gl_capture.main">
-<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">main</code><span class="sig-paren">(</span><em>gl_recording_size=1.0</em>, <em>gl_recording_type='image'</em>, <em>viewport_camera='rendercam'</em>, <em>shading_style='advgl'</em>, <em>filename='preview'</em>, <em>filepath=''</em>, <em>first_frame=1001</em>, <em>last_frame=1250</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.main" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">main</code><span class="sig-paren">(</span><em>gl_recording_size=1.0</em>, <em>gl_recording_type='image'</em>, <em>viewport_camera='rendercam'</em>, <em>shading_style='advgl'</em>, <em>filename='preview'</em>, <em>filepath=''</em>, <em>first_frame=1001</em>, <em>last_frame=1250</em>, <em>raygl='off'</em>, <em>replicators=False</em>, <em>bg_style='environment'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="function">
-<dt id="bd_tools.bd_gl_capture.restoreSelection">
-<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">restoreSelection</code><span class="sig-paren">(</span><em>listSelections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#restoreSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.restoreSelection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves a selection for later use.</p>
-<p class="rubric">Example</p>
-<p>global save_selection
-save_selection = lx.evalN(&#8220;query sceneservice selection ? all&#8221;)</p>
-<p>To restore a selection later:</p>
-<blockquote>
-<div>bd_utils.restoreSelection(save_selection)</div></blockquote>
-</dd></dl>
 
 </div>
 <div class="section" id="module-bd_tools.bd_helpers">
@@ -296,6 +275,25 @@ This allows searching for files in directories directly above a given directory.
 </dd></dl>
 
 </div>
+<div class="section" id="module-bd_tools.bd_instance_reroute">
+<span id="bd-tools-bd-instance-reroute-module"></span><h2>bd_tools.bd_instance_reroute module<a class="headerlink" href="#module-bd_tools.bd_instance_reroute" title="Permalink to this headline">¶</a></h2>
+<p>babylondreams - bd_reroute_instances</p>
+<p>Release Notes:</p>
+<blockquote>
+<div><p>select as many instances as you want and execute the command. it will ask you for a new mesh source.
+pick one from the dropdown or put in a new name and an empty mesh will be created as new source.</p>
+<blockquote>
+<div><p>Only works in modo 10.2v1 and lower for now.</p>
+<p>Already bugged: <a class="reference external" href="http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=54793">http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=54793</a></p>
+</div></blockquote>
+</div></blockquote>
+<p>V0.1 Initial Release - 2017-02-23</p>
+<dl class="function">
+<dt id="bd_tools.bd_instance_reroute.main">
+<code class="descclassname">bd_tools.bd_instance_reroute.</code><code class="descname">main</code><span class="sig-paren">(</span><em>new_source</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_instance_reroute.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_instance_reroute.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-bd_tools.bd_instance_source_center_adjust">
 <span id="bd-tools-bd-instance-source-center-adjust-module"></span><h2>bd_tools.bd_instance_source_center_adjust module<a class="headerlink" href="#module-bd_tools.bd_instance_source_center_adjust" title="Permalink to this headline">¶</a></h2>
 <p>Allows adjustments to the center of an object that is the source of a bunch of instances without the instances flying off in all directions.</p>
@@ -312,25 +310,6 @@ This allows searching for files in directories directly above a given directory.
 <dl class="function">
 <dt id="bd_tools.bd_instance_source_center_adjust.main">
 <code class="descclassname">bd_tools.bd_instance_source_center_adjust.</code><code class="descname">main</code><span class="sig-paren">(</span><em>center_action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_instance_source_center_adjust.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_instance_source_center_adjust.main" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
-<div class="section" id="module-bd_tools.bd_reroute_instances">
-<span id="bd-tools-bd-reroute-instances-module"></span><h2>bd_tools.bd_reroute_instances module<a class="headerlink" href="#module-bd_tools.bd_reroute_instances" title="Permalink to this headline">¶</a></h2>
-<p>babylondreams - bd_reroute_instances</p>
-<p>Release Notes:</p>
-<blockquote>
-<div><p>select as many instances as you want and execute the command. it will ask you for a new mesh source.
-pick one from the dropdown or put in a new name and an empty mesh will be created as new source.</p>
-<blockquote>
-<div><p>Only works in modo 10.2v1 and lower for now.</p>
-<p>Already bugged: <a class="reference external" href="http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=54793">http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=54793</a></p>
-</div></blockquote>
-</div></blockquote>
-<p>V0.1 Initial Release - 2017-02-23</p>
-<dl class="function">
-<dt id="bd_tools.bd_reroute_instances.main">
-<code class="descclassname">bd_tools.bd_reroute_instances.</code><code class="descname">main</code><span class="sig-paren">(</span><em>new_source</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_reroute_instances.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_reroute_instances.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
