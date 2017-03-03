@@ -32,52 +32,6 @@ class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
     def commander_arguments(self):
-        """
-            TODO:
-                * RayGL (Off, Fast, Full)
-                * Wireframe
-                * Grid
-                * Viewport Controls and Info
-                * Onion Skinning
-                * Silhouette
-                * Topology Mode
-                * File Path
-                * Auto Versioning
-                * Replicators (None, All)
-                * GL Background (None, Gradient, Environment, Image)
-                * GL Reflection (None, Same as BG, Gradient, Environment, Image)
-                * Enable Deformers Active
-                * Item Visibility
-                    * Lights
-                    * Cameras
-                    * Locators
-                    * Texture Locators
-                    * Meshes
-                    * Instances
-                * Workplane
-                * Turn off Selections
-                * Turn off Normals
-                * Fur
-                * Displacement
-                * Use Shader Tree
-                * Advanced
-                    * Shadows
-                    * Normal Maps
-                    * Bump Maps
-                    * Lighting (Viewport, Scene, Environment, Scene + Environment)
-                    * Background (Viewport, Environment)
-                    * Display Override (None, Without Wireframe, Without Wireframe + Widgets)
-                    * Visibility (Viewport, Render)
-                    * Ambient Occlusion
-                    * AA (Off, 2xH, 2xV, 3x, 4x, 6x, 8x, 9x)
-                    * Transparency (Off, Fast, Correct)
-                    * Screen Space Reflections (Off, Fast, Blurry)
-                    * Dither (Off, Ordered)
-                * Inactive same as active
-                * Disable Bounding Box Display
-
-        :return:
-        """
         return [
             {
                 'name': 'gl_recording_size',
@@ -229,8 +183,8 @@ class CommandClass(babylondreams.CommanderClass):
         last_frame = self.commander_arg_value(10)
 
         reload(bd_gl_capture)
-        bd_gl_capture.main(gl_recording_size, gl_recording_type, viewport_camera,
-                           shading_style, filename, filepath, first_frame, last_frame)
+        bd_gl_capture.main(gl_recording_size, gl_recording_type, viewport_camera, shading_style, filename, filepath,
+                           first_frame, last_frame, raygl, replicators, bg_stlye)
 
 
 lx.bless(CommandClass, 'bd.gl_capture')
