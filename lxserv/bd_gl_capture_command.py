@@ -121,10 +121,19 @@ class CommandClass(babylondreams.CommanderClass):
                 'values_list': [('environment', 'Environment'), ('solid', 'None')]
             },
             {
+                'name': 'ray_gl',
+                'label': "RayGL",
+                'datatype': 'string',
+                'default': 'off',
+                'values_list_type': 'popup',
+                'values_list': [('full', ' Full'), ('fast', ' Fast'), ('off', ' Off')]
+            },
+            {
                 'name': 'replicators',
                 'datatype': 'boolean',
                 'default': True
             },
+            {
                 'name': 'file_name',
                 'datatype': 'string',
                 'default': 'preview',
@@ -211,12 +220,13 @@ class CommandClass(babylondreams.CommanderClass):
         gl_recording_type = self.commander_arg_value(1)
         viewport_camera = self.commander_arg_value(2)
         shading_style = self.commander_arg_value(3)
-        filename = self.commander_arg_value(4)
-        filepath = self.commander_arg_value(5)
-        first_frame = self.commander_arg_value(6)
-        last_frame = self.commander_arg_value(7)
         bg_stlye = self.commander_arg_value(4)
+        raygl = self.commander_arg_value(5)
         replicators = self.commander_arg_value(6)
+        filename = self.commander_arg_value(7)
+        filepath = self.commander_arg_value(8)
+        first_frame = self.commander_arg_value(9)
+        last_frame = self.commander_arg_value(10)
 
         reload(bd_gl_capture)
         bd_gl_capture.main(gl_recording_size, gl_recording_type, viewport_camera,

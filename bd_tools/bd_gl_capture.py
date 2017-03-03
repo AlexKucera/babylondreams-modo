@@ -116,6 +116,8 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('view3d.wireframeOverlay none active')
     lx.eval('view3d.showWireframeItemMode false')
     lx.eval('view3d.showWorkPlane no')
+    lx.eval('view3d.rayGL {0}'.format(raygl))
+    lx.eval('pref.value preview.rglQuality draft')
     lx.eval('view3d.replicators {0}'.format(replicator_visibility))
 
     if capture_camera == 'rendercam':
