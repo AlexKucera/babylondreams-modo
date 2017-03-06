@@ -11,6 +11,7 @@ Todo:
     * use scene range checkbox
     * global pipeline config prefs (image paths etc.)
     * automatic naming (with preview)
+    * versioning/overwrite checkbox
 
 """
 import re
