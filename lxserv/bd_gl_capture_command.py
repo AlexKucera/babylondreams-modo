@@ -8,10 +8,7 @@ https://github.com/adamohern/commander for details
 
 Todo:
 
-    * use scene range checkbox
     * global pipeline config prefs (image paths etc.)
-    * automatic naming (with preview)
-    * versioning/overwrite checkbox
 
 """
 import re
@@ -42,7 +39,7 @@ class CommandClass(babylondreams.CommanderClass):
         return [
             {
                 'name': 'gl_recording_size',
-                'label': "Recording Size (based on render size)",
+                'label': "Recording Res (Render res)",
                 'datatype': 'string',
                 'default': "100%",
                 'values_list_type': 'popup',
@@ -50,6 +47,7 @@ class CommandClass(babylondreams.CommanderClass):
             },
             {
                 'name': 'gl_recording_type',
+                'label': "Recording Format",
                 'datatype': 'string',
                 'default': 'image',
                 'values_list_type': 'popup',
@@ -90,7 +88,19 @@ class CommandClass(babylondreams.CommanderClass):
                 'values_list': [('full', ' Full'), ('fast', ' Fast'), ('off', ' Off')]
             },
             {
-                'name': 'replicators',
+                'name': 'replicator_visibility',
+                'datatype': 'boolean',
+                'default': True
+            },
+            {
+                'name': 'automatic_naming',
+                'label': 'Automatic Naming (based on project definition)',
+                'datatype': 'boolean',
+                'default': True,
+            },
+            {
+                'name': 'overwrite',
+                'label': 'Overwrite? (Versions up if disabled)',
                 'datatype': 'boolean',
                 'default': True
             },
@@ -107,6 +117,11 @@ class CommandClass(babylondreams.CommanderClass):
                 'default': HOME_DIR,
                 'values_list_type': 'sPresetText',
                 'values_list': self.capture_output
+            },
+            {
+                'name': 'use_scene_range',
+                'datatype': 'boolean',
+                'default': True,
             },
             {
                 'name': 'first_frame',
@@ -129,11 +144,10 @@ class CommandClass(babylondreams.CommanderClass):
 
         """
         scene = modo.Scene()
-        cameras = scene.items(itype='camera', superType=True)
 
         all_cameras = [('rendercam', "Render Camera")]
 
-        for camera in cameras:
+        for camera in scene.iterItemsFast(itype='camera'):
             all_cameras.append((camera.id, camera.name))
 
         return all_cameras
@@ -143,55 +157,34 @@ class CommandClass(babylondreams.CommanderClass):
         frame = scene.renderItem.channel(switch).get()
         return frame
 
-    def capture_path(self):
-        scene = modo.Scene()
-        scene_path = scene.filename
-        output = os.path.expanduser('~')
-        file = 'preview'
-        if scene_path is not None:
-            file = os.path.splitext(os.path.basename(scene_path))[0]
-            dir = os.path.dirname(scene_path)
-
-            for path, directory, files in bd_helpers.walk_up(dir):
-
-                if 'img' in directory:
-
-                    output_path = '{0}{1}img{1}cg{1}previews{1}'.format(path, os.sep)
-
-                    if not os.path.exists(output_path):
-                        os.makedirs(output_path)
-
-                    output = output_path  # '{0}{1}_preview.jpg'.format(output_path, file)
-
-        return {'output_path': output, 'filename': file}
-
     def capture_file(self):
-        filename = self.capture_path()
+        filename = bd_gl_capture.capture_path()
         name = [filename['filename']]
         return name
 
     def capture_output(self):
-        output_path = self.capture_path()
+        output_path = bd_gl_capture.capture_path()
         output = [output_path['output_path']]
         return output
 
     def commander_execute(self, msg, flags):
-
-        gl_recording_size = self.commander_arg_value(0)
-        gl_recording_type = self.commander_arg_value(1)
-        viewport_camera = self.commander_arg_value(2)
-        shading_style = self.commander_arg_value(3)
-        bg_stlye = self.commander_arg_value(4)
-        raygl = self.commander_arg_value(5)
-        replicators = self.commander_arg_value(6)
-        filename = self.commander_arg_value(7)
-        filepath = self.commander_arg_value(8)
-        first_frame = self.commander_arg_value(9)
-        last_frame = self.commander_arg_value(10)
+        arguments = self.commander_args()
 
         reload(bd_gl_capture)
-        bd_gl_capture.main(gl_recording_size, gl_recording_type, viewport_camera, shading_style, filename, filepath,
-                           first_frame, last_frame, raygl, replicators, bg_stlye)
+        bd_gl_capture.main(gl_recording_size=arguments['gl_recording_size'],
+                           gl_recording_type=arguments['gl_recording_type'],
+                           viewport_camera=arguments['viewport_camera'],
+                           shading_style=arguments['shading_style'],
+                           filename=arguments['file_name'],
+                           filepath=arguments['file_path'],
+                           first_frame=arguments['first_frame'],
+                           last_frame=arguments['last_frame'],
+                           raygl=arguments['ray_gl'],
+                           replicators=arguments['replicator_visibility'],
+                           bg_style=arguments['gl_background'],
+                           use_scene_range=arguments['use_scene_range'],
+                           automatic_naming=arguments['automatic_naming'],
+                           overwrite=arguments['overwrite'])
 
 
 lx.bless(CommandClass, 'bd.gl_capture')

@@ -18,13 +18,38 @@ v0.2 Trigger GL Recording and close the window after recording has finished - 20
 
 """
 import os
+import re
 import traceback
 
 import lx
 import modo
 
+from bd_tools import bd_helpers
 
 # FUNCTIONS -----------------------------------------------
+
+
+def capture_path():
+    scene = modo.Scene()
+    scene_path = scene.filename
+    output = os.path.expanduser('~')
+    file = 'preview'
+    if scene_path is not None:
+        file = os.path.splitext(os.path.basename(scene_path))[0]
+        dir = os.path.dirname(scene_path)
+
+        for path, directory, files in bd_helpers.walk_up(dir):
+
+            if 'img' in directory:
+
+                output_path = '{0}{1}img{1}cg{1}previews{1}'.format(path, os.sep)
+
+                if not os.path.exists(output_path):
+                    os.makedirs(output_path)
+
+                output = output_path  # '{0}{1}_preview.jpg'.format(output_path, file)
+
+    return {'output_path': output, 'filename': file}
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
@@ -32,7 +57,7 @@ import modo
 
 def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
          filename='preview', filepath="", first_frame=1001, last_frame=1250, raygl='off', replicators=False,
-         bg_style='environment'):
+         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True):
     scene = modo.Scene()
 
     # Initialize main variables
@@ -57,16 +82,55 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
 
     shading_style = shading_style
 
+    if automatic_naming:
+        filename = capture_path()['filename']
+        filepath = capture_path()['output_path']
+
     if gl_recording_type == 'movie':
         filepath = '{}{}_{}.mov'.format(filepath, filename, capture_camera_name)
     else:
         filepath = '{0}{1}{3}{1}_{2}.jpg'.format(filepath, filename, capture_camera_name, os.sep)
 
+    print(filepath)
+    if not overwrite:
+        exists = True
+        version = 1
+        while exists:
+
+            if os.path.exists(filepath):
+                path = os.path.split(filepath)
+                name = os.path.splitext(path[1])
+
+                regex = re.compile('(.*)(_v)([0-9]{2,}$)')
+                match = re.match(regex, name[0])
+
+                if match is None:
+                    version = '01'
+                    new_name = name[0]
+                else:
+                    new_name = match.group(1)
+                    version = str(int(version) + 1).zfill(2)
+
+                if gl_recording_type == 'image':
+                    new_path = "{0}_v{1}".format(path[0], version)
+                else:
+                    new_path = path[0]
+
+                filepath = "{0}{1}{2}_v{3}{4}".format(new_path, os.sep, new_name, version, name[1])
+            else:
+                exists = False
+
+    print(filepath)
+
     if not os.path.exists(os.path.dirname(filepath)):
         os.makedirs(os.path.dirname(filepath))
 
-    first_frame = first_frame
-    last_frame = last_frame
+    if use_scene_range:
+        first_frame = scene.renderItem.channel('first').get()
+        last_frame = scene.renderItem.channel('last').get()
+    else:
+        first_frame = first_frame
+        last_frame = last_frame
 
     if replicators:
         replicator_visibility = 'always'
@@ -161,8 +225,10 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     elif gl_type == "image":
         gl_type = 'seq:true'
 
-    lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
+    print('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
                                                                                        first_frame, last_frame))
+    #lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
+    #                                                                                   first_frame, last_frame))
 
     for item in bbox:
         item.channel('drawShape').set('custom')
