@@ -6,6 +6,12 @@
 A simple example of a blessed MODO command using the commander module.
 https://github.com/adamohern/commander for details
 
+Todo:
+
+    * use scene range checkbox
+    * global pipeline config prefs (image paths etc.)
+    * automatic naming (with preview)
+
 """
 import re
 
