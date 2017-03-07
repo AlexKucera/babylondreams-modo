@@ -226,6 +226,8 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
         gl_type = 'seq:true'
 
     print('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
+                                                                                     first_frame, last_frame))
+    lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
                                                                                        first_frame, last_frame))
     #lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
     #                                                                                   first_frame, last_frame))
