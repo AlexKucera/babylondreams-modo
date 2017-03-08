@@ -4,6 +4,14 @@ bd_tools package
 Submodules
 ----------
 
+bd_tools.bd_bbox_toggle module
+------------------------------
+
+.. automodule:: bd_tools.bd_bbox_toggle
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 bd_tools.bd_blend_hierarchy module
 ----------------------------------
 
