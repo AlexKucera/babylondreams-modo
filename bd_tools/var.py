@@ -21,6 +21,7 @@ INSTANCE_REROUTE = 'bd.instance_reroute'
 # Variables
 
 HOME_DIR = '{}{}'.format(os.path.expanduser('~'), os.sep)
+BD_PIPELINE = "/Volumes/ProjectsRaid/x_Pipeline/x_AppPlugins/bd_pipeline"
 
 BLEND_COMMAND = 'fade'
 

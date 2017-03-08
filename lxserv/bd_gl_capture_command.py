@@ -184,7 +184,9 @@ class CommandClass(babylondreams.CommanderClass):
                            bg_style=arguments['gl_background'],
                            use_scene_range=arguments['use_scene_range'],
                            automatic_naming=arguments['automatic_naming'],
-                           overwrite=arguments['overwrite'])
+                           overwrite=arguments['overwrite'],
+                           capture_file=self.capture_file()[0],
+                           capture_path=self.capture_output()[0])
 
 
 lx.bless(CommandClass, 'bd.gl_capture')

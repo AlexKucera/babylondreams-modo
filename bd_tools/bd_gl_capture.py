@@ -23,8 +23,13 @@ import traceback
 
 import lx
 import modo
+import sys
 
 from bd_tools import bd_helpers
+
+from var import *
+from bd_globals import *
+
 
 # FUNCTIONS -----------------------------------------------
 
@@ -32,24 +37,29 @@ from bd_tools import bd_helpers
 def capture_path():
     scene = modo.Scene()
     scene_path = scene.filename
-    output = os.path.expanduser('~')
-    file = 'preview'
+    output = os.path.expanduser('~') + "/"
+    file = 'playblast'
+
     if scene_path is not None:
+
+        project = find_project(scene_path)
+        project_config = projectconfig(scene_path)
+
         file = os.path.splitext(os.path.basename(scene_path))[0]
-        dir = os.path.dirname(scene_path)
 
-        for path, directory, files in bd_helpers.walk_up(dir):
+        output ='{project_dir}{sep}{img}{sep}{previews}{sep}'.format(
+            sep=os.sep,
+            project_dir=project['project_dir'],
+            img=project_config['images/parent folder'],
+            previews=project_config['images/playblasts']
+        )
 
-            if 'img' in directory:
-
-                output_path = '{0}{1}img{1}cg{1}previews{1}'.format(path, os.sep)
-
-                if not os.path.exists(output_path):
-                    os.makedirs(output_path)
-
-                output = output_path  # '{0}{1}_preview.jpg'.format(output_path, file)
+    if not os.path.exists(output):
+        os.makedirs(output)
 
     return {'output_path': output, 'filename': file}
+
+
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
@@ -57,7 +67,8 @@ def capture_path():
 
 def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
          filename='preview', filepath="", first_frame=1001, last_frame=1250, raygl='off', replicators=False,
-         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True):
+         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True,
+         capture_file='playblast', capture_path=HOME_DIR):
     scene = modo.Scene()
 
     # Initialize main variables
@@ -82,22 +93,33 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
 
     shading_style = shading_style
 
+    if use_scene_range:
+        first_frame = scene.renderItem.channel('first').get()
+        last_frame = scene.renderItem.channel('last').get()
+    else:
+        first_frame = first_frame
+        last_frame = last_frame
+
     if automatic_naming:
-        filename = capture_path()['filename']
-        filepath = capture_path()['output_path']
+        filename = capture_file
+        filepath = capture_path
 
     if gl_recording_type == 'movie':
         filepath = '{}{}_{}.mov'.format(filepath, filename, capture_camera_name)
     else:
         filepath = '{0}{1}{3}{1}_{2}.jpg'.format(filepath, filename, capture_camera_name, os.sep)
 
-    print(filepath)
     if not overwrite:
         exists = True
         version = 1
         while exists:
 
-            if os.path.exists(filepath):
+            if gl_recording_type == 'image':
+                checkpath = '{0}_{1}{2}'.format(os.path.splitext(filepath)[0], first_frame, os.path.splitext(filepath)[1])
+            else:
+                checkpath = filename
+
+            if os.path.exists(checkpath):
                 path = os.path.split(filepath)
                 name = os.path.splitext(path[1])
 
@@ -120,17 +142,8 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
             else:
                 exists = False
 
-    print(filepath)
-
     if not os.path.exists(os.path.dirname(filepath)):
         os.makedirs(os.path.dirname(filepath))
-
-    if use_scene_range:
-        first_frame = scene.renderItem.channel('first').get()
-        last_frame = scene.renderItem.channel('last').get()
-    else:
-        first_frame = first_frame
-        last_frame = last_frame
 
     if replicators:
         replicator_visibility = 'always'
@@ -229,8 +242,6 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
                                                                                      first_frame, last_frame))
     lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
                                                                                        first_frame, last_frame))
-    #lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
-    #                                                                                   first_frame, last_frame))
 
     for item in bbox:
         item.channel('drawShape').set('custom')

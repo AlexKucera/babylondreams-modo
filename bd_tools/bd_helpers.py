@@ -22,6 +22,11 @@ import time
 import lx
 import modo
 
+from var import *
+
+sys.path.append(BD_PIPELINE)
+from bd_globals import *
+
 
 def selected(num=1):
     """
