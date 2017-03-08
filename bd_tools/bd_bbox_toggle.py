@@ -26,6 +26,15 @@ from var import *
 
 # MAIN PROGRAM --------------------------------------------
 def main(state='custom'):
+    """
+    Toggles a scenes or selection hierarchies instances to Bounding Box or Default Display.
+
+    Args:
+        state: Custom or Default
+
+    Returns: Nothing
+
+    """
 
     start_timer = bd_helpers.timer()
 
