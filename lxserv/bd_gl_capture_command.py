@@ -95,6 +95,14 @@ class CommandClass(babylondreams.CommanderClass):
                 'values_list': [('always', 'Visible'), ('none', ' Hidden')]
             },
             {
+                'name': 'bbox_toggle',
+                'label': "Bounding Box Display",
+                'datatype': 'string',
+                'default': 'full',
+                'values_list_type': 'popup',
+                'values_list': [('full', 'Geo Visible'), ('bbox', 'BBox On')]
+            },
+            {
                 'name': 'automatic_naming',
                 'label': 'Automatic Name & Path (based on project definition)',
                 'datatype': 'boolean',
@@ -186,7 +194,8 @@ class CommandClass(babylondreams.CommanderClass):
                            bg_style=arguments['gl_background'],
                            use_scene_range=arguments['use_scene_range'],
                            automatic_naming=arguments['automatic_naming'],
-                           overwrite=arguments['overwrite'])
+                           overwrite=arguments['overwrite'],
+                           bbox_toggle=arguments['bbox_toggle'])
 
 
 lx.bless(CommandClass, 'bd.gl_capture')
