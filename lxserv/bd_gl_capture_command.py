@@ -96,7 +96,7 @@ class CommandClass(babylondreams.CommanderClass):
             },
             {
                 'name': 'automatic_naming',
-                'label': 'Automatic Naming (based on project definition)',
+                'label': 'Automatic Name & Path (based on project definition)',
                 'datatype': 'boolean',
                 'default': True,
             },
