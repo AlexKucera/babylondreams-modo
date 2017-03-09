@@ -90,6 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="babylondreams.html">babylondreams package</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">bd_tools package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_bbox_toggle">bd_tools.bd_bbox_toggle module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_blend_hierarchy">bd_tools.bd_blend_hierarchy module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_blend_hierarchy_split_passes">bd_tools.bd_blend_hierarchy_split_passes module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bd_tools.bd_deinstance">bd_tools.bd_deinstance module</a></li>
@@ -155,6 +156,27 @@
 <h1>bd_tools package<a class="headerlink" href="#bd-tools-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-bd_tools.bd_bbox_toggle">
+<span id="bd-tools-bd-bbox-toggle-module"></span><h2>bd_tools.bd_bbox_toggle module<a class="headerlink" href="#module-bd_tools.bd_bbox_toggle" title="Permalink to this headline">¶</a></h2>
+<p>babylondreams - bd_bbox_toggle</p>
+<p>Release Notes:</p>
+<p>V0.1 Initial Release - 2017-03-08</p>
+<dl class="function">
+<dt id="bd_tools.bd_bbox_toggle.main">
+<code class="descclassname">bd_tools.bd_bbox_toggle.</code><code class="descname">main</code><span class="sig-paren">(</span><em>state='custom'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_bbox_toggle.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_bbox_toggle.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles a scenes or selection hierarchies instances to Bounding Box or Default Display.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>state</strong> &#8211; Custom or Default</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: Nothing</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-bd_tools.bd_blend_hierarchy">
 <span id="bd-tools-bd-blend-hierarchy-module"></span><h2>bd_tools.bd_blend_hierarchy module<a class="headerlink" href="#module-bd_tools.bd_blend_hierarchy" title="Permalink to this headline">¶</a></h2>
@@ -226,8 +248,13 @@ parent item and running the command a few things happen:</p>
 <p>V0.1 Initial Release - 2016-11-23
 v0.2 Trigger GL Recording and close the window after recording has finished - 2016-11-24</p>
 <dl class="function">
+<dt id="bd_tools.bd_gl_capture.capture_path">
+<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">capture_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#capture_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.capture_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="bd_tools.bd_gl_capture.main">
-<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">main</code><span class="sig-paren">(</span><em>gl_recording_size=1.0</em>, <em>gl_recording_type='image'</em>, <em>viewport_camera='rendercam'</em>, <em>shading_style='advgl'</em>, <em>filename='preview'</em>, <em>filepath=''</em>, <em>first_frame=1001</em>, <em>last_frame=1250</em>, <em>raygl='off'</em>, <em>replicators=False</em>, <em>bg_style='environment'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.main" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">bd_tools.bd_gl_capture.</code><code class="descname">main</code><span class="sig-paren">(</span><em>gl_recording_size=1.0</em>, <em>gl_recording_type='image'</em>, <em>viewport_camera='rendercam'</em>, <em>shading_style='advgl'</em>, <em>filename='preview'</em>, <em>filepath=''</em>, <em>first_frame=1001</em>, <em>last_frame=1250</em>, <em>raygl='off'</em>, <em>replicators=False</em>, <em>bg_style='environment'</em>, <em>use_scene_range=True</em>, <em>automatic_naming=True</em>, <em>overwrite=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bd_tools/bd_gl_capture.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bd_tools.bd_gl_capture.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

@@ -107,7 +107,7 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     if gl_recording_type == 'movie':
         filepath = '{}{}_{}.mov'.format(filepath, filename, capture_camera_name)
     else:
-        filepath = '{0}{1}{3}{1}_{2}.jpg'.format(filepath, filename, capture_camera_name, os.sep)
+        filepath = '{0}{1}{3}{1}_{2}.tga'.format(filepath, filename, capture_camera_name, os.sep)
 
     if not overwrite:
         exists = True
@@ -145,10 +145,12 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     if not os.path.exists(os.path.dirname(filepath)):
         os.makedirs(os.path.dirname(filepath))
 
-    if replicators:
-        replicator_visibility = 'always'
+    if use_scene_range:
+        first_frame = scene.renderItem.channel('first').get()
+        last_frame = scene.renderItem.channel('last').get()
     else:
-        replicator_visibility = 'none'
+        first_frame = first_frame
+        last_frame = last_frame
 
     selection = scene.selected
     scene.deselect()  # Clears the selection so we don't get any unwanted highlighting in the recording
@@ -172,7 +174,7 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('view3d.showMeshes true')
     lx.eval('view3d.showInstances true')
 
-    if replicators:
+    if replicators == "always":
         lx.eval('view3d.showLocators True')
     else:
         lx.eval('view3d.showLocators false')
@@ -198,7 +200,7 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('view3d.showWorkPlane no')
     lx.eval('view3d.rayGL {0}'.format(raygl))
     lx.eval('pref.value preview.rglQuality draft')
-    lx.eval('view3d.replicators {0}'.format(replicator_visibility))
+    lx.eval('view3d.replicators {0}'.format(replicators))
 
     if capture_camera == 'rendercam':
         lx.eval('view3d.renderCamera')
