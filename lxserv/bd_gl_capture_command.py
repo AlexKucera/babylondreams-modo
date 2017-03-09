@@ -89,20 +89,16 @@ class CommandClass(babylondreams.CommanderClass):
             },
             {
                 'name': 'replicator_visibility',
-                'datatype': 'boolean',
-                'default': True
+                'datatype': 'string',
+                'default': 'always',
+                'values_list_type': 'popup',
+                'values_list': [('always', 'Visible'), ('none', ' Hidden')]
             },
             {
                 'name': 'automatic_naming',
                 'label': 'Automatic Naming (based on project definition)',
                 'datatype': 'boolean',
                 'default': True,
-            },
-            {
-                'name': 'overwrite',
-                'label': 'Overwrite? (Versions up if disabled)',
-                'datatype': 'boolean',
-                'default': True
             },
             {
                 'name': 'file_name',
@@ -117,6 +113,12 @@ class CommandClass(babylondreams.CommanderClass):
                 'default': HOME_DIR,
                 'values_list_type': 'sPresetText',
                 'values_list': self.capture_output
+            },
+            {
+                'name': 'overwrite',
+                'label': 'Overwrite? (Versions up if disabled)',
+                'datatype': 'boolean',
+                'default': True
             },
             {
                 'name': 'use_scene_range',
