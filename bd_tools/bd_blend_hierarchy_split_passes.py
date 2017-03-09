@@ -38,23 +38,33 @@ def main():
     func_name = BLEND_COMMAND
 
     frame_range = modo.Scene().currentRange
-    frame_range = range(frame_range[0], frame_range[1])
+    frame_range = range(frame_range[0], frame_range[1]+1)
+
     fps = modo.Scene().fps
     regex = re.compile('({0}_)(.*)(_cnstnt)'.format(func_name))
 
     print("#"*10)
 
-    # for item in scene.items(itype='constant', superType=True):
-    #     match = regex.match(item.name)
-    #     if match:
-    #         if match.group(2) == "Teapot":
-    #             layer = "{0}{1}".format(match.group(1), match.group(2))
-    #             print layer
-    #             for frame in frame_range:
-    #                 blend_value = {item.channel('value').get(frame / fps)
-    #             frozen_values = [item.channel('value').get(frame / fps) for frame in frame_range]
-    #             blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
-    #             pprint(blend_grp.channels())
+    for item in scene.items(itype='constant', superType=True):
+        match = regex.match(item.name)
+        if match:
+            if match.group(2) == "Teapot":
+                layer = "{0}{1}".format(match.group(1), match.group(2))
+                print layer
+
+                # for frame in frame_range:
+                #     print(item.channel('value').get(frame / fps))
+                print item.channel('value').isAnimated
+                print item.channel('value').envelope.keyframes.numKeys
+                for key in range(0, item.channel('value').envelope.keyframes.numKeys):
+                    print key
+                    keyframe = item.channel('value').envelope.keyframes.first()
+                    print keyframe
+                    print item.channel('value').envelope.keyframes.time
+                    # print item.channel('value').envelope.keyframes.value
+
+                blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
+                # pprint(blend_grp.channels())
 
 
 
@@ -74,4 +84,4 @@ if __name__ == '__main__':
     try:
         main()
     except:
-        print traceback.format_exc()
+        print(traceback.format_exc())
