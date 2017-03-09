@@ -174,7 +174,6 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('view3d.drawDisp true')
     lx.eval('view3d.drawFur true')
     lx.eval('view3d.showSelectionRollover false')
-    lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.wireframeOverlay none active')
     lx.eval('view3d.showWireframeItemMode false')
     lx.eval('view3d.showWorkPlane no')
@@ -187,6 +186,7 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     else:
         lx.eval('view3d.cameraItem ' + capture_camera_name)
 
+    lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.shadingStyle ' + shading_style)
     lx.eval('view3d.sameAsActive true')
 
