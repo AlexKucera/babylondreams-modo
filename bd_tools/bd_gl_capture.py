@@ -28,7 +28,7 @@ import sys
 from bd_tools import bd_helpers
 
 from var import *
-from bd_globals import *
+import bd_globals
 
 
 # FUNCTIONS -----------------------------------------------
@@ -42,12 +42,12 @@ def capture_path():
 
     if scene_path is not None:
 
-        project = find_project(scene_path)
-        project_config = projectconfig(scene_path)
+        project = bd_globals.find_project(scene_path)
+        project_config = bd_globals.projectconfig(scene_path)
 
         file = os.path.splitext(os.path.basename(scene_path))[0]
 
-        output ='{project_dir}{sep}{img}{sep}{previews}{sep}'.format(
+        output = '{project_dir}{sep}{img}{sep}{previews}{sep}'.format(
             sep=os.sep,
             project_dir=project['project_dir'],
             img=project_config['images/parent folder'],
