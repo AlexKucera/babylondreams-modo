@@ -13,15 +13,15 @@ V0.1 Initial Release - 2017-02-24
 
 """
 
-# Commands
 import os
 
-INSTANCE_REROUTE = 'bd.instance_reroute'
+# Config
+
+BD_PIPELINE = "/Volumes/ProjectsRaid/x_Pipeline/x_AppPlugins/bd_pipeline"
 
 # Variables
 
 HOME_DIR = '{}{}'.format(os.path.expanduser('~'), os.sep)
-BD_PIPELINE = "/Volumes/ProjectsRaid/x_Pipeline/x_AppPlugins/bd_pipeline"
 
 BLEND_COMMAND = 'fade'
 
@@ -33,3 +33,7 @@ CENTER_LEFT = 'Center to BBox Left'
 CENTER_RIGHT = 'Center to BBox Right'
 CENTER_FRONT = 'Center to BBox Front'
 CENTER_BACK = 'Center to BBox Back'
+
+# Commands
+
+INSTANCE_REROUTE = 'bd.instance_reroute'

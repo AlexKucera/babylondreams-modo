@@ -27,7 +27,14 @@ import sys
 
 from bd_tools import bd_helpers
 
+import imp
+
 from var import *
+
+try:
+    imp.find_module('bd_globals')
+except ImportError:
+    sys.path.append(BD_PIPELINE)
 import bd_globals
 
 
