@@ -52,19 +52,41 @@ def main():
             print layer
 
             keyframes = item.channel('value').envelope.keyframes
+            keyframe = []
             for key in range(0, keyframes.numKeys):
                 keyframes.setIndex(key)
-                keyframe = {int(round(keyframes.time*fps)): keyframes.value}
-                for key in sorted(keyframe.keys()):
-                    print key
-                    print keyframe[key]
+                keyframe.append({'frame': int(round(keyframes.time*fps)), 'value': keyframes.value})
 
+            blend_range = "{}-".format(keyframe[0]['frame'])
+            i = 0
+            for key in keyframe:
+
+                if not i == 0:
+                    previous_value = keyframe[i - 1]['value']
+                else:
+                    previous_value = keyframe[0]['value']
+
+                # if i + 1 < len(keyframe):
+                #     next_value = keyframe[i + 1]['value']
+                # else:
+                #     next_value = keyframe[-1]['value']
+
+                if previous_value != key['value']:
+
+                    if key['value'] == 0:
+                        blend_range = ("{}{}, ".format(blend_range, key['frame']))
+                    elif key['value'] == 1:
+                        blend_range = ("{}{}-".format(blend_range, keyframe[i - 1]['frame']))
+                    else:
+                        print "Not a valid key."
+
+                i += 1
+
+            print blend_range
 
             blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
-            #print blend_grp.name
-            #pprint(blend_grp.channels())
-
-
+            # print blend_grp.name
+            # pprint(blend_grp.channels())
 
 # END MAIN PROGRAM -----------------------------------------------
 
