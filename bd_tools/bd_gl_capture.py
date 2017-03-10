@@ -57,7 +57,7 @@ def capture_path():
 
 def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
          filename='preview', filepath="", first_frame=1001, last_frame=1250, raygl='off', replicators=False,
-         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True):
+         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True, bbox_toggle='full'):
     scene = modo.Scene()
 
     # Initialize main variables
@@ -174,7 +174,6 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('view3d.drawDisp true')
     lx.eval('view3d.drawFur true')
     lx.eval('view3d.showSelectionRollover false')
-    lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.wireframeOverlay none active')
     lx.eval('view3d.showWireframeItemMode false')
     lx.eval('view3d.showWorkPlane no')
@@ -187,6 +186,7 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     else:
         lx.eval('view3d.cameraItem ' + capture_camera_name)
 
+    lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.shadingStyle ' + shading_style)
     lx.eval('view3d.sameAsActive true')
 
@@ -205,15 +205,26 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
         lx.eval("view3d.setGnzBackground environment")
 
     bbox = []
-    for item in scene.iterItemsFast(itype='mesh'):
-        if item.channel('drawShape').get() == 'custom':
-            bbox.append(item)
-            item.channel('drawShape').set('default')
+    if bbox_toggle == 'full':
+        for item in scene.iterItemsFast(itype='mesh'):
+            if item.channel('drawShape').get() == 'custom':
+                bbox.append(item)
+                item.channel('drawShape').set('default')
 
-    for item in scene.iterItemsFast(itype='meshInst'):
-        if item.channel('drawShape').get() == 'custom':
-            bbox.append(item)
-            item.channel('drawShape').set('default')
+        for item in scene.iterItemsFast(itype='meshInst'):
+            if item.channel('drawShape').get() == 'custom':
+                bbox.append(item)
+                item.channel('drawShape').set('default')
+    else:
+        for item in scene.iterItemsFast(itype='mesh'):
+            if item.channel('drawShape').get() == 'default':
+                bbox.append(item)
+                item.channel('drawShape').set('custom')
+
+        for item in scene.iterItemsFast(itype='meshInst'):
+            if item.channel('drawShape').get() == 'default':
+                bbox.append(item)
+                item.channel('drawShape').set('custom')
 
     if gl_type == "movie":
         gl_type = ""
@@ -225,8 +236,12 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
                                                                                        first_frame, last_frame))
 
-    for item in bbox:
-        item.channel('drawShape').set('custom')
+    if bbox_toggle == 'full':
+        for item in bbox:
+            item.channel('drawShape').set('custom')
+    else:
+        for item in bbox:
+            item.channel('drawShape').set('default')
 
     scene.select(selection)
 
