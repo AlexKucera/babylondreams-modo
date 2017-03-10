@@ -48,23 +48,21 @@ def main():
     for item in scene.items(itype='constant', superType=True):
         match = regex.match(item.name)
         if match:
-            if match.group(2) == "Teapot":
-                layer = "{0}{1}".format(match.group(1), match.group(2))
-                print layer
+            layer = "{0}{1}".format(match.group(1), match.group(2))
+            print layer
 
-                # for frame in frame_range:
-                #     print(item.channel('value').get(frame / fps))
-                print item.channel('value').isAnimated
-                print item.channel('value').envelope.keyframes.numKeys
-                for key in range(0, item.channel('value').envelope.keyframes.numKeys):
+            keyframes = item.channel('value').envelope.keyframes
+            for key in range(0, keyframes.numKeys):
+                keyframes.setIndex(key)
+                keyframe = {int(round(keyframes.time*fps)): keyframes.value}
+                for key in sorted(keyframe.keys()):
                     print key
-                    keyframe = item.channel('value').envelope.keyframes.first()
-                    print keyframe
-                    print item.channel('value').envelope.keyframes.time
-                    # print item.channel('value').envelope.keyframes.value
+                    print keyframe[key]
 
-                blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
-                # pprint(blend_grp.channels())
+
+            blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
+            #print blend_grp.name
+            #pprint(blend_grp.channels())
 
 
 
