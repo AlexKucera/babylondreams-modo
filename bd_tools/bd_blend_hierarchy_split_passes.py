@@ -36,6 +36,8 @@ from var import *
 def main():
     scene = modo.Scene()
 
+    start = bd_helpers.timer()
+
     func_name = BLEND_COMMAND
 
     frame_range = modo.Scene().currentRange
@@ -88,6 +90,7 @@ def main():
             blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
             # print blend_grp.name
             # pprint(blend_grp.channels())
+    bd_helpers.timer(start, 'Splitting {} Hierarchy'.format(str.capitalize(func_name)))
 
 # END MAIN PROGRAM -----------------------------------------------
 
