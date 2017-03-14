@@ -25,6 +25,7 @@ import lx
 import modo
 
 from bd_tools import bd_helpers
+reload(bd_helpers)
 
 # FUNCTIONS -----------------------------------------------
 
@@ -253,7 +254,8 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
 
     end = bd_helpers.timer(start, 'GL Recording')
     per_frame = (end - start) / (last_frame - first_frame)
-    print("That's {:.2f} seconds per frame.".format(per_frame))
+    timestring = bd_helpers.secondsToHoursMinutesSeconds(per_frame)
+    print("That's {} per frame.".format(timestring))
 
 
 # END MAIN PROGRAM -----------------------------------------------
