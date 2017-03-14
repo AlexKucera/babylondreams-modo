@@ -49,12 +49,17 @@ def main():
 
     regex = re.compile('({0}_)(.*)(_cnstnt)'.format(func_name))
 
+    try:
+        fade_passes = modo.item.RenderPassGroup('fade_passes')
+    except:
+        fade_passes = scene.addRenderPassGroup('fade_passes')
+
     print("#"*10)
 
     # Find all Constant texture layers in the scene
     for item in scene.iterItemsFast(itype='constant'):
         match = regex.match(item.name)
-        if match.group(2) == "Teapot":
+        if match:  # match.group(2) == "Teapot":
             layer = "{0}{1}".format(match.group(1), match.group(2))
             print layer
 
@@ -107,8 +112,21 @@ def main():
             print "Visible Range: {}".format(visible)
 
             blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
-            print blend_grp.name
-            pprint(blend_grp.channels())
+
+            on_pass = fade_passes.addPass('{}_on'.format(blend_grp.name))
+            on_pass.active = True
+
+            fade_passes.addChannel(blend_grp.channel('render'))
+            blend_grp.channel('render').set('on')
+            lx.eval('edit.apply')
+
+            off_pass = fade_passes.addPass('{}_off'.format(blend_grp.name))
+            off_pass.active = True
+
+            fade_passes.addChannel(blend_grp.channel('render'))
+            blend_grp.channel('render').set('off')
+            lx.eval('edit.apply')
+
     bd_helpers.timer(start, 'Splitting {} Hierarchy'.format(str.capitalize(func_name)))
 
 # END MAIN PROGRAM -----------------------------------------------
