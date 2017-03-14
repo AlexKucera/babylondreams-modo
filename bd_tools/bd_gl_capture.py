@@ -60,6 +60,10 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
          bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True, bbox_toggle='full'):
     scene = modo.Scene()
 
+    # Start timer
+
+    start = bd_helpers.timer()
+
     # Initialize main variables
 
     if gl_recording_size == '100%':
@@ -246,6 +250,10 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     scene.select(selection)
 
     lx.eval("layout.closeWindow")
+
+    end = bd_helpers.timer(start, 'GL Recording')
+    per_frame = (end - start) / (last_frame - first_frame)
+    print("That's {:.2f} seconds per frame.".format(per_frame))
 
 
 # END MAIN PROGRAM -----------------------------------------------
