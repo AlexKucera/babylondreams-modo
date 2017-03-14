@@ -49,11 +49,14 @@ def main():
     print("#"*10)
 
     for item in scene.items(itype='constant', superType=True):
+    # Find all Constant texture layers in the scene
+    for item in scene.iterItemsFast(itype='constant'):
         match = regex.match(item.name)
         if match:
             layer = "{0}{1}".format(match.group(1), match.group(2))
             print layer
 
+            # Get all keyframes and their values for this item
             keyframes = item.channel('value').envelope.keyframes
             keyframe = []
             for key in range(0, keyframes.numKeys):
@@ -67,6 +70,8 @@ def main():
                 if not i == 0:
                     previous_value = keyframe[i - 1]['value']
                 else:
+                # If we are not on the first keyframe get the keyframe before it to compare it to
+                # otherwise just use the first keyframe
                     previous_value = keyframe[0]['value']
 
                 # if i + 1 < len(keyframe):
@@ -74,12 +79,18 @@ def main():
                 # else:
                 #     next_value = keyframe[-1]['value']
 
+                # If the keyframe and the previous keyframe differ we have a blend.
+                # Now we need to figure out if we are blending in or out
                 if previous_value != key['value']:
 
+                    # If the keyframe is 0 we end a blend range
                     if key['value'] == 0:
                         blend_range = ("{}{}, ".format(blend_range, key['frame']))
+                    # A value of 1 means we are starting a blend range
                     elif key['value'] == 1:
                         blend_range = ("{}{}-".format(blend_range, keyframe[i - 1]['frame']))
+                    # Anything else and this function does not work. We need keys to be either 0 or 1.
+                    # Kick the animator if he did anything else!
                     else:
                         print "Not a valid key."
 
