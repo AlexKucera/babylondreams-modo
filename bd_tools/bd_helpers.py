@@ -17,7 +17,7 @@ V0.1 Initial Release - 2017-02-20
 
 import sys
 import os
-import time
+import timeit
 
 import lx
 import modo
@@ -90,12 +90,25 @@ def timer(elapsed=0.0, name=''):
         bd_helpers.timer(start, "test")
 
     """
-    running_timer = time.clock()
+    running_timer = timeit.default_timer()
     if elapsed != 0.0:
         running_time = running_timer - elapsed
+        minutes, seconds = divmod(running_time, 60)
+        hours, minutes = divmod(minutes, 60)
+        if hours != 0:
+            hours = "{} hours ".format(hours)
+        else:
+            hours = ""
+        if minutes != 0:
+            minutes = "{} minutes ".format(minutes)
+        else:
+            minutes = ""
         if name is not '':
             name += ' '
-        print('{0}Running Time: {1:.2f} seconds'.format(name, running_time))
+        print('{0}Running Time: {hours}{minutes}{seconds: .2f} seconds'.format(name,
+                                                                               hours=hours,
+                                                                               minutes=minutes,
+                                                                               seconds=seconds))
     return running_timer
 
 
