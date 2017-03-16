@@ -74,7 +74,6 @@ def main():
     func_name = BLEND_COMMAND
 
     frame_range = modo.Scene().currentRange
-    frame_range = range(frame_range[0], frame_range[1]+1)
 
     fps = modo.Scene().fps
 
@@ -90,7 +89,7 @@ def main():
     # Find all Constant texture layers in the scene
     for item in scene.iterItemsFast(itype='constant'):
         match = regex.match(item.name)
-        if match:  # .group(2) == "Teapot":
+        if match.group(2) == "Teapot":
             layer = "{0}{1}".format(match.group(1), match.group(2))
             print layer
 
@@ -103,6 +102,7 @@ def main():
 
             blending = []
             visible = []
+            invisible = []
 
             i = 0
             for key in keyframe:
@@ -136,23 +136,39 @@ def main():
                     #     print "Not a valid key."
 
                 elif previous_value == key['value'] and key['value'] == 0.0:
+
                     visible.append((keyframe[i - 1]['frame'], key['frame']))
 
-                i += 1
-            visible_range = []
-            for blend in blending:
-                visible_range += (range(blend[0], blend[1]+1, 1))
-            for vis in visible:
-                visible_range += (range(vis[0], vis[1]+1, 1))
+                elif previous_value == key['value'] and key['value'] == 1.0:
 
-            visible_range = sorted(set(visible_range))
+                    if i == 0:
+                        invisible.append((keyframe[0]['frame'], key['frame']))
+                    else:
+                        invisible.append((keyframe[i - 1]['frame'], key['frame']))
+
+                i += 1
+
+            # visible_range = []
+            # for blend in blending:
+            #     visible_range += (range(blend[0], blend[1]+1, 1))
+            # for vis in visible:
+            #     visible_range += (range(vis[0], vis[1]+1, 1))
+
+            invisible_range = []
+            condensed_invisible_range = []
+            for invis in invisible:
+                invisible_range += (range(invis[0], invis[1]+1, 1))
+            for x in contractor(sorted(invisible_range)):
+                condensed_invisible_range.append(x)
 
             condensed_visible_range = []
+            shot_range = range(frame_range[0], frame_range[1] + 1)
+            visible_range = sorted(set(shot_range) - set(invisible_range))
             for x in contractor(sorted(visible_range)):
                 condensed_visible_range.append(x)
 
             print "Blending Ranges: {}".format(blending)
-            print "Fully Visible Range: {}".format(visible)
+            print "Invisible Range {}".format(condensed_invisible_range)
             print "Complete Visible Range: {}".format(condensed_visible_range)
 
             blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
