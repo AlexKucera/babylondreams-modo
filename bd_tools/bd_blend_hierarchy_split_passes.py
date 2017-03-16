@@ -28,6 +28,37 @@ from var import *
 
 
 # FUNCTIONS -----------------------------------------------
+
+def contractor(range):
+    """
+    Yields the current SequentialRange contents as a list of tuples.
+    Each tuple represents (first, last, increment) of a continuous frame
+    range.  The purpose of contractor is to provide a quick means of
+    seeing all the continuous and discontinuous ranges in the
+    SequentialRange object via a Generator object.
+
+    :yields: each (first, last, incr) tuple.
+    :ytype: tuple
+    """
+    frames = sorted(list(range))
+    total = len(frames)
+    curr_idx = 0
+    while curr_idx < total:
+        first, last, incr = frames[curr_idx], frames[curr_idx], 1
+        if curr_idx + 2 < total:
+            last_idx = curr_idx + 2
+            curr_incr = frames[curr_idx + 1] - frames[curr_idx]
+            while last_idx < total:
+                if curr_incr == frames[last_idx] - frames[last_idx - 1]:
+                    last = frames[last_idx]
+                    incr = curr_incr
+                    curr_idx = last_idx
+                else:
+                    break
+                last_idx += 1
+        yield (first, last)
+        curr_idx += 1
+
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
@@ -59,7 +90,7 @@ def main():
     # Find all Constant texture layers in the scene
     for item in scene.iterItemsFast(itype='constant'):
         match = regex.match(item.name)
-        if match:  # match.group(2) == "Teapot":
+        if match:  # .group(2) == "Teapot":
             layer = "{0}{1}".format(match.group(1), match.group(2))
             print layer
 
@@ -72,7 +103,7 @@ def main():
 
             blending = []
             visible = []
-            visible_range = [keyframe[0]['frame']]
+
             i = 0
             for key in keyframe:
 
@@ -89,27 +120,40 @@ def main():
 
                     blending.append((keyframe[i - 1]['frame'], key['frame']))
 
-                    # If the keyframe is 0 we end a blend range
-                    if key['value'] == 0:
-                        print ("Blending Out During {}".format(blending[-1:]))
-                        visible_range.append(key['frame'])
-                        visible.append(tuple(visible_range))
-                        visible_range = []
+                    # # If the keyframe is 0 we end a blend range
+                    # if key['value'] == 0.0:
+                    #     print ("Blending In During {}".format(blending[-1:]))
+                    #     visible_range.append(keyframe[i - 1]['frame'])
+                    #
+                    # # A value of 1 means we are starting a blend range
+                    # elif key['value'] == 1.0:
+                    #     print ("Blending Out During {}".format(blending[-1:]))
+                    #     visible_range.append(key['frame'])
+                    #
+                    # # Anything else and this function does not work. We need keys to be either 0 or 1.
+                    # # Kick the animator if he did anything else!
+                    # else:
+                    #     print "Not a valid key."
 
-                    # A value of 1 means we are starting a blend range
-                    elif key['value'] == 1:
-                        print ("Blending In During {}".format(blending[-1:]))
-                        visible_range.append(keyframe[i - 1]['frame'])
-
-                    # Anything else and this function does not work. We need keys to be either 0 or 1.
-                    # Kick the animator if he did anything else!
-                    else:
-                        print "Not a valid key."
+                elif previous_value == key['value'] and key['value'] == 0.0:
+                    visible.append((keyframe[i - 1]['frame'], key['frame']))
 
                 i += 1
+            visible_range = []
+            for blend in blending:
+                visible_range += (range(blend[0], blend[1]+1, 1))
+            for vis in visible:
+                visible_range += (range(vis[0], vis[1]+1, 1))
+
+            visible_range = sorted(set(visible_range))
+
+            condensed_visible_range = []
+            for x in contractor(sorted(visible_range)):
+                condensed_visible_range.append(x)
 
             print "Blending Ranges: {}".format(blending)
-            print "Visible Range: {}".format(visible)
+            print "Fully Visible Range: {}".format(visible)
+            print "Complete Visible Range: {}".format(condensed_visible_range)
 
             blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
 
