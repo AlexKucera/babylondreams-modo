@@ -25,12 +25,16 @@ import lx
 import modo
 
 from bd_tools import bd_helpers
-reload(bd_helpers)
 
 # FUNCTIONS -----------------------------------------------
 
 
 def capture_path():
+    """
+    Gets the projects path and turns it into the preview output path.
+    Returns:
+
+    """
     scene = modo.Scene()
     scene_path = scene.filename
     output = os.path.expanduser('~')
@@ -59,6 +63,29 @@ def capture_path():
 def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
          filename='preview', filepath="", first_frame=1001, last_frame=1250, raygl='off', replicators=False,
          bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True, bbox_toggle='full'):
+
+    """
+    Preps and calls gl.capture.
+    Args:
+        gl_recording_size:
+        gl_recording_type:
+        viewport_camera:
+        shading_style:
+        filename:
+        filepath:
+        first_frame:
+        last_frame:
+        raygl:
+        replicators:
+        bg_style:
+        use_scene_range:
+        automatic_naming:
+        overwrite:
+        bbox_toggle:
+
+    Returns:
+
+    """
     scene = modo.Scene()
 
     # Start timer
