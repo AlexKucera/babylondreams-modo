@@ -136,12 +136,12 @@ class CommandClass(babylondreams.CommanderClass):
             {
                 'name': 'first_frame',
                 'datatype': 'integer',
-                'default': self.get_range('first'),
+                'default': self.get_range()['first'],
             },
             {
                 'name': 'last_frame',
                 'datatype': 'integer',
-                'default': self.get_range('last'),
+                'default': self.get_range()['last'],
             },
         ]
 
@@ -162,9 +162,10 @@ class CommandClass(babylondreams.CommanderClass):
 
         return all_cameras
 
-    def get_range(self, switch='first'):
+    def get_range(self):
         scene = modo.Scene()
-        frame = scene.renderItem.channel(switch).get()
+        frame_range = modo.Scene().currentRange
+        frame = {'first': frame_range[0], 'last': frame_range[1]}
         return frame
 
     def capture_file(self):
