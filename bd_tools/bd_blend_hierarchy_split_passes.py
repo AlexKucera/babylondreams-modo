@@ -104,7 +104,7 @@ def main():
     # Find all Constant texture layers in the scene
     for item in scene.iterItemsFast(itype='constant'):
         match = regex.match(item.name)
-        if match.group(2) == "Teapot":
+        if match:  # .group(2) == "Teapot":
             layer = "{0}{1}".format(match.group(1), match.group(2))
             log(layer)
 
