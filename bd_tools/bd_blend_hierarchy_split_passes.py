@@ -220,6 +220,8 @@ def main():
 
             fade_passes.addChannel(blend_grp.channel('render'))
             blend_grp.channel('render').set('on')
+            fade_passes.addChannel(blend_grp.channel('visible'))
+            blend_grp.channel('visible').set('on')
             lx.eval('edit.apply')
 
             try:
@@ -230,6 +232,8 @@ def main():
 
             fade_passes.addChannel(blend_grp.channel('render'))
             blend_grp.channel('render').set('off')
+            fade_passes.addChannel(blend_grp.channel('visible'))
+            blend_grp.channel('visible').set('off')
             lx.eval('edit.apply')
 
     bd_helpers.timer(start, 'Splitting {} Hierarchy'.format(str.capitalize(func_name)))
