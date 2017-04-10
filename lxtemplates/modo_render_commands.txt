@@ -1,0 +1,28 @@
+log.toConsole true
+log.toConsoleRolling true
+
+@require(pathaliases, scenes)
+@if pathaliases:
+    @for p in pathaliases:
+pathalias.create @p "@pathaliases[p]"
+    @end
+@end
+
+
+@for scene in scenes:
+
+scene.open "@scenes[scene]['path']"
+query sceneservice scene.name ? current
+pref.value render.threads auto
+select.Item Render
+@scenes[scene]['region']!s
+item.channel step @scenes[scene]['step']!s
+item.channel first @scenes[scene]['first']!s
+item.channel last @scenes[scene]['last']!s
+item.channel outPat "@scenes[scene]['pattern']"
+render.animation {*} @scenes[scene]['passes']
+scene.close
+
+@end
+
+app.quit
