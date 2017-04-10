@@ -136,6 +136,18 @@ def main():
                 else:
                     previous_value = keyframe[i - 1]['value']
 
+                if i == 0:
+                    if key['value'] == 1.0:
+                        invisible.append((frame_range[0], key['frame']))
+                    else:
+                        visible.append((frame_range[0], key['frame']))
+                if i == len(keyframes)-1:
+                    if key['value'] == 1.0:
+                        invisible.append((key['frame'], frame_range[1]))
+                    else:
+                        visible.append((key['frame'], frame_range[1]))
+
+
                 # If the keyframe and the previous keyframe differ we have a blend.
                 # Now we need to figure out if we are blending in or out
                 if previous_value != key['value']:
@@ -170,24 +182,29 @@ def main():
 
                 i += 1
 
-            # visible_range = []
-            # for blend in blending:
-            #     visible_range += (range(blend[0], blend[1]+1, 1))
-            # for vis in visible:
-            #     visible_range += (range(vis[0], vis[1]+1, 1))
+            visible_range = []
+            condensed_visible_range =  []
+            for blend in blending:
+                visible_range += (range(blend[0], blend[1]+1, 1))
+            for vis in visible:
+                visible_range += (range(vis[0], vis[1]+1, 1))
+            for x in contractor(sorted(set(visible_range))):
+                condensed_visible_range.append(x)
 
             invisible_range = []
             condensed_invisible_range = []
+            for blend in blending:
+                invisible_range += (range(blend[0], blend[1] + 1, 1))
             for invis in invisible:
                 invisible_range += (range(invis[0], invis[1]+1, 1))
-            for x in contractor(sorted(invisible_range)):
+            for x in contractor(sorted(set(invisible_range))):
                 condensed_invisible_range.append(x)
 
-            condensed_visible_range = []
-            shot_range = range(frame_range[0], frame_range[1] + 1)
-            visible_range = sorted(set(shot_range) - set(invisible_range))
-            for x in contractor(sorted(visible_range)):
-                condensed_visible_range.append(x)
+            # condensed_visible_range = []
+            # shot_range = range(frame_range[0], frame_range[1] + 1)
+            # visible_range = sorted(set(shot_range) - set(invisible_range))
+            # for x in contractor(sorted(visible_range)):
+            #     condensed_visible_range.append(x)
 
             log("Blending Ranges: {}".format(blending))
             log("Invisible Range {}".format(condensed_invisible_range))
