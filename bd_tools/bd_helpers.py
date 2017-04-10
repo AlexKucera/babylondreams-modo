@@ -25,6 +25,9 @@ import modo
 
 from var import *
 
+sys.path.append(BD_PIPELINE)
+from bd_globals import *
+
 
 def selected(num=1):
     """
@@ -162,27 +165,3 @@ def walk_up(bottom):
 
     for x in walk_up(new_path):
         yield x
-
-
-def debug(string):
-    """
-    Prints a string to lx.out() if defaults.get('debug') returns True. (See defaults.py)
-    Intended for developer debugging only; user messages should use 'status'.
-    Inspired by the debug function from Adam O'Hern for Mechanical Color
-    """
-    if DEBUG:
-        t = traceback.extract_stack()[-2]
-        print("debug '{filename}' line {line}, {function}\n----------\n{string}".format(filename=os.path.basename(t[0]),
-                                                  line=t[1],
-                                                  function=t[2],
-                                                  string=string))
-
-
-def status(string):
-    """
-    Prints a string to lx.out(). Differs from "debug" only in that it's always enabled.
-    Useful for user-related messages.
-    Inspired by the debug function from Adam O'Hern for Mechanical Color
-    """
-
-    print("status:\n----------\n{}".format(string))

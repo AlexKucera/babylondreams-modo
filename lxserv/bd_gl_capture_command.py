@@ -196,7 +196,9 @@ class CommandClass(babylondreams.CommanderClass):
                            use_scene_range=arguments['use_scene_range'],
                            automatic_naming=arguments['automatic_naming'],
                            overwrite=arguments['overwrite'],
-                           bbox_toggle=arguments['bbox_toggle'])
+                           bbox_toggle=arguments['bbox_toggle'],
+                           capture_file=self.capture_file()[0],
+                           capture_path=self.capture_output()[0])
 
 
 lx.bless(CommandClass, 'bd.gl_capture')
