@@ -78,7 +78,7 @@ def capture_path():
 def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
          filename='preview', filepath="", first_frame=1001, last_frame=1250, raygl='off', replicators=False,
          bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True, bbox_toggle='full',
-         capture_file='playblast', capture_path=HOME_DIR)):
+         capture_file='playblast', capture_path=HOME_DIR):
 
     """
     Preps and calls gl.capture.
