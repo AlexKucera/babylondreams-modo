@@ -93,6 +93,13 @@ def main():
     fps = modo.Scene().fps
 
     regex = re.compile('({0}_)(.*)(_cnstnt)'.format(func_name))
+    regex_mask = re.compile('({0}_)(.*)(_msk)'.format(func_name))
+
+    # Find all Group Masks in the scene and turn them off
+    for item in scene.iterItemsFast(itype='mask'):
+        match = regex_mask.match(item.name)
+        if match:
+            item.channel('enable').set(0)
 
     try:
         fade_passes = modo.item.RenderPassGroup('fade_passes')
