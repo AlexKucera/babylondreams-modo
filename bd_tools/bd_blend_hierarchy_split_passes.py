@@ -212,14 +212,20 @@ def main():
 
             blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
 
-            on_pass = fade_passes.addPass('{}_on'.format(blend_grp.name))
+            try:
+                on_pass = scene.item('{}_on'.format(blend_grp.name))
+            except:
+                on_pass = fade_passes.addPass('{}_on'.format(blend_grp.name))
             on_pass.active = True
 
             fade_passes.addChannel(blend_grp.channel('render'))
             blend_grp.channel('render').set('on')
             lx.eval('edit.apply')
 
-            off_pass = fade_passes.addPass('{}_off'.format(blend_grp.name))
+            try:
+                off_pass = scene.item('{}_off'.format(blend_grp.name))
+            except:
+                off_pass = fade_passes.addPass('{}_off'.format(blend_grp.name))
             off_pass.active = True
 
             fade_passes.addChannel(blend_grp.channel('render'))
