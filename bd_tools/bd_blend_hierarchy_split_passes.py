@@ -59,6 +59,21 @@ def contractor(range):
         yield (first, last)
         curr_idx += 1
 
+
+def write_result(line, mode='a+'):
+    scene = modo.Scene()
+    path = os.path.splitext(scene.filename)[0] + "_split_passes.txt"
+    with open(path, mode=mode) as output:
+        output.write(line)
+        output.close()
+
+
+def log(line, mode='a+'):
+
+    print(line)
+    write_result(line + "\n", mode)
+
+
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
@@ -84,14 +99,14 @@ def main():
     except:
         fade_passes = scene.addRenderPassGroup('fade_passes')
 
-    print("#"*10)
+    log("#"*10, mode='w')
 
     # Find all Constant texture layers in the scene
     for item in scene.iterItemsFast(itype='constant'):
         match = regex.match(item.name)
         if match.group(2) == "Teapot":
             layer = "{0}{1}".format(match.group(1), match.group(2))
-            print layer
+            log(layer)
 
             # Get all keyframes and their values for this item
             keyframes = item.channel('value').envelope.keyframes
@@ -167,9 +182,9 @@ def main():
             for x in contractor(sorted(visible_range)):
                 condensed_visible_range.append(x)
 
-            print "Blending Ranges: {}".format(blending)
-            print "Invisible Range {}".format(condensed_invisible_range)
-            print "Complete Visible Range: {}".format(condensed_visible_range)
+            log("Blending Ranges: {}".format(blending))
+            log("Invisible Range {}".format(condensed_invisible_range))
+            log("Complete Visible Range: {}".format(condensed_visible_range))
 
             blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
 
