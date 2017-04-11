@@ -36,7 +36,7 @@ class CommandClass(babylondreams.CommanderClass):
        return [
            {
                'name': 'scene_range',
-               'label': "Use Render Range",
+               'label': "Use Scene Range",
                'datatype': 'boolean',
                'default': True
            },
