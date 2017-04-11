@@ -102,6 +102,7 @@ def get_passes():
     if len(passes) > 0:
         for pas in passes:
             render_passes.append((pas, pas.name))
+        render_passes.append((None, "No passes"))
     else:
         render_passes.append((None, "No passes in scene"))
     return render_passes
