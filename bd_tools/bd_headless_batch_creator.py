@@ -85,8 +85,11 @@ def renderRegionCheck():
 def get_scene_range():
     scene = modo.Scene()
 
-    first_frame = int(scene.renderItem.channel('first').get())
-    last_frame = int(scene.renderItem.channel('last').get())
+    #first_frame = int(scene.renderItem.channel('first').get())
+    #last_frame = int(scene.renderItem.channel('last').get())
+    frame_range = modo.Scene().currentRange
+    first_frame = frame_range[0]
+    last_frame = frame_range[1]
     frame_step = int(scene.renderItem.channel('step').get())
 
     return "{}-{}x{}".format(first_frame, last_frame, frame_step)
