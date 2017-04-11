@@ -57,7 +57,7 @@ class CommandClass(babylondreams.CommanderClass):
                'name': 'batchsize',
                'label': "Batch Size",
                'datatype': 'integer',
-               'default': 10
+               'default': 20
            },
            {
                'name': 'pattern',
