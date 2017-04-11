@@ -106,10 +106,39 @@ def main():
         if match:
             item.channel('enable').set(0)
 
+    # Find all Fade Groups in the scene and turn them off
+    for blend_grp in scene.getGroups('fade'):
+        blend_grp.channel('render').set('off')
+        blend_grp.channel('visible').set('off')
+
     try:
         fade_passes = modo.item.RenderPassGroup('fade_passes')
     except:
         fade_passes = scene.addRenderPassGroup('fade_passes')
+
+    try:
+        on_pass = scene.item('{}s_on'.format(func_name))
+    except:
+        on_pass = fade_passes.addPass('{}s_on'.format(func_name))
+    on_pass.active = True
+
+    # Find all Fade Groups in the scene and turn them on
+    for blend_grp in scene.getGroups('fade'):
+        blend_grp.channel('render').set('on')
+        blend_grp.channel('visible').set('on')
+    lx.eval('edit.apply')
+
+    try:
+        off_pass = scene.item('{}s_off'.format(func_name))
+    except:
+        off_pass = fade_passes.addPass('{}s_off'.format(func_name))
+    off_pass.active = True
+
+    # Find all Fade Groups in the scene and turn them off
+    for blend_grp in scene.getGroups('fade'):
+        blend_grp.channel('render').set('off')
+        blend_grp.channel('visible').set('off')
+    lx.eval('edit.apply')
 
     log("#"*10, mode='w')
 
@@ -240,6 +269,10 @@ def main():
             fade_passes.addChannel(blend_grp.channel('visible'))
             blend_grp.channel('visible').set('off')
             lx.eval('edit.apply')
+    for blend_grp in scene.getGroups('fade'):
+        blend_grp.channel('render').set('off')
+        blend_grp.channel('visible').set('off')
+    lx.eval('edit.apply')
 
     write_result(fileopen=True)
     bd_helpers.timer(start, 'Splitting {} Hierarchy'.format(str.capitalize(func_name)))
