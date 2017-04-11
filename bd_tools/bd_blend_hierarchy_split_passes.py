@@ -76,7 +76,7 @@ def write_result(line="", mode='a+', fileopen=False):
 def log(line, mode='a+'):
 
     print(line)
-    write_result(line + "\n", mode)
+    write_result("{}\n".format(line), mode)
 
 
 # END FUNCTIONS -----------------------------------------------
