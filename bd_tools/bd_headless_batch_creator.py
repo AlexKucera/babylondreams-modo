@@ -161,8 +161,9 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
         batch_base_path = "{filepath}/_batch/{filename}".format(filepath=os.path.dirname(scene_path),
                                                                 filename=os.path.splitext(os.path.basename(scene_path))[0]
                                                                 )
-        batch_path = os.path.normpath("{}.bat".format(batch_base_path))
-        bash_path = os.path.normpath("{}.sh".format(batch_base_path))
+        frames = "_Frames{}-{}".format(first_frame, last_frame)
+        batch_path = os.path.normpath("{}{}.bat".format(batch_base_path, frames))
+        bash_path = os.path.normpath("{}{}.sh".format(batch_base_path, frames))
 
         framelist = range(int(first_frame), int(last_frame) + 1, int(frame_step))
         framelist = chunker(framelist, batchsize)
