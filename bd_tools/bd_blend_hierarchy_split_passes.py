@@ -18,6 +18,8 @@ V0.1 Initial Release - 2017-02-22
 """
 
 import re
+import subprocess
+
 import modo
 import lx
 import traceback
@@ -60,12 +62,15 @@ def contractor(range):
         curr_idx += 1
 
 
-def write_result(line, mode='a+'):
+def write_result(line="", mode='a+', fileopen=False):
     scene = modo.Scene()
     path = os.path.splitext(scene.filename)[0] + "_split_passes.txt"
-    with open(path, mode=mode) as output:
-        output.write(line)
-        output.close()
+    if not fileopen:
+        with open(path, mode=mode) as output:
+            output.write(line)
+            output.close()
+    else:
+        subprocess.call(['open', path])
 
 
 def log(line, mode='a+'):
@@ -236,6 +241,7 @@ def main():
             blend_grp.channel('visible').set('off')
             lx.eval('edit.apply')
 
+    write_result(fileopen=True)
     bd_helpers.timer(start, 'Splitting {} Hierarchy'.format(str.capitalize(func_name)))
 
 # END MAIN PROGRAM -----------------------------------------------
