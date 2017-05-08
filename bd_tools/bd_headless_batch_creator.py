@@ -46,15 +46,39 @@ def build_modo_render_command(pathaliases=None, scenes={}):
     return template.render({'pathaliases': pathaliases, 'scenes': scenes})
 
 
+def build_modo_render_command_win(pathaliases=None, scenes={}):
+    searchpath = [TEMPLATES]
+    engine = Engine(
+        loader=FileLoader(searchpath),
+        extensions=[CoreExtension()]
+    )
+    template = engine.get_template('modo_render_commands_win.txt')
+
+    if pathaliases:
+        for key in pathaliases:
+            '{} "{}"'.format(key, os.path.normpath(pathaliases[key]))
+
+    for scene in scenes:
+        scenes[scene]['path'] = format_filename(scenes[scene]['path'], 'win32')
+
+    return template.render({'pathaliases': pathaliases, 'scenes': scenes})
+
+
 def build_modo_batch(commands=[], headless=""):
+    import ntpath
     searchpath = [TEMPLATES]
     engine = Engine(
         loader=FileLoader(searchpath),
         extensions=[CoreExtension()]
     )
     template = engine.get_template('modo_batch.bat')
+    win_commands = []
+    for command in commands:
+        win_commands.append(ntpath.normpath(format_filename(command, 'win32')))
 
-    return template.render({'modo_cl': headless, 'commands': commands})
+    headless = ntpath.normpath(r"C:\Program Files\Luxology\modo\11.0v1\modo_cl.exe")
+
+    return template.render({'modo_cl': ntpath.normpath(headless), 'commands': win_commands})
 
 
 def build_modo_bash(commands=[], headless="", render_range={}):
@@ -101,7 +125,7 @@ def get_passes():
     render_passes = []
     if len(passes) > 0:
         for pas in passes:
-            render_passes.append((pas, pas.name))
+            render_passes.append((pas.id, pas.name))
         render_passes.append((None, "No passes"))
     else:
         render_passes.append((None, "No passes in scene"))
@@ -129,6 +153,28 @@ def chunker(seq, size):
     return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
 
 
+def format_filename(s, format):
+    """
+    Takes a UNIX path and turns it into a Windows path.
+    
+    """
+
+    unix_path = "/Volumes/ProjectsRaid/WorkingProjects"
+    win_path = "Z:\AzureSync\CloudComputing\WorkingProjects"
+
+    if format == "win32":
+        filename = s.replace(unix_path, win_path)
+        filename = filename.replace('/', '\\')
+        return filename
+    elif format == "darwin":
+        filename = s.replace(win_path, unix_path)
+        filename = filename.replace('\\', '/')
+        return filename
+    else:
+        print ("ERROR no valid OS given for path transform")
+        return None
+
+
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
@@ -137,6 +183,11 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
 
     scene = modo.Scene()
     scene_path = scene.filename
+
+    if passname:
+        passname = "group:{}".format(scene.item(passname).name)
+    else:
+        passname = ""
 
     if sys.platform == "darwin":
         headless_path = lx.eval("query platformservice path.path ? exename") + "_cl"
@@ -169,6 +220,7 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
         framelist = range(int(first_frame), int(last_frame) + 1, int(frame_step))
         framelist = chunker(framelist, batchsize)
         all_commands = []
+        all_commands_win = []
 
         for framegroup in framelist:
             scene_dict = {}
@@ -185,6 +237,16 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
             if not os.path.exists(os.path.dirname(command_path)):
                 os.makedirs(os.path.dirname(command_path))
 
+            command_path_win = os.path.normpath("{filepath}_win/{filename}_batchrender_frames_{first}-{last}.txt".format(
+                filepath=batch_base_path,
+                filename=os.path.splitext(os.path.basename(scene_path))[0],
+                first=first_batch_frame,
+                last=last_batch_frame
+            ))
+
+            if not os.path.exists(os.path.dirname(command_path_win)):
+                os.makedirs(os.path.dirname(command_path_win))
+
             scene_dict[first_batch_frame] = {
                 'path': scene_path,
                 'first': first_batch_frame,
@@ -194,7 +256,7 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
                 'passes': passname,
                 'region': region
             }
-
+            print passname
             modo_command = build_modo_render_command(scenes=scene_dict,
                                                      pathaliases={
                                                          'WorkingProjects': '/Volumes/ProjectsRaid/WorkingProjects/'
@@ -206,7 +268,20 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
 
             all_commands.append(command_path)
 
-        modo_batch = build_modo_batch(commands=all_commands, headless=headless_path)
+            modo_command_win = build_modo_render_command_win(scenes=scene_dict,
+                                                     pathaliases={
+                                                         'WorkingProjects': 'Z:\AzureSync\CloudComputing\WorkingProjects'
+                                                     })
+
+            with open(command_path_win, mode='w+') as command:
+                command.write(modo_command_win)
+                command.close()
+
+            all_commands_win.append(command_path_win)
+
+
+
+        modo_batch = build_modo_batch(commands=all_commands_win)
         modo_bash = build_modo_bash(commands=all_commands, headless=headless_path, render_range={'first': first_frame, 'last': last_frame})
 
         with open(batch_path, mode='w+') as batch:
@@ -217,6 +292,8 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
             bash.write(modo_bash)
             bash.close()
         os.chmod(bash_path, 0755)
+
+        lx.eval('scene.save')
 
         if sys.platform == "darwin":
             pyperclip.copy(bash_path)
