@@ -3,7 +3,11 @@
 
 """
 
-ljsmith_batch_processor - batch_event_logger_command
+batch_event_logger_command
+
+Usage:
+
+batch.event_logger "Starting Render" "/Volumes/projects/logpath.log"
 
 Release Notes:
 
