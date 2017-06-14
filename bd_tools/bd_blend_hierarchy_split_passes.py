@@ -142,133 +142,222 @@ def main():
 
     log("#"*10, mode='w')
 
+    ranges = dict()
     # Find all Constant texture layers in the scene
     for item in scene.iterItemsFast(itype='constant'):
         match = regex.match(item.name)
-        if match:  # .group(2) == "Teapot":
+        if match:
             layer = "{0}{1}".format(match.group(1), match.group(2))
             log(layer)
 
             # Get all keyframes and their values for this item
-            keyframes = item.channel('value').envelope.keyframes
-            keyframe = []
-            for key in range(0, keyframes.numKeys):
-                keyframes.setIndex(key)
-                keyframe.append({'frame': int(round(keyframes.time*fps)), 'value': keyframes.value})
+            try:
+                keyframes = item.channel('value').envelope.keyframes
+                keyframe = []
+                for key in range(0, keyframes.numKeys):
+                    keyframes.setIndex(key)
+                    keyframe.append({'frame': int(round(keyframes.time*fps)), 'value': keyframes.value})
 
-            blending = []
-            visible = []
-            invisible = []
+                blending = []
+                visible = []
+                invisible = []
 
-            i = 0
-            for key in keyframe:
+                i = 0
+                for key in keyframe:
 
-                # If we are not on the first keyframe get the keyframe before it to compare it to
-                # otherwise just use the first keyframe
-                if i == 0:
-                    previous_value = keyframe[0]['value']
-                else:
-                    previous_value = keyframe[i - 1]['value']
-
-                if i == 0:
-                    if key['value'] == 1.0:
-                        invisible.append((frame_range[0], key['frame']))
+                    # If we are not on the first keyframe get the keyframe before it to compare it to
+                    # otherwise just use the first keyframe
+                    if i == 0:
+                        previous_value = keyframe[0]['value']
                     else:
-                        visible.append((frame_range[0], key['frame']))
-                if i == len(keyframes)-1:
-                    if key['value'] == 1.0:
-                        invisible.append((key['frame'], frame_range[1]))
-                    else:
-                        visible.append((key['frame'], frame_range[1]))
-
-
-                # If the keyframe and the previous keyframe differ we have a blend.
-                # Now we need to figure out if we are blending in or out
-                if previous_value != key['value']:
-
-                    blending.append((keyframe[i - 1]['frame'], key['frame']))
-
-                    # # If the keyframe is 0 we end a blend range
-                    # if key['value'] == 0.0:
-                    #     print ("Blending In During {}".format(blending[-1:]))
-                    #     visible_range.append(keyframe[i - 1]['frame'])
-                    #
-                    # # A value of 1 means we are starting a blend range
-                    # elif key['value'] == 1.0:
-                    #     print ("Blending Out During {}".format(blending[-1:]))
-                    #     visible_range.append(key['frame'])
-                    #
-                    # # Anything else and this function does not work. We need keys to be either 0 or 1.
-                    # # Kick the animator if he did anything else!
-                    # else:
-                    #     print "Not a valid key."
-
-                elif previous_value == key['value'] and key['value'] == 0.0:
-
-                    visible.append((keyframe[i - 1]['frame'], key['frame']))
-
-                elif previous_value == key['value'] and key['value'] == 1.0:
+                        previous_value = keyframe[i - 1]['value']
 
                     if i == 0:
-                        invisible.append((keyframe[0]['frame'], key['frame']))
-                    else:
-                        invisible.append((keyframe[i - 1]['frame'], key['frame']))
+                        if key['value'] == 1.0:
+                            invisible.append((frame_range[0], key['frame']))
+                        else:
+                            visible.append((frame_range[0], key['frame']))
+                    if i == len(keyframes)-1:
+                        if key['value'] == 1.0:
+                            invisible.append((key['frame'], frame_range[1]))
+                        else:
+                            visible.append((key['frame'], frame_range[1]))
 
-                i += 1
+                    # If the keyframe and the previous keyframe differ we have a blend.
+                    # Now we need to figure out if we are blending in or out
+                    if previous_value != key['value']:
 
-            visible_range = []
-            condensed_visible_range =  []
-            for blend in blending:
-                visible_range += (range(blend[0], blend[1]+1, 1))
-            for vis in visible:
-                visible_range += (range(vis[0], vis[1]+1, 1))
-            for x in contractor(sorted(set(visible_range))):
-                condensed_visible_range.append(x)
+                        blending.append((keyframe[i - 1]['frame'], key['frame']))
 
-            invisible_range = []
-            condensed_invisible_range = []
-            for blend in blending:
-                invisible_range += (range(blend[0], blend[1] + 1, 1))
-            for invis in invisible:
-                invisible_range += (range(invis[0], invis[1]+1, 1))
-            for x in contractor(sorted(set(invisible_range))):
-                condensed_invisible_range.append(x)
+                        # # If the keyframe is 0 we end a blend range
+                        # if key['value'] == 0.0:
+                        #     print ("Blending In During {}".format(blending[-1:]))
+                        #     visible_range.append(keyframe[i - 1]['frame'])
+                        #
+                        # # A value of 1 means we are starting a blend range
+                        # elif key['value'] == 1.0:
+                        #     print ("Blending Out During {}".format(blending[-1:]))
+                        #     visible_range.append(key['frame'])
+                        #
+                        # # Anything else and this function does not work. We need keys to be either 0 or 1.
+                        # # Kick the animator if he did anything else!
+                        # else:
+                        #     print "Not a valid key."
 
-            # condensed_visible_range = []
-            # shot_range = range(frame_range[0], frame_range[1] + 1)
-            # visible_range = sorted(set(shot_range) - set(invisible_range))
-            # for x in contractor(sorted(visible_range)):
-            #     condensed_visible_range.append(x)
+                    elif previous_value == key['value'] and key['value'] == 0.0:
 
-            log("Blending Ranges: {}".format(blending))
-            log("Invisible Range {}".format(condensed_invisible_range))
-            log("Complete Visible Range: {}".format(condensed_visible_range))
+                        visible.append((keyframe[i - 1]['frame'], key['frame']))
 
-            blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
+                    elif previous_value == key['value'] and key['value'] == 1.0:
 
-            try:
-                on_pass = scene.item('{}_on'.format(blend_grp.name))
+                        if i == 0:
+                            invisible.append((keyframe[0]['frame'], key['frame']))
+                        else:
+                            invisible.append((keyframe[i - 1]['frame'], key['frame']))
+
+                    i += 1
+
+                visible_range = []
+                condensed_visible_range =  []
+                for blend in blending:
+                    visible_range += (range(blend[0], blend[1]+1, 1))
+                for vis in visible:
+                    visible_range += (range(vis[0], vis[1]+1, 1))
+                for x in contractor(sorted(set(visible_range))):
+                    condensed_visible_range.append(x)
+
+                invisible_range = []
+                condensed_invisible_range = []
+                for blend in blending:
+                    invisible_range += (range(blend[0], blend[1] + 1, 1))
+                for invis in invisible:
+                    invisible_range += (range(invis[0], invis[1]+1, 1))
+                for x in contractor(sorted(set(invisible_range))):
+                    condensed_invisible_range.append(x)
+
+                log("Blending Ranges: {}".format(blending))
+                log("Invisible Range {}: {}".format(layer, condensed_invisible_range))
+                log("Complete Visible Range {}: {}".format(layer, condensed_visible_range))
+
+                blend_grp = item.parent.itemGraph('shadeLoc').forward()[0]
+                ranges[blend_grp.name] = {'invisible': condensed_invisible_range,
+                                          'visible': condensed_visible_range}
+
+
+                # try:
+                #     on_pass = scene.item('{}_on'.format(blend_grp.name))
+                # except:
+                #     on_pass = fade_passes.addPass('{}_on'.format(blend_grp.name))
+                # on_pass.active = True
+                #
+                # fade_passes.addChannel(blend_grp.channel('render'))
+                # blend_grp.channel('render').set('on')
+                # fade_passes.addChannel(blend_grp.channel('visible'))
+                # blend_grp.channel('visible').set('on')
+                # lx.eval('edit.apply')
+
             except:
-                on_pass = fade_passes.addPass('{}_on'.format(blend_grp.name))
-            on_pass.active = True
+                log("No animation on {}".format(item.name))
 
-            fade_passes.addChannel(blend_grp.channel('render'))
-            blend_grp.channel('render').set('on')
-            fade_passes.addChannel(blend_grp.channel('visible'))
-            blend_grp.channel('visible').set('on')
-            lx.eval('edit.apply')
+    for i in ranges:
+        log("{}:\t\t\t{}".format(i, ranges[i]))
 
-            try:
-                off_pass = scene.item('{}_off'.format(blend_grp.name))
-            except:
-                off_pass = fade_passes.addPass('{}_off'.format(blend_grp.name))
-            off_pass.active = True
+    # min_frame = frame_range[1]
+    # max_frame = frame_range[1]
+    # for blend_grp in ranges:
+    #     for frames in ranges[blend_grp]['invisible']:
+    #         min_frame = min(min_frame, frames[0])
+    #         max_frame = min(max_frame, frames[1])
+    #
+    # all_off_range = (min_frame, max_frame)
+    # log("all off {}".format(all_off_range))
+    #
+    # min_frame = frame_range[0]
+    # max_frame = frame_range[1]
+    # for blend_grp in ranges:
+    #     for frames in ranges[blend_grp]['visible']:
+    #         min_frame = max(min_frame, frames[0])
+    #         max_frame = min(max_frame, frames[1])
+    #
+    # all_on_range = (min_frame, max_frame)
+    # log("all on {}".format(all_on_range))
+    #
+    # min_frame = frame_range[1]
+    # max_frame = frame_range[0]
+    # for blend_grp in ranges:
+    #     for frames in ranges[blend_grp]['visible']:
+    #         min_frame = min(min_frame, frames[0])
+    #         max_frame = max(max_frame, frames[1])
+    #
+    # first_on_range = (min_frame, max_frame)
+    # log("first on {}".format(first_on_range))
 
-            fade_passes.addChannel(blend_grp.channel('render'))
-            blend_grp.channel('render').set('off')
-            fade_passes.addChannel(blend_grp.channel('visible'))
-            blend_grp.channel('visible').set('off')
-            lx.eval('edit.apply')
+    # visible = dict()
+    # invisible = dict()
+    # for x in xrange(first_on_range[0], all_on_range[0], 1):
+    #     for blend_grp in ranges:
+    #         for frames in ranges[blend_grp]['visible']:
+    #             if x in xrange(frames[0], frames[1] + 1, 1):
+    #                 try:
+    #                     visible[x].append(blend_grp)
+    #                 except:
+    #                     visible[x] = [blend_grp]
+
+    visible = dict()
+    invisible = dict()
+    for x in xrange(frame_range[0], frame_range[1] + 1, 1):
+        for blend_grp in ranges:
+            for frames in ranges[blend_grp]['visible']:
+                if x in xrange(frames[0], frames[1] + 1, 1):
+                    try:
+                        visible[x].append(blend_grp)
+                    except:
+                        visible[x] = [blend_grp]
+            for frames in ranges[blend_grp]['invisible']:
+                if x in xrange(frames[0], frames[1] + 1, 1):
+                    try:
+                        invisible[x].append(blend_grp)
+                    except:
+                        invisible[x] = [blend_grp]
+    # log('visible')
+    # for x in visible:
+    #     log("{}: {}".format(x, visible[x]))
+    # log('invisible')
+    # for x in invisible:
+    #     log("{}: {}".format(x, invisible[x]))
+
+    items = 1
+    min_frame = frame_range[0]
+    log("visible")
+    for x in visible:
+        if x == frame_range[0]:
+            pass
+        else:
+            if x == frame_range[1]:
+                log("{}-{} {}".format(min_frame, frame_range[1], visible[x]))
+            else:
+                if items != len(visible[x]):
+                    items = len(visible[x])
+                    max_frame = x-1
+                    log("{}-{} {}".format(min_frame, max_frame, visible[x-1]))
+                    min_frame = x
+
+    items = 1
+    min_frame = frame_range[0]
+    log("invisible")
+    for x in invisible:
+        if x == frame_range[0]:
+            pass
+        else:
+            if x == frame_range[1]:
+                log("{}-{} {}".format(min_frame, frame_range[1], invisible[x]))
+            else:
+                if items != len(invisible[x]):
+                    items = len(invisible[x])
+                    max_frame = x - 1
+                    log("{}-{} {}".format(min_frame, max_frame, invisible[x-1]))
+                    min_frame = x
+
     for blend_grp in scene.getGroups('fade'):
         blend_grp.channel('render').set('off')
         blend_grp.channel('visible').set('off')
