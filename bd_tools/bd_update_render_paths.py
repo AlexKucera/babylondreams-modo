@@ -69,31 +69,31 @@ def main():
             outputtype = item.channel('effect').get()
             filepath = item.channel('filename').get()
             enabled = item.channel('enable').get()
+            if enabled:
+                if filepath:
 
-            if filepath is not None and enabled:
+                    fileformat = enabled = item.channel('format').get()
 
-                fileformat = enabled = item.channel('format').get()
+                    if fileformat is None or "$FLEX":
+                        if outputtype == "shade.normal" or outputtype == "geo.world" or outputtype == "geo.uv" or outputtype == "depth" or outputtype == "motion":
+                            fileformat = "openexr_32"
+                        else:
+                            fileformat = "openexr"
 
-                if fileformat is None or "$FLEX":
-                    if outputtype == "shade.normal" or outputtype == "geo.world" or outputtype == "geo.uv" or outputtype == "depth" or outputtype == "motion":
-                        fileformat = "openexr_32"
+                    if item.name == "rgba":
+                        renderpasspath = "{}/".format(output)
                     else:
-                        fileformat = "openexr"
+                        renderpasspath = "{}/{}/".format(output, item.name.replace(" ", "_"))
 
-                if item.name == "rgba":
-                    renderpasspath = "{}/".format(output)
-                else:
-                    renderpasspath = "{}/{}/".format(output, item.name.replace(" ", "_"))
-
-                renderoutputpath = renderpasspath + os.path.splitext(file)[0] + "_"
-                lx.out("RenderOutput " + item.name + " will be located at: " +
-                       renderpasspath)
-                if not os.path.exists(renderpasspath):
-                    os.makedirs(renderpasspath)
-                lx.out("Setting Render Output path to: " + renderoutputpath)
-                item.channel('filename').set(renderoutputpath)
-                lx.out("Setting Render Output format to: " + fileformat)
-                item.channel('format').set(fileformat)
+                    renderoutputpath = renderpasspath + os.path.splitext(file)[0] + "_"
+                    lx.out("RenderOutput " + item.name + " will be located at: " +
+                           renderpasspath)
+                    if not os.path.exists(renderpasspath):
+                        os.makedirs(renderpasspath)
+                    lx.out("Setting Render Output path to: " + renderoutputpath)
+                    item.channel('filename').set(renderoutputpath)
+                    lx.out("Setting Render Output format to: " + fileformat)
+                    item.channel('format').set(fileformat)
 
             else:
                 pass
