@@ -12,10 +12,6 @@ Release Notes:
     select as many instances as you want and execute the command. it will ask you for a new mesh source.
     pick one from the dropdown or put in a new name and an empty mesh will be created as new source.
 
-     Only works in modo 10.2v1 and lower for now.
-
-     Already bugged: http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=54793
-
 V0.1 Initial Release - 2017-02-23
 
 """
@@ -84,7 +80,7 @@ def main(new_source):
 
         # Connect new prototype. Again, notice how they go in
         # different directions.
-        instance >> prototype.itemGraph("source")
+        instance >> new_source.itemGraph("source")
         new_source >> instance.itemGraph("meshInst")
 
         print "re-routing {0} from {1} to {2}".format(instance.name, old_source.name, new_source.name)
