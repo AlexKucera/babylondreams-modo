@@ -84,7 +84,7 @@ def main(new_source):
 
         # Connect new prototype. Again, notice how they go in
         # different directions.
-        instance >> prototype.itemGraph("source")
+        instance >> new_source.itemGraph("source")
         new_source >> instance.itemGraph("meshInst")
 
         print "re-routing {0} from {1} to {2}".format(instance.name, old_source.name, new_source.name)
