@@ -10,6 +10,13 @@ Welcome to BabylonDreams modo Pipeline Kit's documentation!
     :maxdepth: 4
     :caption: Contents:
 
+    modeling
+    rigging
+    animation
+    shading
+    rendering
+    scripting
+
     modules
 
 Commander Help: https://github.com/adamohern/commander
