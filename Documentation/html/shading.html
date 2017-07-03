@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>babylondreams &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  <title>Shading &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
   
 
   
@@ -33,7 +33,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="index.html"/> 
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="index.html"/>
+        <link rel="next" title="Rendering" href="rendering.html"/>
+        <link rel="prev" title="Animation" href="animation.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -83,9 +85,19 @@
             
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="modeling.html">Modeling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rigging.html">Rigging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.html">Animation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Shading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fix-orphans">Fix Orphans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#blend-hierarchy">Blend Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#blend-arbitrary">Blend Arbitrary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bbox-instance-toggle">BBox Instance Toggle</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rendering.html">Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripting.html">Scripting</a></li>
 </ul>
 
             
@@ -116,11 +128,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>babylondreams</li>
+    <li>Shading</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/shading.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -130,42 +142,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="babylondreams">
-<h1>babylondreams<a class="headerlink" href="#babylondreams" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="babylondreams.html">babylondreams package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="babylondreams.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="babylondreams.commander.html">babylondreams.commander package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#module-babylondreams.commander.Commander">babylondreams.commander.Commander module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#module-babylondreams.commander.MeshEditor">babylondreams.commander.MeshEditor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#module-babylondreams.commander.Var">babylondreams.commander.Var module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#module-babylondreams.commander">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="babylondreams.html#module-babylondreams">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="bd_tools.html">bd_tools package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_bbox_toggle">bd_tools.bd_bbox_toggle module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_blend_hierarchy">bd_tools.bd_blend_hierarchy module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_blend_hierarchy_split_passes">bd_tools.bd_blend_hierarchy_split_passes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_deinstance">bd_tools.bd_deinstance module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_fix_orphans">bd_tools.bd_fix_orphans module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_gl_capture">bd_tools.bd_gl_capture module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_helpers">bd_tools.bd_helpers module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_instance_reroute">bd_tools.bd_instance_reroute module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_instance_source_center_adjust">bd_tools.bd_instance_source_center_adjust module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_transfer_anim">bd_tools.bd_transfer_anim module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.var">bd_tools.var module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools">Module contents</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="shading">
+<h1>Shading<a class="headerlink" href="#shading" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="fix-orphans">
+<h2>Fix Orphans<a class="headerlink" href="#fix-orphans" title="Permalink to this headline">¶</a></h2>
+<p>Finds any Shader Tree items that have become unparented and parents them back to the Shader Tree.</p>
+</div>
+<div class="section" id="blend-hierarchy">
+<h2>Blend Hierarchy<a class="headerlink" href="#blend-hierarchy" title="Permalink to this headline">¶</a></h2>
+<p>The command creates an easily animateable setup to dissolve/fade a hierarchy of items. By selecting the parent item and running the command a few things happen:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>A group with the whole item hierarchy gets created</li>
+<li>A shader setup gets created and put at the top of the shader tree</li>
+<li>The shader setup gets linked to the group</li>
+</ol>
+</div></blockquote>
+<p>To animate the blend/dissolve you open the corresponding Shader group and animate the constant&#8217;s value.</p>
+</div>
+<div class="section" id="blend-arbitrary">
+<h2>Blend Arbitrary<a class="headerlink" href="#blend-arbitrary" title="Permalink to this headline">¶</a></h2>
+<p>Same as Blend Hierarchy, but allows blending of completely unrelated items in the scene.</p>
+</div>
+<div class="section" id="bbox-instance-toggle">
+<h2>BBox Instance Toggle<a class="headerlink" href="#bbox-instance-toggle" title="Permalink to this headline">¶</a></h2>
+<p>Toggles the bounding box display of all instances of a given selection (or all instances in the scene if nothing is selected).</p>
 </div>
 </div>
 
@@ -173,6 +174,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rendering.html" class="btn btn-neutral float-right" title="Rendering" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="animation.html" class="btn btn-neutral" title="Animation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

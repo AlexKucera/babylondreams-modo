@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>babylondreams &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  <title>Rigging &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
   
 
   
@@ -33,7 +33,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="index.html"/> 
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="index.html"/>
+        <link rel="next" title="Animation" href="animation.html"/>
+        <link rel="prev" title="Modeling" href="modeling.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -83,9 +85,18 @@
             
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="modeling.html">Modeling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rigging.html">Rigging</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Rigging</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#re-route-instances">Re-Route Instances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#de-instance">De-Instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#instance-source-center-adjust">Instance Source Center Adjust</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shading.html">Shading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rendering.html">Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripting.html">Scripting</a></li>
 </ul>
 
             
@@ -116,11 +127,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>babylondreams</li>
+    <li>Rigging</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/rigging.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -130,42 +141,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="babylondreams">
-<h1>babylondreams<a class="headerlink" href="#babylondreams" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="babylondreams.html">babylondreams package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="babylondreams.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="babylondreams.commander.html">babylondreams.commander package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#module-babylondreams.commander.Commander">babylondreams.commander.Commander module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#module-babylondreams.commander.MeshEditor">babylondreams.commander.MeshEditor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#module-babylondreams.commander.Var">babylondreams.commander.Var module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html#module-babylondreams.commander">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="babylondreams.html#module-babylondreams">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="bd_tools.html">bd_tools package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_bbox_toggle">bd_tools.bd_bbox_toggle module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_blend_hierarchy">bd_tools.bd_blend_hierarchy module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_blend_hierarchy_split_passes">bd_tools.bd_blend_hierarchy_split_passes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_deinstance">bd_tools.bd_deinstance module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_fix_orphans">bd_tools.bd_fix_orphans module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_gl_capture">bd_tools.bd_gl_capture module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_helpers">bd_tools.bd_helpers module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_instance_reroute">bd_tools.bd_instance_reroute module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_instance_source_center_adjust">bd_tools.bd_instance_source_center_adjust module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_transfer_anim">bd_tools.bd_transfer_anim module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools.var">bd_tools.var module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html#module-bd_tools">Module contents</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="rigging">
+<h1>Rigging<a class="headerlink" href="#rigging" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="re-route-instances">
+<h2>Re-Route Instances<a class="headerlink" href="#re-route-instances" title="Permalink to this headline">¶</a></h2>
+<p>see <a class="reference internal" href="modeling.html"><span class="doc">Modeling</span></a></p>
+</div>
+<div class="section" id="de-instance">
+<h2>De-Instance<a class="headerlink" href="#de-instance" title="Permalink to this headline">¶</a></h2>
+<p>see <a class="reference internal" href="modeling.html"><span class="doc">Modeling</span></a></p>
+</div>
+<div class="section" id="instance-source-center-adjust">
+<h2>Instance Source Center Adjust<a class="headerlink" href="#instance-source-center-adjust" title="Permalink to this headline">¶</a></h2>
+<p>Allows adjustments to the center of an object that is the source of a bunch of instances without the instances flying off in all directions.</p>
+<p>The basic idea is to save the source world position, then adjust the center, then get the new world position and calculate the offset. Then apply this offset to the transform of all the instances.</p>
+<p>Seems to work well on fresh CAD imports. Does not seem to work at all on manually created instance hierarchies for now. Bummer.</p>
 </div>
 </div>
 
@@ -173,6 +163,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="animation.html" class="btn btn-neutral float-right" title="Animation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modeling.html" class="btn btn-neutral" title="Modeling" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

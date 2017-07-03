@@ -85,6 +85,12 @@
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeling.html">Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rigging.html">Rigging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../shading.html">Shading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rendering.html">Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripting.html">Scripting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">babylondreams</a></li>
 </ul>
 
@@ -158,6 +164,7 @@
 <span class="kn">import</span> <span class="nn">modo</span>
 
 <span class="kn">from</span> <span class="nn">bd_tools</span> <span class="k">import</span> <span class="n">bd_helpers</span>
+<span class="n">reload</span><span class="p">(</span><span class="n">bd_helpers</span><span class="p">)</span>
 
 <span class="c1"># FUNCTIONS -----------------------------------------------</span>
 
@@ -190,8 +197,12 @@
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_gl_capture.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">gl_recording_size</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">gl_recording_type</span><span class="o">=</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="n">viewport_camera</span><span class="o">=</span><span class="s1">&#39;rendercam&#39;</span><span class="p">,</span> <span class="n">shading_style</span><span class="o">=</span><span class="s1">&#39;advgl&#39;</span><span class="p">,</span>
          <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;preview&#39;</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">first_frame</span><span class="o">=</span><span class="mi">1001</span><span class="p">,</span> <span class="n">last_frame</span><span class="o">=</span><span class="mi">1250</span><span class="p">,</span> <span class="n">raygl</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="n">replicators</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-         <span class="n">bg_style</span><span class="o">=</span><span class="s1">&#39;environment&#39;</span><span class="p">,</span> <span class="n">use_scene_range</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">automatic_naming</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+         <span class="n">bg_style</span><span class="o">=</span><span class="s1">&#39;environment&#39;</span><span class="p">,</span> <span class="n">use_scene_range</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">automatic_naming</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bbox_toggle</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">):</span>
     <span class="n">scene</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span>
+
+    <span class="c1"># Start timer</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">bd_helpers</span><span class="o">.</span><span class="n">timer</span><span class="p">()</span>
 
     <span class="c1"># Initialize main variables</span>
 
@@ -307,7 +318,6 @@
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.drawDisp true&#39;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.drawFur true&#39;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showSelectionRollover false&#39;</span><span class="p">)</span>
-    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.shadingStyle &#39;</span> <span class="o">+</span> <span class="n">shading_style</span> <span class="o">+</span> <span class="s1">&#39; active&#39;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.wireframeOverlay none active&#39;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showWireframeItemMode false&#39;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.showWorkPlane no&#39;</span><span class="p">)</span>
@@ -320,6 +330,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.cameraItem &#39;</span> <span class="o">+</span> <span class="n">capture_camera_name</span><span class="p">)</span>
 
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.shadingStyle &#39;</span> <span class="o">+</span> <span class="n">shading_style</span> <span class="o">+</span> <span class="s1">&#39; active&#39;</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.shadingStyle &#39;</span> <span class="o">+</span> <span class="n">shading_style</span><span class="p">)</span>
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;view3d.sameAsActive true&#39;</span><span class="p">)</span>
 
@@ -338,15 +349,26 @@
         <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;view3d.setGnzBackground environment&quot;</span><span class="p">)</span>
 
     <span class="n">bbox</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">iterItemsFast</span><span class="p">(</span><span class="n">itype</span><span class="o">=</span><span class="s1">&#39;mesh&#39;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;custom&#39;</span><span class="p">:</span>
-            <span class="n">bbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-            <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bbox_toggle</span> <span class="o">==</span> <span class="s1">&#39;full&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">iterItemsFast</span><span class="p">(</span><span class="n">itype</span><span class="o">=</span><span class="s1">&#39;mesh&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;custom&#39;</span><span class="p">:</span>
+                <span class="n">bbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">iterItemsFast</span><span class="p">(</span><span class="n">itype</span><span class="o">=</span><span class="s1">&#39;meshInst&#39;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;custom&#39;</span><span class="p">:</span>
-            <span class="n">bbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-            <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">iterItemsFast</span><span class="p">(</span><span class="n">itype</span><span class="o">=</span><span class="s1">&#39;meshInst&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;custom&#39;</span><span class="p">:</span>
+                <span class="n">bbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">iterItemsFast</span><span class="p">(</span><span class="n">itype</span><span class="o">=</span><span class="s1">&#39;mesh&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+                <span class="n">bbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;custom&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">iterItemsFast</span><span class="p">(</span><span class="n">itype</span><span class="o">=</span><span class="s1">&#39;meshInst&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+                <span class="n">bbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;custom&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gl_type</span> <span class="o">==</span> <span class="s2">&quot;movie&quot;</span><span class="p">:</span>
         <span class="n">gl_type</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -358,12 +380,21 @@
     <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;gl.capture </span><span class="si">{0}</span><span class="s1"> filename:&quot;</span><span class="si">{1}</span><span class="s1">&quot; frameS:</span><span class="si">{2}</span><span class="s1"> frameE:</span><span class="si">{3}</span><span class="s1"> autoplay:true&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gl_type</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span>
                                                                                        <span class="n">first_frame</span><span class="p">,</span> <span class="n">last_frame</span><span class="p">))</span>
 
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">bbox</span><span class="p">:</span>
-        <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;custom&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bbox_toggle</span> <span class="o">==</span> <span class="s1">&#39;full&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">bbox</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;custom&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">bbox</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="s1">&#39;drawShape&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
 
     <span class="n">scene</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
 
-    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;layout.closeWindow&quot;</span><span class="p">)</span></div>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;layout.closeWindow&quot;</span><span class="p">)</span>
+
+    <span class="n">end</span> <span class="o">=</span> <span class="n">bd_helpers</span><span class="o">.</span><span class="n">timer</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="s1">&#39;GL Recording&#39;</span><span class="p">)</span>
+    <span class="n">per_frame</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">last_frame</span> <span class="o">-</span> <span class="n">first_frame</span><span class="p">)</span>
+    <span class="n">timestring</span> <span class="o">=</span> <span class="n">bd_helpers</span><span class="o">.</span><span class="n">secondsToHoursMinutesSeconds</span><span class="p">(</span><span class="n">per_frame</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;That&#39;s </span><span class="si">{}</span><span class="s2"> per frame.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timestring</span><span class="p">))</span></div>
 
 
 <span class="c1"># END MAIN PROGRAM -----------------------------------------------</span>
