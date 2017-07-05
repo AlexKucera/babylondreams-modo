@@ -58,7 +58,8 @@ def capture_path():
 
 def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
          filename='preview', filepath="", first_frame=1001, last_frame=1250, raygl='off', replicators=False,
-         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True, bbox_toggle='full'):
+         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True, bbox_toggle='full',
+         avp_shadows=True, avp_ao=True):
     scene = modo.Scene()
 
     # Start timer
@@ -92,9 +93,9 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
         filepath = capture_path()['output_path']
 
     if gl_recording_type == 'movie':
-        filepath = '{}{}_{}.mov'.format(filepath, filename, capture_camera_name)
+        filepath = '{0}{3}{1}_{2}.mov'.format(filepath, filename, capture_camera_name, os.sep)
     else:
-        filepath = '{0}{1}{3}{1}_{2}.tga'.format(filepath, filename, capture_camera_name, os.sep)
+        filepath = '{0}{3}{1}{3}{1}_{2}.tga'.format(filepath, filename, capture_camera_name, os.sep)
 
     print(filepath)
     if not overwrite:
@@ -196,13 +197,25 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('view3d.sameAsActive true')
 
     if shading_style == "gnzgl":
+        lx.eval("view3d.setGnzMaterialMode full")
         lx.eval("view3d.showGnzFSAA x9")
+        lx.eval("view3d.setGnzLineAA full")
         lx.eval("view3d.setGnzTransparency correct")
         lx.eval("view3d.setGnzSSReflections blurry")
         lx.eval("view3d.setGnzDitherMode ordered")
-        lx.eval("view3d.showGnzSSAO true")
+        if avp_ao:
+            lx.eval("view3d.showGnzSSAO true")
+        else:
+            lx.eval("view3d.showGnzSSAO false")
         lx.eval("view3d.GnzVisOverride all")
-        lx.eval("view3d.showGnzShadows true")
+        if avp_shadows:
+            lx.eval("view3d.showGnzShadows true")
+            lx.eval("view3d.setGnzShadowsCSMLevels x4")
+            lx.eval("view3d.setGnzShadowsSize high")
+            lx.eval("view3d.setGnzShadowsFilter on")
+        else:
+            lx.eval("view3d.showGnzShadows false")
+
         lx.eval("view3d.useGnzNormalMaps true")
         lx.eval("view3d.useGnzBumpMaps true")
         lx.eval("view3d.setGnzVisibility render")
