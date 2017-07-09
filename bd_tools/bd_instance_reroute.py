@@ -83,7 +83,7 @@ def main(new_source):
         instance >> new_source.itemGraph("source")
         new_source >> instance.itemGraph("meshInst")
 
-        print "re-routing {0} from {1} to {2}".format(instance.name, old_source.name, new_source.name)
+        print "re-routing {0} from {1} to {2}".format(instance.name, source.name, new_source.name)
 
     if len(sources) > 0:
         modo.dialogs.alert('Warning',
