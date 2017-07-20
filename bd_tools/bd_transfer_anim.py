@@ -53,14 +53,18 @@ def channel_copy_paste(item_id, channel_name, cmd="copy"):
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
-def main():
+def main(source=None, target=None):
+    # These channels show up as animated even if there are no keys on them. Not a reliable source to determin animation.
     forbidden_channels = ["localMatrix", "wposMatrix", "wrotMatrix", "wsclMatrix", "wpivPosMatrix", "wpivRotMatrix",
                           "worldMatrix", "glstate", "crvGroup", "matrix"]
     scene = modo.Scene()
-    selected = bd_helpers.selected(2)
 
-    source = selected[0]
-    target = selected[1]
+    if source == None or target == None:
+        selected = bd_helpers.selected(2)
+
+        source = selected[0]
+        target = selected[1]
+
 
     source_channels = get_channels(source, type="name", forbidden_channels=forbidden_channels, isAnimated=False)
     target_channels = get_channels(target, type="name", forbidden_channels=forbidden_channels, isAnimated=False)
