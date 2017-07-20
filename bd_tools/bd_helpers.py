@@ -39,7 +39,7 @@ def selected(num=1):
         else:
             filler = "items"
 
-        modo.dialogs.alert("Warning", "Please select at least one {0}.".format(filler), dtype='warning')
+        modo.dialogs.alert("Warning", "Please select at least {1} {0}.".format(filler, num), dtype='warning')
 
     if len(selected) > num:
         selected = selected[-num:]
