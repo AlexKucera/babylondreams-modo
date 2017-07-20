@@ -3,7 +3,7 @@
 
 """
 
-babylondreams - bd_transfer_anim_command
+babylondreams - bd_transfer_anim_tagger_command
 
 Release Notes:
 
@@ -15,7 +15,7 @@ import babylondreams
 import lx
 import modo
 
-from bd_tools import bd_transfer_anim
+from bd_tools import bd_transfer_anim_tagger
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -30,9 +30,26 @@ __status__ = "Development"
 class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
+    def commander_arguments(self):
+        return [
+            {
+                'name': 'mode',
+                'label': "Tagging Mode",
+                'datatype': 'string',
+                'default': "update",
+                'values_list_type': 'popup',
+                'values_list': [('update', 'Update Tags'),
+                                ('overwrite', 'Overwrite/Re-create Tags'),
+                                ('list', 'List Untagged Animated Items'),
+                                ('assign', 'Assign Tags to Hierarchy')]
+            }
+        ]
+
     def commander_execute(self, msg, flags):
-        reload(bd_transfer_anim)
-        bd_transfer_anim.main()
+        arguments = self.commander_args()
+
+        reload(bd_transfer_anim_tagger)
+        bd_transfer_anim_tagger.main(mode=arguments['mode'])
 
 
-lx.bless(CommandClass, 'bd.transfer_anim')
+lx.bless(CommandClass, 'bd.transfer_anim_tagger')
