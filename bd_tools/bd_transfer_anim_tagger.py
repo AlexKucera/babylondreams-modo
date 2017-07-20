@@ -24,75 +24,120 @@ from pprint import pprint
 
 from bd_tools import bd_helpers
 
+# These channels show up as animated even if there are no keys on them. Not a reliable source to determin animation.
+forbidden_channels = ["localMatrix", "wposMatrix", "wrotMatrix", "wsclMatrix", "wpivPosMatrix", "wpivRotMatrix",
+                      "worldMatrix", "glstate", "crvGroup", "matrix"]
+
 
 # FUNCTIONS -----------------------------------------------
+
+def list():
+    print("Listing animated items without an animation tag.")
+
+    untagged = []
+
+    for item in selected:
+        animated = False
+
+        # find only animated items as we don't want to tag static ones and make the scene unnecessarily heavy.
+
+        # first check the item's channels
+        for channel in item.channels():
+            if channel.name not in forbidden_channels:
+                if channel.isAnimated:
+                    animated = True
+
+        # then check any transforms connected to the item as they don't show up under the item's channels
+        for transform in item.transforms:
+            for channel in transform.channels():
+                if channel.name not in forbidden_channels:
+                    if channel.isAnimated:
+                        animated = True
+        if animated:
+            if item.hasTag("anim"):
+                if not item.readTag("anim"):
+                    untagged.append(item.name)
+            else:
+                untagged.append(item.name)
+
+    if len(untagged) > 0:
+        message = ""
+        for item in untagged:
+            message = "{}\n{}".format(message, item)
+        modo.dialogs.alert("List of untagged items",
+                       "The following items have animation on them, but are not tagged. "
+                       "You might want to update your asset before importing it.\n{}".format(message),
+                       dtype='info')
+    else:
+        modo.dialogs.alert("You are good to go!",
+                           "Congratulations. All animated items have tags on them. You can start the auto anim transfer.",
+                           dtype='info')
+
+
+def assign():
+    modo.dialogs.fileOpen('text', title='Open List of Tags', multi=False)
+
+
+def update():
+    for item in selected:
+
+        createTag = False
+
+        if item.hasTag("anim"):
+            if not item.readTag("anim"):
+                createTag = True
+        else:
+            createTag = True
+
+        if createTag:
+            tag(item)
+
+
+def overwrite():
+    for item in selected:
+        tag(item)
+
+
+def tag(item):
+    print("Creating unique identifier.")
+    # Creating unique identifier with a hash and the current time
+    message = "{} {}".format(item.id, time.time())
+    m = hashlib.sha1()
+    m.update(message)
+    digest = m.hexdigest()
+
+    item.setTag("anim", "{}_{}".format(item.name, digest[:4]))
+
 
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
 def main(mode="update"):
-    # These channels show up as animated even if there are no keys on them. Not a reliable source to determin animation.
-    forbidden_channels = ["localMatrix", "wposMatrix", "wrotMatrix", "wsclMatrix", "wpivPosMatrix", "wpivRotMatrix",
-                          "worldMatrix", "glstate", "crvGroup", "matrix"]
+    global scene
+    global selected
 
     scene = modo.Scene()
     selected = scene.selected
 
-    print mode
-
     if mode == "assign":
-
-        modo.dialogs.fileOpen('text', title='Open List of Tags', multi=False)
+        assign()
 
     if mode == "list":
-        print("Listing animated items without an animation tag.")
+        list()
 
-    if mode == "update" or mode == "overwrite":
+    if mode == "update":
 
-        for item in selected:
-            # animated = False
-            #
-            # # find only animated items as we don't want to tag static ones and make the scene unnecessarily heavy.
-            #
-            # # first check the item's channels
-            # for channel in item.channels():
-            #     if channel.name not in forbidden_channels:
-            #         if channel.isAnimated:
-            #             print channel.name
-            #             animated = True
-            #
-            # # then check any transforms connected to the item as they don't show up under the item's channels
-            # for transform in item.transforms:
-            #     for channel in transform.channels():
-            #         if channel.name not in forbidden_channels:
-            #             if channel.envelope.keyframes.numKeys > 0:
-            #                 print channel.name
-            #                 animated = True
-            animated = True
-            if animated:
+        if len(selected) == 0:
+            modo.dialogs.alert("Warning", "Please select at least one item.", dtype='warning')
 
-                createTag = False
+        update()
 
-                if mode == "update":
-                    if item.hasTag("anim"):
-                        if not item.readTag("anim"):
-                            createTag = True
-                    else:
-                        createTag = True
+    if mode == "overwrite":
 
-                if mode == "overwrite":
-                    print "er?"
-                    createTag = True
+        if len(selected) == 0:
+            modo.dialogs.alert("Warning", "Please select at least one item.", dtype='warning')
 
-                if createTag:
-                    print("Creating unique identifier.")
-                    # Creating unique identifier with a hash and the current time
-                    message = "{} {}".format(item.id, time.time())
-                    m = hashlib.sha1()
-                    m.update(message)
-                    digest = m.hexdigest()
-
-                    item.setTag("anim", "{}_{}".format(item.name, digest[:4]))
+        overwrite()
 
 
 # END MAIN PROGRAM -----------------------------------------------

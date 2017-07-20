@@ -38,9 +38,9 @@ class CommandClass(babylondreams.CommanderClass):
                 'datatype': 'string',
                 'default': "update",
                 'values_list_type': 'popup',
-                'values_list': [('update', 'Update Tags'),
-                                ('overwrite', 'Overwrite/Re-create Tags'),
+                'values_list': [('update', 'Update Missing Tags'),
                                 ('list', 'List Untagged Animated Items'),
+                                ('overwrite', 'Overwrite/Re-create Tags (CAREFUL!)'),
                                 ('assign', 'Assign Tags to Hierarchy')]
             }
         ]
