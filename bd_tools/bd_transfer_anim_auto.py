@@ -43,38 +43,40 @@ def main():
 
     scene = modo.Scene()
     selected = bd_helpers.selected(2)
+    print selected
+    if selected != None:
 
-    sourceGroup = selected[0]
-    targetGroup = selected[1]
+        sourceGroup = selected[0]
+        targetGroup = selected[1]
 
-    tagsSource = dict()
-    for child in sourceGroup.children(recursive=True):
-        tag = get_tags(child)
-        tagsSource[tag] = child
+        tagsSource = dict()
+        for child in sourceGroup.children(recursive=True):
+            tag = get_tags(child)
+            tagsSource[tag] = child
 
-    tagsTarget = dict()
-    for child in targetGroup.children(recursive=True):
-        tag = get_tags(child)
-        tagsTarget[tag] = child
+        tagsTarget = dict()
+        for child in targetGroup.children(recursive=True):
+            tag = get_tags(child)
+            tagsTarget[tag] = child
 
-    tagMismatch = []
-    for tag in tagsSource:
-        print tag
-        if tag in tagsTarget:
-            print("{1} → {0}".format(tagsTarget[tag].name,tagsSource[tag].name) )
-            reload(bd_transfer_anim)
-            bd_transfer_anim.main(source=tagsSource[tag], target=tagsTarget[tag])
-        else:
-            tagMismatch.append(tagsSource[tag].name)
+        tagMismatch = []
+        for tag in tagsSource:
+            print tag
+            if tag in tagsTarget:
+                print("{1} → {0}".format(tagsTarget[tag].name,tagsSource[tag].name) )
+                reload(bd_transfer_anim)
+                bd_transfer_anim.main(source=tagsSource[tag], target=tagsTarget[tag])
+            else:
+                tagMismatch.append(tagsSource[tag].name)
 
-    if len(tagMismatch) > 0:
-        message = ""
-        for tag in tagMismatch:
-            message = "{}\n{}".format(message, tag)
-        modo.dialogs.alert("Warning",
-                           "There were animated items that could not be matched to any items in the target.\n"
-                           "Check their anim tag. Maybe it is missing or there is a mismatch.\n"
-                           "{}".format(message), dtype='warning')
+        if len(tagMismatch) > 0:
+            message = ""
+            for tag in tagMismatch:
+                message = "{}\n{}".format(message, tag)
+            modo.dialogs.alert("Warning",
+                               "There were animated items that could not be matched to any items in the target.\n"
+                               "Check their anim tag. Maybe it is missing or there is a mismatch.\n"
+                               "{}".format(message), dtype='warning')
 
 
 # END MAIN PROGRAM -----------------------------------------------

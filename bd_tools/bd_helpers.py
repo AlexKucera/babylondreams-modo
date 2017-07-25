@@ -41,10 +41,16 @@ def selected(num=1):
 
         modo.dialogs.alert("Warning", "Please select at least {1} {0}.".format(filler, num), dtype='warning')
 
+        return None
+
     if len(selected) > num:
         selected = selected[-num:]
 
-    return selected
+        return selected
+
+    if len(selected) == num:
+
+        return selected
 
 
 def restoreSelection(listSelections):
