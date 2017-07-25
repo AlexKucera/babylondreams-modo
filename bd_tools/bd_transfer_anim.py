@@ -43,10 +43,12 @@ def get_channels(item, type=None, forbidden_channels=[], isAnimated=False):
 
 
 def channel_copy_paste(item_id, channel_name, cmd="copy"):
+
     lx.eval("select.channel {{{0}:{1}}} set".format(item_id, channel_name))
     if cmd is "paste":
         lx.eval("channel.paste")
     elif cmd is "copy":
+        print("Copying {}".format(channel_name))
         lx.eval("channel.copy")
 
 
@@ -74,41 +76,46 @@ def main(source=None, target=None):
     for difference in differences:
         forbidden_channels.append(difference)
 
+    animated = False
+
+    # First we copy the item's channels
     for channel in source.channels():
         if channel.isAnimated:
             if channel.name not in forbidden_channels:
-                print channel.name
                 if channel.envelope.keyframes.numKeys > 0:
-                    pprint(channel.name)
+                    animated = True
+
                     channel_copy_paste(source.id, channel.name, cmd="copy")
                     channel_copy_paste(target.id, channel.name, cmd="paste")
-    try:
-        for source_transform in source.transforms:
-                source_transform_type = source_transform.type
-                exists = False
 
-                for target_transform in target.transforms:
-                    if target_transform.type == source_transform_type:
-                        exists = True
-                        target_transform_id = target_transform.id
+    # Now we find any Transform items associated with the source item and copy those
+    for source_transform in modo.item.LocatorSuperType(item=source).transforms:
+            source_transform_type = source_transform.type
+            exists = False
 
-                if not exists:
-                    target_transform_id = target.transforms.insert(source_transform_type)
-                    target_transform_id = target_transform_id.id
+            for target_transform in modo.item.LocatorSuperType(item=target).transforms:
+                if target_transform.type == source_transform_type:
+                    exists = True
+                    target_transform_id = target_transform.id
 
-                for channel in source_transform.channels():
-                    if channel.isAnimated:
-                        if channel.name not in forbidden_channels:
-                            if channel.envelope.keyframes.numKeys > 0:
-                                channel_copy_paste(source_transform.id, channel.name, cmd="copy")
-                                channel_copy_paste(target_transform_id, channel.name, cmd="paste")
-    except:
-        print("{} does not have any Transform channels to copy.".format(source.name))
+            if not exists:
+                target_transform_id = target.transforms.insert(source_transform_type)
+                target_transform_id = target_transform_id.id
+
+            for channel in source_transform.channels():
+                if channel.isAnimated:
+                    if channel.name not in forbidden_channels:
+                        if channel.envelope.keyframes.numKeys > 0:
+                            animated = True
+                            channel_copy_paste(source_transform.id, channel.name, cmd="copy")
+                            channel_copy_paste(target_transform_id, channel.name, cmd="paste")
 
     if len(differences) != 0:
         warning = "The following channels could not be copied because they do not exist on the target item:\n{0}".format(
         differences)
         modo.dialogs.alert("Warning", warning, dtype='warning')
+
+    return animated
 
 
 # END MAIN PROGRAM -----------------------------------------------
