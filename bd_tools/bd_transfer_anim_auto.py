@@ -29,7 +29,7 @@ import bd_transfer_anim
 # FUNCTIONS -----------------------------------------------
 
 def get_tags(item):
-    print item
+
     if item.hasTag("anim"):
         if item.readTag("anim"):
             tag = item.readTag("anim")
