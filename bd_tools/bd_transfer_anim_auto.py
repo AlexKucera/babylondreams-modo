@@ -43,8 +43,8 @@ def main():
 
     scene = modo.Scene()
     selected = bd_helpers.selected(2)
-    print selected
-    if selected != None:
+
+    if selected is not None:
 
         sourceGroup = selected[0]
         targetGroup = selected[1]
@@ -61,11 +61,13 @@ def main():
 
         tagMismatch = []
         for tag in tagsSource:
-            print tag
+
             if tag in tagsTarget:
-                print("{1} → {0}".format(tagsTarget[tag].name,tagsSource[tag].name) )
+
                 reload(bd_transfer_anim)
-                bd_transfer_anim.main(source=tagsSource[tag], target=tagsTarget[tag])
+                animated = bd_transfer_anim.main(source=tagsSource[tag], target=tagsTarget[tag])
+                if animated:
+                    print("{0} ({1}) → {2} ({3})".format(tagsSource[tag].name, tagsSource[tag].id, tagsTarget[tag].name, tagsTarget[tag].id))
             else:
                 tagMismatch.append(tagsSource[tag].name)
 
