@@ -26,7 +26,7 @@ from bd_tools import bd_helpers
 
 # These channels show up as animated even if there are no keys on them. Not a reliable source to determin animation.
 forbidden_channels = ["localMatrix", "wposMatrix", "wrotMatrix", "wsclMatrix", "wpivPosMatrix", "wpivRotMatrix",
-                      "worldMatrix", "glstate", "crvGroup", "matrix"]
+                      "worldMatrix", "glstate", "crvGroup", "matrix", "wParentMatrix", "glsurf", "mesh"]
 
 
 # FUNCTIONS -----------------------------------------------
