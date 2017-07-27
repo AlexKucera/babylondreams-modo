@@ -217,18 +217,20 @@ def save_json(dictdata="", prefix=""):
 
     jsonpath = modo.dialogs.customFile('fileSave', 'Save File', ('json',), ('JSON File',), ext=('json',),
                                         path=default_json_path(prefix))
+    if jsonpath is not None:
+        config_path = os.path.normpath(jsonpath)
 
-    config_path = os.path.normpath(jsonpath)
+        if not os.path.exists(os.path.dirname(config_path)):
+            try:
+                os.makedirs(os.path.dirname(config_path))
+            except:
+                print(traceback.format_exc())
 
-    if not os.path.exists(os.path.dirname(config_path)):
-        try:
-            os.makedirs(os.path.dirname(config_path))
-        except:
-            print(traceback.format_exc())
+        with open(config_path, 'w+') as outfile:
+            json.dump(dictdata, outfile, sort_keys=True, indent=4)
 
-    with open(config_path, 'w+') as outfile:
-        json.dump(dictdata, outfile, sort_keys=True, indent=4)
-        outfile.close()
+            outfile.close()
+            print("{} written to {}".format(os.path.basename(config_path), os.path.dirname(config_path)))
 
 
 def default_json_path(prefix=""):
@@ -238,6 +240,8 @@ def default_json_path(prefix=""):
     filename = scene.filename
     if not filename:
         filename = "untitled"
+    else:
+        filename = os.path.splitext(filename)[0]
 
     jsonpath = os.path.join(
         configpath,
