@@ -28,14 +28,6 @@ import bd_transfer_anim
 
 # FUNCTIONS -----------------------------------------------
 
-def get_tags(item):
-
-    if item.hasTag("anim"):
-        if item.readTag("anim"):
-            tag = item.readTag("anim")
-            return tag
-    return None
-
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
@@ -51,12 +43,12 @@ def main():
 
         tagsSource = dict()
         for child in sourceGroup.children(recursive=True):
-            tag = get_tags(child)
+            tag = bd_helpers.get_tags(child)
             tagsSource[tag] = child
 
         tagsTarget = dict()
         for child in targetGroup.children(recursive=True):
-            tag = get_tags(child)
+            tag = bd_helpers.get_tags(child)
             tagsTarget[tag] = child
 
         tagMismatch = []

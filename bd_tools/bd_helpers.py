@@ -14,13 +14,37 @@ Release Notes:
 V0.1 Initial Release - 2017-02-20
 
 """
-
+import json
 import sys
 import os
 import timeit
+import traceback
 
 import lx
 import modo
+
+
+class QueryDict(dict):
+    """
+    Creates a Dictionary that is browseable by path.
+
+    Example:
+
+        query_dict = {'key': {'subkey': 'value'}}
+
+        print query_dict['key/subkey']
+
+    """
+
+    def __getitem__(self, key_string):
+        current = self
+        try:
+            for key in key_string.split('/'):
+                current = dict.__getitem__(current, key)
+            return current
+        except (TypeError, KeyError):
+
+            return None
 
 
 def selected(num=1):
@@ -165,3 +189,91 @@ def walk_up(bottom):
 
     for x in walk_up(new_path):
         yield x
+
+
+def load_json(jsonpath="", prefix=""):
+    """
+    Returns a queryable dictionary from a JSON file.
+
+    :return: vars (QueryDict)
+
+    """
+
+    jsonpath = modo.dialogs.customFile('fileOpen', 'Open File', ('json',), ('JSON File',), ext=('json',),
+                                       path=default_json_path(prefix))
+
+    config_path = os.path.normpath(jsonpath)
+    with open(config_path) as json_data:
+        vars = QueryDict(json.load(json_data))
+
+    return vars
+
+
+def save_json(dictdata="", prefix=""):
+    """
+    Saves a dictionary to a JSON file.
+
+    """
+
+    jsonpath = modo.dialogs.customFile('fileSave', 'Save File', ('json',), ('JSON File',), ext=('json',),
+                                        path=default_json_path(prefix))
+
+    config_path = os.path.normpath(jsonpath)
+
+    if not os.path.exists(os.path.dirname(config_path)):
+        try:
+            os.makedirs(os.path.dirname(config_path))
+        except:
+            print(traceback.format_exc())
+
+    with open(config_path, 'w+') as outfile:
+        json.dump(dictdata, outfile, sort_keys=True, indent=4)
+        outfile.close()
+
+
+def default_json_path(prefix=""):
+    scene = modo.Scene()
+    configpath = lx.eval("query platformservice path.path ? configs")
+
+    filename = scene.filename
+    if not filename:
+        filename = "untitled"
+
+    jsonpath = os.path.join(
+        configpath,
+        "{}{}".format(prefix, filename)
+    )
+
+    return jsonpath
+
+
+def get_channels(item, type=None, forbidden_channels=[], isAnimated=False):
+    item_channels = []
+    for channel in item.channels():
+        if channel.name not in forbidden_channels:
+            if type is "name":
+                item_channels.append(channel.name)
+            if type is "index":
+                item_channels.append((channel.index))
+            if type is None:
+                pass
+    if type is None:
+        item_channels = item.channels()
+    return item_channels
+
+
+def channel_copy_paste(item_id, channel_name, cmd="copy"):
+    lx.eval("select.channel {{{0}:{1}}} set".format(item_id, channel_name))
+    if cmd is "paste":
+        lx.eval("channel.paste")
+    elif cmd is "copy":
+        print("Copying {}".format(channel_name))
+        lx.eval("channel.copy")
+
+
+def get_tags(item):
+    if item.hasTag("anim"):
+        if item.readTag("anim"):
+            tag = item.readTag("anim")
+            return tag
+    return None

@@ -27,31 +27,6 @@ from bd_tools import bd_helpers
 
 # FUNCTIONS -----------------------------------------------
 
-def get_channels(item, type=None, forbidden_channels=[], isAnimated=False):
-    item_channels = []
-    for channel in item.channels():
-        if channel.name not in forbidden_channels:
-            if type is "name":
-                item_channels.append(channel.name)
-            if type is "index":
-                item_channels.append((channel.index))
-            if type is None:
-                pass
-    if type is None:
-        item_channels = item.channels()
-    return item_channels
-
-
-def channel_copy_paste(item_id, channel_name, cmd="copy"):
-
-    lx.eval("select.channel {{{0}:{1}}} set".format(item_id, channel_name))
-    if cmd is "paste":
-        lx.eval("channel.paste")
-    elif cmd is "copy":
-        print("Copying {}".format(channel_name))
-        lx.eval("channel.copy")
-
-
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
@@ -61,15 +36,17 @@ def main(source=None, target=None):
                           "worldMatrix", "glstate", "crvGroup", "matrix", "wParentMatrix", "glsurf", "mesh"]
     scene = modo.Scene()
 
-    if source == None or target == None:
+    if source is None or target is None:
         selected = bd_helpers.selected(2)
 
         source = selected[0]
         target = selected[1]
 
+    source_channels = bd_helpers.get_channels(source, type="name", forbidden_channels=forbidden_channels, isAnimated=False)
+    target_channels = bd_helpers.get_channels(target, type="name", forbidden_channels=forbidden_channels, isAnimated=False)
 
-    source_channels = get_channels(source, type="name", forbidden_channels=forbidden_channels, isAnimated=False)
-    target_channels = get_channels(target, type="name", forbidden_channels=forbidden_channels, isAnimated=False)
+    sourceTag = bd_helpers.get_tags(source)
+    targetTag = bd_helpers.get_tags(target)
 
     differences = list(set(source_channels) - set(target_channels))
 
@@ -85,8 +62,8 @@ def main(source=None, target=None):
                 if channel.envelope.keyframes.numKeys > 0:
                     animated = True
 
-                    channel_copy_paste(source.id, channel.name, cmd="copy")
-                    channel_copy_paste(target.id, channel.name, cmd="paste")
+                    bd_helpers.channel_copy_paste(source.id, channel.name, cmd="copy")
+                    bd_helpers.channel_copy_paste(target.id, channel.name, cmd="paste")
 
     # Now we find any Transform items associated with the source item and copy those
     for source_transform in modo.item.LocatorSuperType(item=source).transforms:
@@ -107,16 +84,15 @@ def main(source=None, target=None):
                     if channel.name not in forbidden_channels:
                         if channel.envelope.keyframes.numKeys > 0:
                             animated = True
-                            channel_copy_paste(source_transform.id, channel.name, cmd="copy")
-                            channel_copy_paste(target_transform_id, channel.name, cmd="paste")
+                            bd_helpers.channel_copy_paste(source_transform.id, channel.name, cmd="copy")
+                            bd_helpers.channel_copy_paste(target_transform_id, channel.name, cmd="paste")
 
     if len(differences) != 0:
         warning = "The following channels could not be copied because they do not exist on the target item:\n{0}".format(
-        differences)
+            differences)
         modo.dialogs.alert("Warning", warning, dtype='warning')
 
     return animated
-
 
 # END MAIN PROGRAM -----------------------------------------------
 
