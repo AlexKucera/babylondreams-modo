@@ -23,15 +23,18 @@ import traceback
 from pprint import pprint
 
 from bd_tools import bd_helpers
-import bd_transfer_anim
 
+# These channels show up as animated even if there are no keys on them. Not a reliable source to determin animation.
+forbidden_channels = ["localMatrix", "wposMatrix", "wrotMatrix", "wsclMatrix", "wpivPosMatrix", "wpivRotMatrix",
+                      "worldMatrix", "glstate", "crvGroup", "matrix", "wParentMatrix", "glsurf", "mesh"]
+
+scene = modo.Scene()
+fps = scene.fps
 
 # FUNCTIONS -----------------------------------------------
 
 def get_channels(source=""):
-    # These channels show up as animated even if there are no keys on them. Not a reliable source to determin animation.
-    forbidden_channels = ["localMatrix", "wposMatrix", "wrotMatrix", "wsclMatrix", "wpivPosMatrix", "wpivRotMatrix",
-                          "worldMatrix", "glstate", "crvGroup", "matrix", "wParentMatrix", "glsurf", "mesh"]
+
     scene = modo.Scene()
     fps = modo.Scene().fps
 
@@ -47,7 +50,6 @@ def get_channels(source=""):
     animated = False
 
     item_anim = bd_helpers.QueryDict()
-    item_anim[sourceTag] = {'name': source.name}
 
     # First we copy the item's channels
     for channel in source.channels():
@@ -56,53 +58,91 @@ def get_channels(source=""):
                 if channel.envelope.keyframes.numKeys > 0:
                     animated = True
 
-                    keyframes = channel.envelope.keyframes
-
-                    item_anim[sourceTag].update(
-                        {
-                            channel.name: {
+                    item_anim[channel.name] = {
                                 'name': channel.name,
                                 'type': channel.storageType
                             }
-                        }
-                    )
 
-                    for key in range(0, keyframes.numKeys):
-                        keyframes.setIndex(key)
-
-                        if channel.storageType == "boolean" or channel.storageType == "integer":
-                            item_anim[sourceTag][channel.name].update(
-                                {
-                                    keyframes.time: {
-                                        'time': keyframes.time,
-                                        'frame': int(round(keyframes.time * fps)),
-                                        'value': keyframes.value
-                                    }
-                                }
-                            )
-                        else:
-
-                            item_anim[sourceTag][channel.name].update(
-                                {
-                                    keyframes.time: {
-                                        'time': keyframes.time,
-                                        'frame': int(round(keyframes.time * fps)),
-                                        'value': keyframes.value,
-                                        'in': {
-                                            'slope': keyframes.GetSlope(1),
-                                            'slope_type': keyframes.GetSlopeType(1),
-                                            'slope_weight': keyframes.GetWeight(1)
-                                        },
-                                        'out': {
-                                            'slope': keyframes.GetSlope(2),
-                                            'slope_type': keyframes.GetSlopeType(2),
-                                            'slope_weight': keyframes.GetWeight(2)
-                                        }
-                                    }
-                                }
-                            )
+                    item_anim[channel.name].update(get_keys(channel))
 
     return animated, item_anim
+
+
+def get_transforms(source=""):
+    # Now we find any Transform items associated with the source item and copy those
+    sourceTag = bd_helpers.get_tags(source)
+    item_anim = bd_helpers.QueryDict()
+
+    animated = False
+    for transform in modo.item.LocatorSuperType(item=source).transforms:
+
+        exists = False
+
+        item_anim[transform.name] = {
+                    'name': transform.name
+                }
+
+        for channel in transform.channels():
+            if channel.isAnimated:
+                if channel.name not in forbidden_channels:
+                    if channel.envelope.keyframes.numKeys > 0:
+                        animated = True
+                        item_anim[transform.name].update(
+                            {
+                                channel.name: {
+                                    'name': channel.name,
+                                    'type': channel.storageType
+                                }
+                            }
+                        )
+                        item_anim[transform.name][channel.name].update(get_keys(channel))
+
+    return animated, item_anim
+
+
+def get_keys(channel=""):
+
+    keyframes = channel.envelope.keyframes
+    item_anim = bd_helpers.QueryDict()
+    item_anim["keys"] = {}
+
+    for key in range(0, keyframes.numKeys):
+        keyframes.setIndex(key)
+
+        if channel.storageType == "boolean" or channel.storageType == "integer":
+            item_anim["keys"].update(
+                {
+                    keyframes.time: {
+                        'time': keyframes.time,
+                        'frame': int(round(keyframes.time * fps)),
+                        'value': keyframes.value
+                    }
+                }
+            )
+        else:
+
+            item_anim["keys"].update(
+                {
+                    keyframes.time: {
+                        'time': keyframes.time,
+                        'frame': int(round(keyframes.time * fps)),
+                        'value': keyframes.value,
+                        'in': {
+                            'slope': keyframes.GetSlope(1),
+                            'slope_type': keyframes.GetSlopeType(1),
+                            'slope_weight': keyframes.GetWeight(1)
+                        },
+                        'out': {
+                            'slope': keyframes.GetSlope(2),
+                            'slope_type': keyframes.GetSlopeType(2),
+                            'slope_weight': keyframes.GetWeight(2)
+                        }
+                    }
+                }
+            )
+
+    return item_anim
+
 
 # END FUNCTIONS -----------------------------------------------
 
@@ -110,7 +150,7 @@ def get_channels(source=""):
 # MAIN PROGRAM --------------------------------------------
 def main():
 
-    scene = modo.Scene()
+
     selected = bd_helpers.selected(1)
 
     if selected is not None:
@@ -118,22 +158,53 @@ def main():
         sourceGroup = selected[0]
 
         tagsSource = dict()
+        noTagItems = []
+        noTag = False
+
+        tag = bd_helpers.get_tags(sourceGroup)
+        tagsSource[tag] = sourceGroup
+        if tag is None:
+            noTag = True
+            noTagItems.append(sourceGroup.name)
+
         for child in sourceGroup.children(recursive=True):
             tag = bd_helpers.get_tags(child)
             tagsSource[tag] = child
+            if tag is None:
+                noTag = True
+                noTagItems.append(child.name)
 
-        items_anim =  dict()
-        for tag in tagsSource:
+        if noTag:
 
-            reload(bd_transfer_anim)
-            animated, item_anim = get_channels(source=tagsSource[tag])
-            if animated:
-                print("{0} ({1})".format(tagsSource[tag].name, tagsSource[tag].id))
-            items_anim = {tag: item_anim}
+            modo.dialogs.alert("No Tags!", "Some items have animation, but are not tagged. Aborting…\n{}".format(noTagItems), dtype='info')
 
-        if len(items_anim) > 0:
-            reload(bd_helpers)
-            bd_helpers.save_json(items_anim, "anim_export_cache/anim_export_")
+        else:
+
+            items_anim = dict()
+            items_anim = {"01 __description__": "This is an automated export of an animated hierarchy or rig.",
+                          "02 __URL__": "https://github.com/AlexKucera/babylondreams-modo"}
+
+            for tag in tagsSource:
+
+                items_anim[tag] = {"name": tagsSource[tag].name}
+
+                animated_channels, item_channels = get_channels(source=tagsSource[tag])
+                print animated_channels
+                if animated_channels:
+                    items_anim[tag]["channels"] = item_channels
+
+                animated_transforms, item_transforms = get_transforms(source=tagsSource[tag])
+                print animated_transforms
+                if animated_transforms:
+                    items_anim[tag]["transforms"] = item_transforms
+
+                if animated_channels or animated_transforms:
+                    print("Getting animation from {0} ({1})".format(tagsSource[tag].name, tagsSource[tag].id))
+
+
+            if len(items_anim) > 0:
+                reload(bd_helpers)
+                bd_helpers.save_json(items_anim, "anim_export_cache/anim_export_")
 
 
 
