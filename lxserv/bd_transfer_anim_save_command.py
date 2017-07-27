@@ -15,7 +15,7 @@ import babylondreams
 import lx
 import modo
 
-from bd_tools import bd_transfer_anim
+from bd_tools import bd_transfer_anim_save
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -31,8 +31,8 @@ class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
     def commander_execute(self, msg, flags):
-        reload(bd_transfer_anim)
-        bd_transfer_anim.main()
+        reload(bd_transfer_anim_save)
+        bd_transfer_anim_save.main()
 
 
 lx.bless(CommandClass, 'bd.transfer_anim_save')
