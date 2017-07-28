@@ -152,13 +152,12 @@ def main():
                 message = ""
                 for missing in missingTags:
                     message = "{}\n{}".format(message, missing)
+                message = "The provided file contains tags that are missing in the target hierarchy.\n" \
+                          "The following tags cannot be found:\n{}".format(message)
                 modo.dialogs.alert("Missing Tags!",
-                                   "The provided file contains tags that are missing in the target hierarchy.\n"
-                                   "The following tags cannot be found:\n{}".format(message),
+                                   message,
                                    dtype='info')
-
-
-        bd_helpers.timer(start, "Finished Animation Transfer")
+                print(message)
 
 
 # END MAIN PROGRAM -----------------------------------------------
