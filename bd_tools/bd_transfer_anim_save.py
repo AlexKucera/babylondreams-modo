@@ -189,22 +189,23 @@ def main():
             items_anim = dict()
             items_anim = {
                 "01 __description__": "This is an automated export of an animated hierarchy or rig.",
-                "02 __URL__": "https://github.com/AlexKucera/babylondreams-modo"
+                "02 __URL__": "https://github.com/AlexKucera/babylondreams-modo",
+                "items" : {}
             }
 
             for tag in tagsSource:
 
-                items_anim[tag] = {"name": tagsSource[tag].name}
+                items_anim["items"][tag] = {"name": tagsSource[tag].name}
 
                 animated_channels, item_channels = get_channels(source=tagsSource[tag])
-                print animated_channels
+
                 if animated_channels:
-                    items_anim[tag]["channels"] = item_channels
+                    items_anim["items"][tag]["channels"] = item_channels
 
                 animated_transforms, item_transforms = get_transforms(source=tagsSource[tag])
-                print animated_transforms
+
                 if animated_transforms:
-                    items_anim[tag]["transforms"] = item_transforms
+                    items_anim["items"][tag]["transforms"] = item_transforms
 
                 if animated_channels or animated_transforms:
                     print("Getting animation from {0} ({1})".format(tagsSource[tag].name, tagsSource[tag].id))
