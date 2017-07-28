@@ -197,7 +197,7 @@ def main():
             items_anim = {
                 "01 __description__": "This is an automated export of an animated hierarchy or rig.",
                 "02 __URL__": "https://github.com/AlexKucera/babylondreams-modo",
-                "items" : {}
+                "items": {}
             }
 
             for tag in tagsSource:
@@ -222,6 +222,7 @@ def main():
                 bd_helpers.save_json(items_anim, "anim_export_cache/anim_export_")
 
         bd_helpers.timer(start, "Finished Animation Export")
+
 
 # END MAIN PROGRAM -----------------------------------------------
 
