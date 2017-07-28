@@ -70,7 +70,7 @@ def list():
                        dtype='info')
     else:
         modo.dialogs.alert("You are good to go!",
-                           "Congratulations. All animated items have tags on them. You can start the auto anim transfer.",
+                           "Congratulations. All animated items have tags on them.",
                            dtype='info')
 
 
