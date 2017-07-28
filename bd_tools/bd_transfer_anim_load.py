@@ -90,14 +90,6 @@ def main():
 
             targetGroup = selected[0]
 
-            # get all target tags
-            # loop through the JSON data by tag
-                # select targets by tag
-                    # loop through JSON channels
-                        # apply animation to target channels
-                    # loop through JSON transforms
-                        # apply/create animation on target transforms
-
             tagsTarget = dict()
 
             tag = bd_helpers.get_tags(targetGroup)
@@ -107,7 +99,6 @@ def main():
 
             for child in targetGroup.children(recursive=True):
                 tag = bd_helpers.get_tags(child)
-
                 if tag is not None:
                     tagsTarget[tag] = child
 
@@ -117,36 +108,43 @@ def main():
                 if tag in tagsTarget:
                     print("Transferring animation from {} to {}".format(anim_data["items"][tag]["name"],
                                                                         tagsTarget[tag].name))
+                    target = tagsTarget[tag]
+                    # First we paste the item's channels
+                    if "channels" in anim_data["items"][tag]:
+                        for channel in target.channels():
+                            if channel.name in anim_data["items"][tag]["channels"]:
+                                set_keys(channel, anim_data["items"][tag]["channels"][channel.name],
+                                         anim_data["items"][tag]["channels"][channel.name]["type"])
+
+                    # Now we find any Transform items associated with the source item and copy those
+                    if "transforms" in anim_data["items"][tag]:
+                        for transform in anim_data["items"][tag]["transforms"]:
+                            source_transform_type = anim_data["items"][tag]["transforms"][transform]["type"]
+                            exists = False
+
+                            # check if the transform type already exists
+                            for target_transform in modo.item.LocatorSuperType(item=target).transforms:
+                                if target_transform.type == source_transform_type:
+                                    exists = True
+                                    target_transform_id = target_transform
+                            # if it does not create it
+                            if not exists:
+                                target_transform_id = target.transforms.insert(source_transform_type)
+
+                            for channel in target_transform_id.channels():
+                                if channel.name in anim_data["items"][tag]["transforms"][transform]:
+                                    if channel.name == "type" or channel.name == "name":
+                                        pass
+                                    else:
+                                        set_keys(channel,
+                                                 anim_data["items"][tag]["transforms"][transform][channel.name],
+                                                 anim_data["items"][tag]["transforms"][transform][channel.name]["type"])
+
                 else:
                     missingTags.append("{} ({})".format(tag, anim_data["items"][tag]["name"]))
                     print("{} has not corresponding tag in the target.".format(anim_data["items"][tag]["name"]))
 
-            #     items_anim = dict()
-            #     items_anim = {
-            #         "01 __description__": "This is an automated export of an animated hierarchy or rig.",
-            #         "02 __URL__": "https://github.com/AlexKucera/babylondreams-modo"
-            #     }
-            #
-            #     for tag in tagsTarget:
-            #
-            #         items_anim[tag] = {"name": tagsTarget[tag].name}
-            #
-            #         animated_channels, item_channels = get_channels(source=tagsTarget[tag])
-            #         print animated_channels
-            #         if animated_channels:
-            #             items_anim[tag]["channels"] = item_channels
-            #
-            #         animated_transforms, item_transforms = get_transforms(source=tagsTarget[tag])
-            #         print animated_transforms
-            #         if animated_transforms:
-            #             items_anim[tag]["transforms"] = item_transforms
-            #
-            #         if animated_channels or animated_transforms:
-            #             print("Getting animation from {0} ({1})".format(tagsTarget[tag].name, tagsTarget[tag].id))
-            #
-            #     if len(items_anim) > 0:
-            #         reload(bd_helpers)
-            #         bd_helpers.save_json(items_anim, "anim_export_cache/anim_export_")
+            bd_helpers.timer(start, "Finished Animation Transfer")
 
             if missingTags:
                 message = ""
@@ -176,5 +174,6 @@ if __name__ == '__main__':
 
     try:
         main()
+
     except:
         print traceback.format_exc()
