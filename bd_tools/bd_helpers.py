@@ -224,7 +224,7 @@ def save_json(dictdata="", prefix=""):
 
     """
 
-    jsonpath = modo.dialogs.customFile('fileSave', 'Save File', ('json',), ('JSON File',), ext=('*.json',),
+    jsonpath = modo.dialogs.customFile('fileSave', 'Save File', ('json',), ('JSON File',), ext=('json',),
                                        path=default_json_path(prefix))
 
     if jsonpath is not None:
@@ -268,7 +268,7 @@ def get_channels(item, type=None, forbidden_channels=[], isAnimated=False):
             if type is "name":
                 item_channels.append(channel.name)
             if type is "index":
-                item_channels.append((channel.index))
+                item_channels.append(channel.index)
             if type is None:
                 pass
     if type is None:
