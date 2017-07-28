@@ -35,110 +35,27 @@ fps = None
 # FUNCTIONS -----------------------------------------------
 
 
-def get_channels(source=None):
-    if source is None:
-        selected = bd_helpers.selected(1)
-        source = selected[0]
+def set_keys(channel=None, keys=None, type=None):
+    for key in keys["keys"]:
+        channel.set(keys["keys"][key]["value"], keys["keys"][key]["time"], key=True)
 
-    source_channels = bd_helpers.get_channels(source, type="name", forbidden_channels=forbidden_channels,
-                                              isAnimated=False)
-
-    sourceTag = bd_helpers.get_tags(source)
-
-    animated = False
-
-    item_anim = bd_helpers.QueryDict()
-
-    # First we copy the item's channels
-    for channel in source.channels():
-        if channel.isAnimated:
-            if channel.name not in forbidden_channels:
-                if channel.envelope.keyframes.numKeys > 0:
-                    animated = True
-
-                    item_anim[channel.name] = {
-                        'name': channel.name,
-                        'type': channel.storageType
-                    }
-
-                    item_anim[channel.name].update(get_keys(channel))
-
-    return animated, item_anim
-
-
-def get_transforms(source=None):
-    # Now we find any Transform items associated with the source item and copy those
-    sourceTag = bd_helpers.get_tags(source)
-    item_anim = bd_helpers.QueryDict()
-
-    animated = False
-    for transform in modo.item.LocatorSuperType(item=source).transforms:
-
-        exists = False
-
-        item_anim[transform.name] = {
-            'name': transform.name
-        }
-
-        for channel in transform.channels():
-            if channel.isAnimated:
-                if channel.name not in forbidden_channels:
-                    if channel.envelope.keyframes.numKeys > 0:
-                        animated = True
-                        item_anim[transform.name].update(
-                            {
-                                channel.name: {
-                                    'name': channel.name,
-                                    'type': channel.storageType
-                                }
-                            }
-                        )
-                        item_anim[transform.name][channel.name].update(get_keys(channel))
-
-    return animated, item_anim
-
-
-def get_keys(channel=None):
     keyframes = channel.envelope.keyframes
-    item_anim = bd_helpers.QueryDict()
-    item_anim["keys"] = {}
 
-    for key in range(0, keyframes.numKeys):
-        keyframes.setIndex(key)
+    if type == "boolean" or type == "integer":
+        pass
+    else:
+        for key in keys["keys"]:
+            keyframes.setIndex(int(key))
 
-        if channel.storageType == "boolean" or channel.storageType == "integer":
-            item_anim["keys"].update(
-                {
-                    keyframes.time: {
-                        'time': keyframes.time,
-                        'frame': int(round(keyframes.time * fps)),
-                        'value': keyframes.value
-                    }
-                }
-            )
-        else:
+            # Set in
+            keyframes.SetSlopeType(keys["keys"][key]["in"]["slope_type"][0], 1)
+            keyframes.SetSlope(keys["keys"][key]["in"]["slope"], 1)
+            keyframes.SetWeight(keys["keys"][key]["in"]["slope_weight"], 0, 1)
 
-            item_anim["keys"].update(
-                {
-                    keyframes.time: {
-                        'time': keyframes.time,
-                        'frame': int(round(keyframes.time * fps)),
-                        'value': keyframes.value,
-                        'in': {
-                            'slope': keyframes.GetSlope(1),
-                            'slope_type': keyframes.GetSlopeType(1),
-                            'slope_weight': keyframes.GetWeight(1)
-                        },
-                        'out': {
-                            'slope': keyframes.GetSlope(2),
-                            'slope_type': keyframes.GetSlopeType(2),
-                            'slope_weight': keyframes.GetWeight(2)
-                        }
-                    }
-                }
-            )
-
-    return item_anim
+            # Set out
+            keyframes.SetSlopeType(keys["keys"][key]["out"]["slope_type"][0], 2)
+            keyframes.SetSlope(keys["keys"][key]["out"]["slope"], 2)
+            keyframes.SetWeight(keys["keys"][key]["out"]["slope_weight"], 0, 2)
 
 
 # END FUNCTIONS -----------------------------------------------
