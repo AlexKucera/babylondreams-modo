@@ -89,6 +89,7 @@ class CommandClass(babylondreams.CommanderClass):
             },
             {
                 'name': 'replicator_visibility',
+                'label': "Replicator/Locator Visibility",
                 'datatype': 'string',
                 'default': 'none',
                 'values_list_type': 'popup',

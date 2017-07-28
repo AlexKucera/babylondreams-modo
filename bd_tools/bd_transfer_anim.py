@@ -45,9 +45,6 @@ def main(source=None, target=None):
     source_channels = bd_helpers.get_channels(source, type="name", forbidden_channels=forbidden_channels, isAnimated=False)
     target_channels = bd_helpers.get_channels(target, type="name", forbidden_channels=forbidden_channels, isAnimated=False)
 
-    sourceTag = bd_helpers.get_tags(source)
-    targetTag = bd_helpers.get_tags(target)
-
     differences = list(set(source_channels) - set(target_channels))
 
     for difference in differences:
