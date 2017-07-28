@@ -165,7 +165,7 @@ def main():
 
         tag = bd_helpers.get_tags(sourceGroup)
         tagsSource[tag] = sourceGroup
-        if tag is None:
+        if tag is None and len(sourceGroup.children(recursive=True)) == 0:
             noTag = True
             noTagItems.append(sourceGroup.name)
 
