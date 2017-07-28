@@ -31,11 +31,11 @@ forbidden_channels = ["localMatrix", "wposMatrix", "wrotMatrix", "wsclMatrix", "
 scene = None
 fps = None
 
+
 # FUNCTIONS -----------------------------------------------
 
-def get_channels(source=""):
 
-
+def get_channels(source=None):
     if source is None:
         selected = bd_helpers.selected(1)
         source = selected[0]
@@ -57,16 +57,16 @@ def get_channels(source=""):
                     animated = True
 
                     item_anim[channel.name] = {
-                                'name': channel.name,
-                                'type': channel.storageType
-                            }
+                        'name': channel.name,
+                        'type': channel.storageType
+                    }
 
                     item_anim[channel.name].update(get_keys(channel))
 
     return animated, item_anim
 
 
-def get_transforms(source=""):
+def get_transforms(source=None):
     # Now we find any Transform items associated with the source item and copy those
     sourceTag = bd_helpers.get_tags(source)
     item_anim = bd_helpers.QueryDict()
@@ -77,8 +77,8 @@ def get_transforms(source=""):
         exists = False
 
         item_anim[transform.name] = {
-                    'name': transform.name
-                }
+            'name': transform.name
+        }
 
         for channel in transform.channels():
             if channel.isAnimated:
@@ -98,8 +98,7 @@ def get_transforms(source=""):
     return animated, item_anim
 
 
-def get_keys(channel=""):
-
+def get_keys(channel=None):
     keyframes = channel.envelope.keyframes
     item_anim = bd_helpers.QueryDict()
     item_anim["keys"] = {}
@@ -178,13 +177,17 @@ def main():
 
         if noTag:
 
-            modo.dialogs.alert("No Tags!", "Some items have animation, but are not tagged. Aborting…\n{}".format(noTagItems), dtype='info')
+            modo.dialogs.alert("No Tags!",
+                               "Some items have animation, but are not tagged. Aborting…\n{}".format(noTagItems),
+                               dtype='info')
 
         else:
 
             items_anim = dict()
-            items_anim = {"01 __description__": "This is an automated export of an animated hierarchy or rig.",
-                          "02 __URL__": "https://github.com/AlexKucera/babylondreams-modo"}
+            items_anim = {
+                "01 __description__": "This is an automated export of an animated hierarchy or rig.",
+                "02 __URL__": "https://github.com/AlexKucera/babylondreams-modo"
+            }
 
             for tag in tagsSource:
 
@@ -203,11 +206,9 @@ def main():
                 if animated_channels or animated_transforms:
                     print("Getting animation from {0} ({1})".format(tagsSource[tag].name, tagsSource[tag].id))
 
-
             if len(items_anim) > 0:
                 reload(bd_helpers)
                 bd_helpers.save_json(items_anim, "anim_export_cache/anim_export_")
-
 
 
 # END MAIN PROGRAM -----------------------------------------------
