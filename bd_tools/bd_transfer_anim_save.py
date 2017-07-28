@@ -28,15 +28,13 @@ from bd_tools import bd_helpers
 forbidden_channels = ["localMatrix", "wposMatrix", "wrotMatrix", "wsclMatrix", "wpivPosMatrix", "wpivRotMatrix",
                       "worldMatrix", "glstate", "crvGroup", "matrix", "wParentMatrix", "glsurf", "mesh"]
 
-scene = modo.Scene()
-fps = scene.fps
+scene = None
+fps = None
 
 # FUNCTIONS -----------------------------------------------
 
 def get_channels(source=""):
 
-    scene = modo.Scene()
-    fps = modo.Scene().fps
 
     if source is None:
         selected = bd_helpers.selected(1)
@@ -149,7 +147,11 @@ def get_keys(channel=""):
 
 # MAIN PROGRAM --------------------------------------------
 def main():
+    global scene
+    global fps
 
+    scene = modo.Scene()
+    fps = scene.fps
 
     selected = bd_helpers.selected(1)
 
