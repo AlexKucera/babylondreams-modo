@@ -92,7 +92,7 @@ def get_transforms(source=None):
                 if channel.name not in forbidden_channels:
                     if channel.envelope.keyframes.numKeys > 0:
                         animated = True
-                        item_anim[transform.name].update(
+                        item_anim[transform.id].update(
                             {
                                 channel.name: {
                                     'name': channel.name,
@@ -100,7 +100,7 @@ def get_transforms(source=None):
                                 }
                             }
                         )
-                        item_anim[transform.name][channel.name].update(get_keys(channel))
+                        item_anim[transform.id][channel.name].update(get_keys(channel))
 
     return animated, item_anim
 
