@@ -191,7 +191,7 @@ def walk_up(bottom):
         yield x
 
 
-def load_json(jsonpath="", prefix=""):
+def load_json(prefix=""):
     """
     Returns a queryable dictionary from a JSON file.
 
@@ -199,14 +199,23 @@ def load_json(jsonpath="", prefix=""):
 
     """
 
-    jsonpath = modo.dialogs.customFile('fileOpen', 'Open File', ('json',), ('JSON File',), ext=('json',),
-                                       path=default_json_path(prefix))
+    jsonpath = modo.dialogs.customFile('fileOpen', 'Open File', ('json',), ('JSON File',), ('*.json',))
 
-    config_path = os.path.normpath(jsonpath)
-    with open(config_path) as json_data:
-        vars = QueryDict(json.load(json_data))
+    if jsonpath is not None:
+        config_path = os.path.normpath(jsonpath)
+        with open(config_path) as json_data:
+            try:
+                vars = QueryDict(json.load(json_data))
+                return vars
+            except:
+                modo.dialogs.alert("Loading JSON failed",
+                                   "The provided file does not appear to be valid JSON.\n{}".format(
+                                       traceback.format_exc().splitlines()[-1]),
+                                   dtype='error')
 
-    return vars
+    else:
+
+        return None
 
 
 def save_json(dictdata="", prefix=""):
@@ -215,8 +224,9 @@ def save_json(dictdata="", prefix=""):
 
     """
 
-    jsonpath = modo.dialogs.customFile('fileSave', 'Save File', ('json',), ('JSON File',), ext=('json',),
-                                        path=default_json_path(prefix))
+    jsonpath = modo.dialogs.customFile('fileSave', 'Save File', ('json',), ('JSON File',), ext=('*.json',),
+                                       path=default_json_path(prefix))
+
     if jsonpath is not None:
         config_path = os.path.normpath(jsonpath)
 
