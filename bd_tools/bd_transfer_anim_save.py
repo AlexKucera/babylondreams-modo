@@ -109,7 +109,7 @@ def get_keys(channel=None):
         if channel.storageType == "boolean" or channel.storageType == "integer":
             item_anim["keys"].update(
                 {
-                    keyframes.time: {
+                    key: {
                         'time': keyframes.time,
                         'frame': int(round(keyframes.time * fps)),
                         'value': keyframes.value
@@ -120,7 +120,7 @@ def get_keys(channel=None):
 
             item_anim["keys"].update(
                 {
-                    keyframes.time: {
+                    key: {
                         'time': keyframes.time,
                         'frame': int(round(keyframes.time * fps)),
                         'value': keyframes.value,
