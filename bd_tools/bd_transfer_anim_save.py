@@ -76,8 +76,15 @@ def get_transforms(source=None):
 
         exists = False
 
-        item_anim[transform.name] = {
-            'name': transform.name
+        # There is an inconsistency in the TD SDK that returns "translation" on query, but expects "position" on create
+        if transform.type == "translation":
+            transtype = "position"
+        else:
+            transtype = transform.type
+
+        item_anim[transform.id] = {
+            'name': transform.name,
+            'type': transtype
         }
 
         for channel in transform.channels():
