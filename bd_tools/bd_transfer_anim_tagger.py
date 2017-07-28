@@ -75,7 +75,10 @@ def list():
 
 
 def assign():
-    modo.dialogs.fileOpen('text', title='Open List of Tags', multi=False)
+    modo.dialogs.alert("Not done yet!",
+                       "Sorry. This function is not implemented yet.",
+                       dtype='info')
+    #modo.dialogs.fileOpen('text', title='Open List of Tags', multi=False)
 
 
 def update():
