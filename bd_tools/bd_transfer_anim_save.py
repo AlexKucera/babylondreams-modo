@@ -156,6 +156,9 @@ def main():
 
     if selected is not None:
 
+        print("Starting Animation Export…")
+        start = bd_helpers.timer()
+
         sourceGroup = selected[0]
 
         tagsSource = dict()
@@ -210,6 +213,7 @@ def main():
                 reload(bd_helpers)
                 bd_helpers.save_json(items_anim, "anim_export_cache/anim_export_")
 
+        bd_helpers.timer(start, "Finished Animation Export")
 
 # END MAIN PROGRAM -----------------------------------------------
 
