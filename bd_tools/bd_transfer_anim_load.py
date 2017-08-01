@@ -36,11 +36,26 @@ fps = None
 
 
 def set_keys(channel=None, keys=None, type=None):
+
+    # We add two keys to initialize the envelope in case it does not exist. This will add new keys to potentially
+    # already existing keys creating a broken animation
+    key = min(keys["keys"])
+    print key
+    channel.set(keys["keys"][key]["value"], keys["keys"][key]["time"], key=True)
+    key = iter(keys["keys"]).next()
+    print key
+    channel.set(keys["keys"][key]["value"], keys["keys"][key]["time"], key=True)
+
+    # Here we delete all keys from the channel to ensure we start from a clean slate.
+    channel.envelope.clear()
+
+    # Now we create the actual keys for the whole frame range
     for key in keys["keys"]:
         channel.set(keys["keys"][key]["value"], keys["keys"][key]["time"], key=True)
 
     keyframes = channel.envelope.keyframes
 
+    # Here we set each keys slope and type
     if type == "boolean" or type == "integer":
         pass
     else:
@@ -121,12 +136,12 @@ def main():
                         for transform in anim_data["items"][tag]["transforms"]:
                             source_transform_type = anim_data["items"][tag]["transforms"][transform]["type"]
                             exists = False
-
                             # check if the transform type already exists
                             for target_transform in modo.item.LocatorSuperType(item=target).transforms:
-                                if target_transform.type == source_transform_type:
+                                if target_transform.type == source_transform_type or target_transform.type == "translation" and source_transform_type == "position":
                                     exists = True
                                     target_transform_id = target_transform
+
                             # if it does not create it
                             if not exists:
                                 target_transform_id = target.transforms.insert(source_transform_type)
