@@ -5,39 +5,39 @@ from lxifc import UIValueHints, Visitor
 from operator import ior
 from Var import *
 
-
 class CommanderClass(lxu.command.BasicCommand):
 
-    """
-    Wrapper for lxu.command.BasicCommand. Improves and simplifies common
+    """Wrapper for lxu.command.BasicCommand. Improves and simplifies common
     command UI implementations, like popups, sPresetText fields, and
     Form Command Lists. Allows for virtually any type of command.
 
     See README.md for more examples.
 
-    Example::
+    Example:
+    ****************
 
-        # Extend the commander.CommandClass
-        class MyGreatCommandClass(commander.CommandClass):
+    # Extend the commander.CommandClass
+    class MyGreatCommandClass(commander.CommandClass):
 
-            # Optional method returns any command argument definitions
+        # Optional method returns any command argument definitions
 
-            commander_arguments(self):
-                return[{
-                    commander.NAME: 'myStringArgument',
-                    commander.DATATYPE: 'string'
-                }]
+        commander_arguments(self):
+            return[{
+                commander.NAME: 'myStringArgument',
+                commander.DATATYPE: 'string'
+            }]
 
-            # Required method contains the actual command code.
-            # Note: traceback is included by default; no need to add.
+        # Required method contains the actual command code.
+        # Note: traceback is included by default; no need to add.
 
-            commander_execute(self):
-                args = commander_args()
-                lx.out(args['myStringArgument'])
+        commander_execute(self):
+            args = commander_args()
+            lx.out(args['myStringArgument'])
 
-        # Bless the class as normal.
-        lx.bless(MyGreatCommandClass, "myGreatCommand")
+    # Bless the class as normal.
+    lx.bless(MyGreatCommandClass, "myGreatCommand")
 
+    ****************
     """
 
     def __init__(self):
@@ -140,6 +140,14 @@ class CommanderClass(lxu.command.BasicCommand):
         a try/except statement with traceback, so you don't need to add that."""
         pass
 
+    def commander_query(self, arg_index):
+        """To be overridden by subclasses.
+        Should return a value based on the arg_index being queried. For toggle
+        buttons and checkmarks, this should be a boolean. Can also return strings
+        or floats as required."""
+
+        return False
+
     @classmethod
     def commander_default_values_init(cls):
         """Initialize the class variable _commander_stored_values.
@@ -169,25 +177,30 @@ class CommanderClass(lxu.command.BasicCommand):
         if not self.dyna_IsSet(index):
             return default
 
+        if 'variable' in self.commander_arguments()[index].get(FLAGS, []):
+            datatype = self.basic_ArgType(index)
+        else:
+            datatype = self.commander_arguments()[index][DATATYPE].lower()
+            
         # If it's a string, use dyna_String to grab it.
-        if self.commander_arguments()[index][DATATYPE].lower() in sTYPE_STRINGs:
+        if datatype in sTYPE_STRINGs:
             return self.dyna_String(index)
 
         # If the value is a vector, use dyna_String to grab it, then parse it
         # into a list of float vlues.
-        elif self.commander_arguments()[index][DATATYPE].lower() in sTYPE_STRING_vectors:
+        elif datatype in sTYPE_STRING_vectors:
             return [float(i) for i in self.dyna_String(index).split(" ")]
 
         # If the value is an integer, use dyna_Int to grab it.
-        elif self.commander_arguments()[index][DATATYPE].lower() in sTYPE_INTEGERs:
+        elif datatype in sTYPE_INTEGERs:
             return self.dyna_Int(index)
 
         # If the value is a float, use dyna_Float to grab it.
-        elif self.commander_arguments()[index][DATATYPE].lower in sTYPE_FLOATs:
+        elif datatype in sTYPE_FLOATs:
             return self.dyna_Float(index)
 
         # If the value is a boolean, use dyna_Bool to grab it.
-        elif self.commander_arguments()[index][DATATYPE].lower() in sTYPE_BOOLEANs:
+        elif datatype in sTYPE_BOOLEANs:
             return self.dyna_Bool(index)
 
         # If something bonkers is going on, use the default.
@@ -362,25 +375,47 @@ class CommanderClass(lxu.command.BasicCommand):
         except:
             lx.out(traceback.format_exc())
 
-    def cmd_Query(self,index,vaQuery):
-        """Returns a value when a queriable argument is queried. If the argument
-        is queriable, is not a Form Command List, and has a recent value, the query
-        will return the most recent value.
+    def cmd_Query(self, index, vaQuery):
+        """Returns a value when a queriable argument is queried. It's a bit weird
+        to use, so commander wraps it up for you. Implement `commander_query` in
+        your own sublcass to and return whatever you like based on the arg_index.
 
         You should never need to touch this."""
 
+        # Create the ValueArray object
         va = lx.object.ValueArray()
         va.set(vaQuery)
 
         args = self.commander_arguments()
 
-        if index < len(args):
-            is_query = 'query' in args[index].get(FLAGS, [])
-            is_not_fcl = args[index].get(VALUES_LIST_TYPE) != FCL
-            has_recent_value = self._commander_stored_values[index]
+        # If index out of range, bail
+        if index > len(args):
+            return lx.result.OK
 
-            if is_query and is_not_fcl and has_recent_value:
-                va.AddString(has_recent_value)
+        # If it's not a query, bail
+        is_query = 'query' in args[index].get(FLAGS, [])
+        if not is_query:
+            return lx.result.OK
+
+        # If it's a Form Command List (FCL), bail
+        is_fcl = args[index].get(VALUES_LIST_TYPE) == FCL
+        if is_fcl:
+            return lx.result.OK
+
+        # To keep things simpler for commander users, let them return
+        # a value using only an index (no ValueArray nonsense)
+        commander_query_result = self.commander_query(index)
+
+        # Need to add the proper datatype based on result from commander_query
+
+        if isinstance(commander_query_result, basestring):
+            va.AddString(commander_query_result)
+
+        elif isinstance(commander_query_result, int):
+            va.AddInt(commander_query_result)
+
+        elif isinstance(commander_query_result, float):
+            va.AddFloat(commander_query_result)
 
         return lx.result.OK
 
