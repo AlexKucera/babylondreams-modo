@@ -93,7 +93,7 @@ def main():
         print("\n\nStarting Animation transfer…")
 
         reload(bd_helpers)
-        anim_data = bd_helpers.load_json("anim_export_cache/anim_export_")
+        anim_data = bd_helpers.load_json()
 
         if anim_data is None:
 

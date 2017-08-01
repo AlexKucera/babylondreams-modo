@@ -191,7 +191,7 @@ def walk_up(bottom):
         yield x
 
 
-def load_json(prefix=""):
+def load_json():
     """
     Returns a queryable dictionary from a JSON file.
 
@@ -223,7 +223,7 @@ def save_json(dictdata="", prefix=""):
     Saves a dictionary to a JSON file.
 
     """
-    print(default_json_path(prefix))
+
     jsonpath = modo.dialogs.customFile('fileSave', 'Save File', ('json',), ('JSON File',), ext=('json',),
                                        path=default_json_path(prefix))
 
@@ -255,10 +255,12 @@ def default_json_path(prefix=""):
         filedir = os.path.dirname(filename)
         filename = os.path.splitext(filename)[0]
 
-    jsonpath = os.path.normpath(os.path.join(
-        filedir,
-        "{}{}".format(prefix, filename)
-    ))
+    jsonpath = os.path.normpath(
+        os.path.join(
+            filedir,
+            "{}{}".format(prefix, filename)
+        )
+    )
 
     return jsonpath
 
