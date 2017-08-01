@@ -17,12 +17,11 @@ V0.1 Initial Release - 2017-02-13
 
 """
 
-import modo
-import lx
-import traceback
-from pprint import pprint
-
 import os
+import traceback
+
+import lx
+import modo
 
 from bd_tools import bd_helpers
 

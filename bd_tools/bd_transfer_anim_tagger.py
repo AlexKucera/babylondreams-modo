@@ -14,15 +14,12 @@ V0.1 Initial Release - 2017-02-13
 
 """
 
-import modo
-import lx
-import traceback
-import time
 import hashlib
+import time
+import traceback
 
-from pprint import pprint
-
-from bd_tools import bd_helpers
+import lx
+import modo
 
 # These channels show up as animated even if there are no keys on them. Not a reliable source to determin animation.
 forbidden_channels = ["localMatrix", "wposMatrix", "wrotMatrix", "wsclMatrix", "wpivPosMatrix", "wpivRotMatrix",
