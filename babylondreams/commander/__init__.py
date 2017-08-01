@@ -1,6 +1,6 @@
 # python
 
-__version__ = "0.38"
+__version__ = "0.36"
 __author__ = "Adam"
 
 from Commander import *
