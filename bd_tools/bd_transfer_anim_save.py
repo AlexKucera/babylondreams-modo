@@ -22,6 +22,8 @@ import lx
 import traceback
 from pprint import pprint
 
+import os
+
 from bd_tools import bd_helpers
 
 # These channels show up as animated even if there are no keys on them. Not a reliable source to determin animation.
@@ -219,7 +221,7 @@ def main():
 
             if len(items_anim) > 0:
                 reload(bd_helpers)
-                bd_helpers.save_json(items_anim, "anim_export_cache/anim_export_")
+                bd_helpers.save_json(items_anim, "anim_export_cache{}anim_export_".format(os.sep))
 
         bd_helpers.timer(start, "Finished Animation Export")
 

@@ -223,7 +223,7 @@ def save_json(dictdata="", prefix=""):
     Saves a dictionary to a JSON file.
 
     """
-
+    print(default_json_path(prefix))
     jsonpath = modo.dialogs.customFile('fileSave', 'Save File', ('json',), ('JSON File',), ext=('json',),
                                        path=default_json_path(prefix))
 
@@ -245,18 +245,20 @@ def save_json(dictdata="", prefix=""):
 
 def default_json_path(prefix=""):
     scene = modo.Scene()
-    configpath = lx.eval("query platformservice path.path ? configs")
 
     filename = scene.filename
     if not filename:
+        filedir = lx.eval("query platformservice path.path ? temp")
         filename = "untitled"
+
     else:
+        filedir = os.path.dirname(filename)
         filename = os.path.splitext(filename)[0]
 
-    jsonpath = os.path.join(
-        configpath,
+    jsonpath = os.path.normpath(os.path.join(
+        filedir,
         "{}{}".format(prefix, filename)
-    )
+    ))
 
     return jsonpath
 
