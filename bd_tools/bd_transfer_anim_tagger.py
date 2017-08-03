@@ -106,7 +106,8 @@ def tag(item):
     m.update(message)
     digest = m.hexdigest()
 
-    item.setTag("anim", "{}_{}".format(item.name, digest[:4]))
+    # item.setTag("anim", "{}_{}".format(item.name, digest[:4]))
+    item.setTag("anim", digest[:16])
 
 
 # END FUNCTIONS -----------------------------------------------

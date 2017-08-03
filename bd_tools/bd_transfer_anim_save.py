@@ -157,6 +157,8 @@ def main():
     global scene
     global fps
 
+    reload(bd_helpers)
+
     scene = modo.Scene()
     fps = scene.fps
 
@@ -202,8 +204,7 @@ def main():
             }
 
             for tag in tagsSource:
-
-                items_anim["items"][tag] = {"name": tagsSource[tag].name}
+                items_anim["items"][tag] = {"id": tagsSource[tag].id}
 
                 animated_channels, item_channels = get_channels(source=tagsSource[tag])
 
@@ -219,7 +220,7 @@ def main():
                     print("Getting animation from {0} ({1})".format(tagsSource[tag].name, tagsSource[tag].id))
 
             if len(items_anim) > 0:
-                reload(bd_helpers)
+
                 bd_helpers.save_json(items_anim, "anim_export_cache{}anim_export_".format(os.sep))
 
         bd_helpers.timer(start, "Finished Animation Export")
