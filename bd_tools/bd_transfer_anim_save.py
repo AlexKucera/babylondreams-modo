@@ -84,7 +84,6 @@ def get_transforms(source=None):
             transtype = transform.type
 
         item_anim[transform.id] = {
-            'name': transform.name,
             'type': transtype
         }
 
