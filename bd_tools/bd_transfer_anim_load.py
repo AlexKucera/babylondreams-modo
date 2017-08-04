@@ -121,7 +121,7 @@ def main():
             for tag in anim_data["items"]:
 
                 if tag in tagsTarget:
-                    print("Transferring animation from {} to {}".format(anim_data["items"][tag]["name"],
+                    print("Transferring animation from {} to {}".format(anim_data["items"][tag]["id"],
                                                                         tagsTarget[tag].name))
                     target = tagsTarget[tag]
                     # First we paste the item's channels
@@ -156,7 +156,7 @@ def main():
                                                  anim_data["items"][tag]["transforms"][transform][channel.name]["type"])
 
                 else:
-                    missingTags.append("{} ({})".format(tag, anim_data["items"][tag]["name"]))
+                    missingTags.append("{} ({})".format(tag, anim_data["items"][tag]["id"]))
                     print("{} has not corresponding tag in the target.".format(anim_data["items"][tag]["name"]))
 
             bd_helpers.timer(start, "Finished Animation Transfer")
