@@ -3,7 +3,9 @@
 
 """
 
-batch_event_logger_command
+event_logger_command
+
+Allows simulatneous printing and logging of strings.
 
 Usage:
 
@@ -65,7 +67,7 @@ class MyCommand_Cmd(lxu.command.BasicCommand):
             hints.Label("A string that will be printed to the Event Log.")
 
         if index == 1:
-            hints.Label("The path to an log file on disk.")
+            hints.Label("The path to a log file on disk.")
 
     def cmd_Flags(self):
         return lx.symbol.fCMD_UNDO | lx.symbol.fCMD_UI
@@ -84,4 +86,4 @@ class MyCommand_Cmd(lxu.command.BasicCommand):
             log.write("{} - {}\r\n".format(time.strftime("%Y-%m-%d %H:%M:%S"), cmd_string))
             log.close
 
-lx.bless(MyCommand_Cmd, 'batch.event_logger')
+lx.bless(MyCommand_Cmd, 'bd.event_logger')
