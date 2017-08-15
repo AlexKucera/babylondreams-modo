@@ -35,10 +35,8 @@ from var import *
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
-def main():
+def main(comment=False, commentstring=""):
     start_timer = bd_helpers.timer()
-
-    lx.eval("!!log.masterClear")
 
     scene = modo.Scene()
     regex = "(.+)_v(\d+)(\w+)?"  # Grab anything that has a character sequence followed by a _v and some number
@@ -54,6 +52,8 @@ def main():
         if match:
             version = match.group(2)
             filename = match.group(1)
+            filecomment = match.group(3)
+
             result = "yes"
         else:
             message = "The provided file ({}{}) contains no version info (we are looking for a '_v000' here).\n\n" \
@@ -70,10 +70,19 @@ def main():
             created = False
             zfill = len(version)
 
+            if comment:
+                filecomment = commentstring.replace(" ","_").lower()
+                filecomment = bd_helpers.format_filename(filecomment)
+
             while created is False:
 
                 version = str(int(version) + 1).zfill(zfill)
-                newfile = os.path.join(filepath, "{}_v{}{}".format(filename, version, fileextension))
+
+                if filecomment:
+                    newfile = os.path.join(filepath, "{}_v{}_{}{}".format(filename, version, filecomment, fileextension))
+                else:
+                    newfile = os.path.join(filepath, "{}_v{}{}".format(filename, version, fileextension))
+
                 if os.path.isfile(newfile):
                     print("Version " + version + " already exists. Increasing version count.")
                     pass
