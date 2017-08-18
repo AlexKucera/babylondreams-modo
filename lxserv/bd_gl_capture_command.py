@@ -26,7 +26,7 @@ __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
 __credits__ = ["Alexander Kucera"]
 __license__ = "GPL"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __maintainer__ = "Alexander Kucera"
 __email__ = "a.kucera@babylondreams.de"
 __status__ = "Development"
@@ -89,8 +89,9 @@ class CommandClass(babylondreams.CommanderClass):
             },
             {
                 'name': 'replicator_visibility',
+                'label': "Replicator/Locator Visibility",
                 'datatype': 'string',
-                'default': 'always',
+                'default': 'none',
                 'values_list_type': 'popup',
                 'values_list': [('always', 'Visible'), ('none', ' Hidden')]
             },
@@ -101,6 +102,18 @@ class CommandClass(babylondreams.CommanderClass):
                 'default': 'full',
                 'values_list_type': 'popup',
                 'values_list': [('full', 'Geo Visible'), ('bbox', 'BBox On')]
+            },
+            {
+                'name': 'avp_shadows',
+                'label': 'Enable AVP Shadows',
+                'datatype': 'boolean',
+                'default': True
+            },
+            {
+                'name': 'avp_ao',
+                'label': 'Enable AVP Ambient Occlusion',
+                'datatype': 'boolean',
+                'default': True
             },
             {
                 'name': 'automatic_naming',
@@ -197,6 +210,8 @@ class CommandClass(babylondreams.CommanderClass):
                            automatic_naming=arguments['automatic_naming'],
                            overwrite=arguments['overwrite'],
                            bbox_toggle=arguments['bbox_toggle'],
+                           avp_shadows=arguments['avp_shadows'],
+                           avp_ao=arguments['avp_ao']
                            capture_file=self.capture_file()[0],
                            capture_path=self.capture_output()[0])
 

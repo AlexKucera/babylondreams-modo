@@ -3,11 +3,11 @@
 
 """
 
-babylondreams - bd_fix_orphans
+babylondreams - bd_transfer_anim_command
 
 Release Notes:
 
-V0.1 Initial Release - 2017-02-22
+V0.1 Initial Release - 2017-02-21
 
 """
 
@@ -15,7 +15,7 @@ import babylondreams
 import lx
 import modo
 
-from bd_tools import bd_fix_orphans
+from bd_tools import bd_transfer_anim_save
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -30,19 +30,9 @@ __status__ = "Development"
 class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
-    #def commander_arguments(self):
-    #    return [
-    #         arg_commander 
-    #    ]
-
     def commander_execute(self, msg, flags):
-        # dish1 = self.commander_arg_value(0)
-        # dish2 = self.commander_arg_value(1)
-
-        # modo.dialogs.alert("breakfast", ' and '.join([dish1, dish2]))
-
-        reload(bd_fix_orphans)
-        bd_fix_orphans.main()
+        reload(bd_transfer_anim_save)
+        bd_transfer_anim_save.main()
 
 
-lx.bless(CommandClass, 'bd.fix_orphans')
+lx.bless(CommandClass, 'bd.transfer_anim_save')

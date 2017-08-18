@@ -3,19 +3,29 @@
 
 """
 
-babylondreams - bd_fix_orphans
+babylondreams - bd_version_up_command
 
 Release Notes:
 
-V0.1 Initial Release - 2017-02-22
+V0.1 Initial Release - 2017-08-15
 
 """
 
 import babylondreams
 import lx
+
+import imp
+
+try:
+    imp.find_module('lx.symbol')
+    import lx.symbol
+except ImportError:
+    pass
+
 import modo
 
-from bd_tools import bd_fix_orphans
+from bd_tools import bd_version_up
+from bd_tools.var import *
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
@@ -36,13 +46,8 @@ class CommandClass(babylondreams.CommanderClass):
     #    ]
 
     def commander_execute(self, msg, flags):
-        # dish1 = self.commander_arg_value(0)
-        # dish2 = self.commander_arg_value(1)
-
-        # modo.dialogs.alert("breakfast", ' and '.join([dish1, dish2]))
-
-        reload(bd_fix_orphans)
-        bd_fix_orphans.main()
+        reload(bd_version_up)
+        bd_version_up.main()
 
 
-lx.bless(CommandClass, 'bd.fix_orphans')
+lx.bless(CommandClass, 'bd.version_up')

@@ -34,6 +34,7 @@ def main():
 
             if item.type == "meshInst":
                 lx.eval("item.setType mesh")
+                lx.eval("mesh.setBBox false")
             else:
                 lx.eval("item.setType {0}".format(item.type))
 
