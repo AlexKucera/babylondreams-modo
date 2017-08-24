@@ -50,13 +50,13 @@ def main():
 
         project_config = bd_globals.projectconfig(scene_path)
 
-        output = '{project_dir}/{img}/{renders}/{shot}/{version}/{file}'.format(
-            project_dir=project['project_dir'],
-            img=project_config['images/parent folder'],
-            renders=project_config['images/3d'],
-            file=os.path.splitext(file)[0],
-            shot="{}_{}".format(shot['sequence'], shot['shot']),
-            version=shot['shotname']
+        output = os.path.join(
+            project['project_dir'],
+            project_config['images/parent folder'],
+            project_config['images/3d'],
+            "{}_{}".format(shot['sequence'], shot['shot']),
+            shot['shotname'],
+            os.path.splitext(file)[0]
         )
 
         lx.out("The renders will be located at: {}".format(output))
@@ -81,11 +81,11 @@ def main():
                             fileformat = "openexr"
 
                     if item.name == "rgba":
-                        renderpasspath = "{}/".format(output)
+                        renderpasspath = os.path.join(output, "")
                     else:
-                        renderpasspath = "{}/{}/".format(output, item.name.replace(" ", "_"))
+                        renderpasspath = os.path.join(output, item.name.replace(" ", "_"), "")
 
-                    renderoutputpath = renderpasspath + os.path.splitext(file)[0] + "_"
+                    renderoutputpath = os.path.join(renderpasspath, os.path.splitext(file)[0] + "_")
                     lx.out("RenderOutput " + item.name + " will be located at: " +
                            renderpasspath)
                     if not os.path.exists(renderpasspath):
