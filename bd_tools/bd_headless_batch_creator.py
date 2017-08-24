@@ -221,9 +221,11 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
 
         region = renderRegionCheck()
 
-        batch_base_path = "{filepath}/_batch/{filename}".format(filepath=os.path.dirname(scene_path),
-                                                                filename=os.path.splitext(os.path.basename(scene_path))[0]
-                                                                )
+        batch_base_path = os.path.join(
+            os.path.dirname(scene_path),
+            "_batch",
+            os.path.splitext(os.path.basename(scene_path))[0]
+        )
         frames = "_Frames{}-{}".format(first_frame, last_frame)
         batch_path = os.path.normpath("{}{}.bat".format(batch_base_path, frames))
         bash_path = os.path.normpath("{}{}.sh".format(batch_base_path, frames))
@@ -238,22 +240,30 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
             first_batch_frame = min(int(minframe) for minframe in framegroup)
             last_batch_frame = max(int(maxframe) for maxframe in framegroup)
 
-            command_path = os.path.normpath("{filepath}/{filename}_batchrender_frames_{first}-{last}.txt".format(
-                filepath=batch_base_path,
-                filename=os.path.splitext(os.path.basename(scene_path))[0],
-                first=first_batch_frame,
-                last=last_batch_frame
-            ))
+            command_path = os.path.normpath(
+                os.path.join(
+                    batch_base_path,
+                    "{filename}_batchrender_frames_{first}-{last}.txt".format(
+                        filename=os.path.splitext(os.path.basename(scene_path))[0],
+                        first=first_batch_frame,
+                        last=last_batch_frame
+                    )
+                )
+            )
 
             if not os.path.exists(os.path.dirname(command_path)):
                 os.makedirs(os.path.dirname(command_path))
 
-            command_path_win = os.path.normpath("{filepath}_win/{filename}_batchrender_frames_{first}-{last}.txt".format(
-                filepath=batch_base_path,
-                filename=os.path.splitext(os.path.basename(scene_path))[0],
-                first=first_batch_frame,
-                last=last_batch_frame
-            ))
+            command_path_win = os.path.normpath(
+                os.path.join(
+                    "{}_win".format(batch_base_path),
+                    "{filename}_batchrender_frames_{first}-{last}.txt".format(
+                        filename=os.path.splitext(os.path.basename(scene_path))[0],
+                        first=first_batch_frame,
+                        last=last_batch_frame
+                    )
+                )
+            )
 
             if not os.path.exists(os.path.dirname(command_path_win)):
                 os.makedirs(os.path.dirname(command_path_win))
