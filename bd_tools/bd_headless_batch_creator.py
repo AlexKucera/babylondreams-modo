@@ -14,20 +14,18 @@ V0.1 Initial Release - 2017-04-10
 """
 import re
 import subprocess
-
-import pyperclip
-
-import bd_helpers
-import modo
-import lx
 import traceback
 
-import bd_update_render_paths
-from var import *
-
+import lx
+import modo
+import pyperclip
 from wheezy.template.engine import Engine
 from wheezy.template.ext.core import CoreExtension
 from wheezy.template.loader import FileLoader
+
+import bd_globals
+import bd_helpers
+from var import *
 
 
 # FUNCTIONS -----------------------------------------------
