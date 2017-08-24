@@ -91,7 +91,7 @@ def build_modo_bash(commands=[], headless="", render_range={}):
 
 
 def renderRegionCheck():
-    if modo.Scene().renderItem.channel('region').get():
+    if modo.Scene().renderItem.channel(lx.symbol.sICHAN_POLYRENDER_REGION).get():
         result = modo.dialogs.yesNo('Disable Render Region', "Disable Render Region for batch render?")
         if result == "yes":
             lx.out("Proceeding without Render Region.")
@@ -112,7 +112,7 @@ def get_scene_range():
     frame_range = modo.Scene().currentRange
     first_frame = frame_range[0]
     last_frame = frame_range[1]
-    frame_step = int(scene.renderItem.channel('step').get())
+    frame_step = int(modo.Scene().renderItem.channel(lx.symbol.sICHAN_POLYRENDER_STEP).get())
 
     return "{}-{}x{}".format(first_frame, last_frame, frame_step)
 
