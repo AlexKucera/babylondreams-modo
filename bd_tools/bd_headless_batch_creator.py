@@ -104,11 +104,8 @@ def renderRegionCheck():
 
     return region
 
-def get_scene_range():
-    scene = modo.Scene()
 
-    #first_frame = int(scene.renderItem.channel('first').get())
-    #last_frame = int(scene.renderItem.channel('last').get())
+def get_scene_range():
     frame_range = modo.Scene().currentRange
     first_frame = frame_range[0]
     last_frame = frame_range[1]
@@ -118,8 +115,7 @@ def get_scene_range():
 
 
 def get_passes():
-    scene = modo.Scene()
-    passes = scene.renderPassGroups
+    passes = modo.Scene().renderPassGroups
     render_passes = []
     if len(passes) > 0:
         for pas in passes:
@@ -129,12 +125,12 @@ def get_passes():
         render_passes.append((None, "No passes in scene"))
     return render_passes
 
+
 def get_output_pattern():
-    scene = modo.Scene()
     if get_passes():
-       pattern = "[<pass>]_[<output>][<LR>].<FFFF>"
+        pattern = "[<pass>]_[<output>][<LR>].<FFFF>"
     else:
-       pattern = "[<pass>][<output>][<LR>].<FFFF>"
+        pattern = "[<pass>][<output>][<LR>].<FFFF>"
     return pattern
 
 
@@ -277,10 +273,9 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
 
             all_commands_win.append(command_path_win)
 
-
-
         modo_batch = build_modo_batch(commands=all_commands_win)
-        modo_bash = build_modo_bash(commands=all_commands, headless=headless_path, render_range={'first': first_frame, 'last': last_frame})
+        modo_bash = build_modo_bash(commands=all_commands, headless=headless_path,
+                                    render_range={'first': first_frame, 'last': last_frame})
 
         with open(batch_path, mode='w+') as batch:
             batch.write(modo_batch)
@@ -297,7 +292,7 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
             pyperclip.copy(bash_path)
             subprocess.Popen(['open', '-a', '/Applications/Utilities/Terminal.app', '-n'])
 
-    bd_helpers.timer(start_timer, ' Overall')
+    bd_helpers.timer(start_timer, 'Headless Batch Creator')
 
 
 # END MAIN PROGRAM -----------------------------------------------
