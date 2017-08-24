@@ -153,8 +153,25 @@ def format_filename(s, format):
     
     """
 
-    unix_path = "/Volumes/ProjectsRaid/WorkingProjects"
-    win_path = "Z:\AzureSync\CloudComputing\WorkingProjects"
+    if sys.platform == "darwin":
+
+        unix_path = bd_globals.bdconfig()['projects dir']
+        win_path = os.path.normpath(
+            os.path.join(
+                bd_globals.bdconfig()['alt drive'],
+                bd_globals.bdconfig()['projects location']
+            )
+        )
+
+    elif sys.platform == "win32":
+
+        win_path = bd_globals.bdconfig()['projects dir']
+        unix_path = os.path.normpath(
+            os.path.join(
+                bd_globals.bdconfig()['alt drive'],
+                bd_globals.bdconfig()['projects location']
+            )
+        )
 
     if format == "win32":
         filename = s.replace(unix_path, win_path)
@@ -250,10 +267,10 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
                 'passes': passname,
                 'region': region
             }
-            print passname
+
             modo_command = build_modo_render_command(scenes=scene_dict,
                                                      pathaliases={
-                                                         'WorkingProjects': '/Volumes/ProjectsRaid/WorkingProjects/'
+                                                         'WorkingProjects': bd_globals.bdconfig()['projects dir']
                                                      })
 
             with open(command_path, mode='w+') as command:
@@ -263,9 +280,14 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
             all_commands.append(command_path)
 
             modo_command_win = build_modo_render_command_win(scenes=scene_dict,
-                                                     pathaliases={
-                                                         'WorkingProjects': 'Z:\AzureSync\CloudComputing\WorkingProjects'
-                                                     })
+                                                             pathaliases={
+                                                                 'WorkingProjects': os.path.normpath(
+                                                                     os.path.join(
+                                                                         bd_globals.bdconfig()['alt drive'],
+                                                                         bd_globals.bdconfig()['projects location']
+                                                                     )
+                                                                 )
+                                                             })
 
             with open(command_path_win, mode='w+') as command:
                 command.write(modo_command_win)
