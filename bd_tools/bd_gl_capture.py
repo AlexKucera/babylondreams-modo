@@ -77,10 +77,11 @@ def capture_path():
 
 def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
          filename='preview', filepath="", first_frame=1001, last_frame=1250, raygl='off', replicators=False,
-         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True, bbox_toggle='full', avp_shadows=True, avp_ao=True, capture_file='playblast', capture_path=HOME_DIR):
+         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True, bbox_toggle='full',
+         avp_shadows=True, avp_ao=True, capture_file='playblast', capture_path=HOME_DIR):
     scene = modo.Scene()
-	
-	reload(bd_helpers)
+
+    reload(bd_helpers)
 
     # Start timer
 
