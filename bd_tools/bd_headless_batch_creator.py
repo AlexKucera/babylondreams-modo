@@ -44,6 +44,20 @@ def build_modo_render_command(pathaliases=None, scenes={}):
     return template.render({'pathaliases': pathaliases, 'scenes': scenes})
 
 
+def build_modo_preview_render_command(pathaliases=None, scenes={}):
+    searchpath = [TEMPLATES]
+    engine = Engine(
+        loader=FileLoader(searchpath),
+        extensions=[CoreExtension()]
+    )
+    template = engine.get_template('modo_preview_render_commands.txt')
+
+    if pathaliases:
+        for key in pathaliases:
+            '{} "{}"'.format(key, os.path.normpath(pathaliases[key]))
+
+    return template.render({'pathaliases': pathaliases, 'scenes': scenes})
+
 def build_modo_render_command_win(pathaliases=None, scenes={}):
     searchpath = [TEMPLATES]
     engine = Engine(
@@ -51,6 +65,24 @@ def build_modo_render_command_win(pathaliases=None, scenes={}):
         extensions=[CoreExtension()]
     )
     template = engine.get_template('modo_render_commands_win.txt')
+
+    if pathaliases:
+        for key in pathaliases:
+            '{} "{}"'.format(key, os.path.normpath(pathaliases[key]))
+
+    for scene in scenes:
+        scenes[scene]['path'] = format_filename(scenes[scene]['path'], 'win32')
+
+    return template.render({'pathaliases': pathaliases, 'scenes': scenes})
+
+
+def build_modo_preview_render_command_win(pathaliases=None, scenes={}):
+    searchpath = [TEMPLATES]
+    engine = Engine(
+        loader=FileLoader(searchpath),
+        extensions=[CoreExtension()]
+    )
+    template = engine.get_template('modo_preview_render_commands_win.txt')
 
     if pathaliases:
         for key in pathaliases:
@@ -189,7 +221,9 @@ def format_filename(s, format):
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
-def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize=10, pattern=""):
+def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize=10, pattern="",
+         preview=False, time=5.0, perFrame='frame', conv=0.975, geoUpdate=False):
+
     start_timer = bd_helpers.timer()
 
     scene = modo.Scene()
@@ -275,13 +309,23 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
                 'step': frame_step,
                 'pattern': pattern,
                 'passes': passname,
-                'region': region
+                'region': region,
+                'time': time,
+                'perFrame': perFrame,
+                'conv': conv,
+                'geoUpdate': geoUpdate
             }
 
-            modo_command = build_modo_render_command(scenes=scene_dict,
-                                                     pathaliases={
-                                                         'WorkingProjects': bd_globals.bdconfig()['projects dir']
-                                                     })
+            if preview:
+                modo_command = build_modo_preview_render_command(scenes=scene_dict,
+                                                                 pathaliases={
+                                                                     'WorkingProjects': bd_globals.bdconfig()['projects dir']
+                                                                 })
+            else:
+                modo_command = build_modo_render_command(scenes=scene_dict,
+                                                         pathaliases={
+                                                             'WorkingProjects': bd_globals.bdconfig()['projects dir']
+                                                         })
 
             with open(command_path, mode='w+') as command:
                 command.write(modo_command)
@@ -289,15 +333,26 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
 
             all_commands.append(command_path)
 
-            modo_command_win = build_modo_render_command_win(scenes=scene_dict,
-                                                             pathaliases={
-                                                                 'WorkingProjects': os.path.normpath(
-                                                                     os.path.join(
-                                                                         bd_globals.bdconfig()['alt drive'],
-                                                                         bd_globals.bdconfig()['projects location']
+            if preview:
+                modo_command_win = build_modo_render_command_win(scenes=scene_dict,
+                                                                 pathaliases={
+                                                                     'WorkingProjects': os.path.normpath(
+                                                                         os.path.join(
+                                                                             bd_globals.bdconfig()['alt drive'],
+                                                                             bd_globals.bdconfig()['projects location']
+                                                                         )
                                                                      )
-                                                                 )
-                                                             })
+                                                                 })
+            else:
+                modo_command_win = build_modo_render_command_win(scenes=scene_dict,
+                                                                 pathaliases={
+                                                                     'WorkingProjects': os.path.normpath(
+                                                                         os.path.join(
+                                                                             bd_globals.bdconfig()['alt drive'],
+                                                                             bd_globals.bdconfig()['projects location']
+                                                                         )
+                                                                     )
+                                                                 })
 
             with open(command_path_win, mode='w+') as command:
                 command.write(modo_command_win)
@@ -323,6 +378,8 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
         if sys.platform == "darwin":
             pyperclip.copy(bash_path)
             subprocess.Popen(['open', '-a', '/Applications/Utilities/Terminal.app', '-n'])
+            # proc = subprocess.Popen([bash_path])
+            # print proc.pid
 
     bd_helpers.timer(start_timer, 'Headless Batch Creator')
 

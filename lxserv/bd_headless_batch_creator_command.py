@@ -33,49 +33,87 @@ class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
     def commander_arguments(self):
-       return [
-           {
-               'name': 'scene_range',
-               'label': "Use Scene Range",
-               'datatype': 'boolean',
-               'default': True
-           },
-           {
-               'name': 'range',
-               'label': "Frame Range",
-               'datatype': 'string',
-               'default': bd_headless_batch_creator.get_scene_range()
-           },
-           {
-               'name': 'pass',
-               'label': "Render Pass",
-               'datatype': 'string',
-               'values_list_type': 'popup',
-               'values_list': bd_headless_batch_creator.get_passes
-           },
-           {
-               'name': 'batchsize',
-               'label': "Batch Size",
-               'datatype': 'integer',
-               'default': 20
-           },
-           {
-               'name': 'pattern',
-               'label': "Output Pattern",
-               'datatype': 'string',
-               'default': bd_headless_batch_creator.get_output_pattern()
-           },
-       ]
+        return [
+            {
+                'name': 'scene_range',
+                'label': "Use Scene Range",
+                'datatype': 'boolean',
+                'default': True
+            },
+            {
+                'name': 'range',
+                'label': "Frame Range",
+                'datatype': 'string',
+                'default': bd_headless_batch_creator.get_scene_range()
+            },
+            {
+                'name': 'pass',
+                'label': "Render Pass",
+                'datatype': 'string',
+                'values_list_type': 'popup',
+                'values_list': bd_headless_batch_creator.get_passes
+            },
+            {
+                'name': 'batchsize',
+                'label': "Batch Size",
+                'datatype': 'integer',
+                'default': 20
+            },
+            {
+                'name': 'pattern',
+                'label': "Output Pattern",
+                'datatype': 'string',
+                'default': bd_headless_batch_creator.get_output_pattern()
+            },
+            {
+                'name': 'preview',
+                'label': "Use Preview Rendering",
+                'datatype': 'boolean',
+                'default': True
+            },
+            {
+                'name': 'time',
+                'label': "Max Time (in minutes)",
+                'datatype': 'float',
+                'default': 5.0
+            },
+            {
+                'name': 'perFrame',
+                'label': "Use Time for",
+                'datatype': 'string',
+                'default': 'frame',
+                'values_list_type': 'popup',
+                'values_list': [('frame', 'Frame'), ('sequence', 'Entire Sequence')]
+            },
+            {
+                'name': 'conv',
+                'label': "Convergence Target",
+                'datatype': 'percent',
+                'default': 0.975
+            },
+            {
+                'name': 'geoUpdate',
+                'label': "Force Geometry Update per Frame",
+                'datatype': 'boolean',
+                'default': False
+            }
+        ]
 
     def commander_execute(self, msg, flags):
         arguments = self.commander_args()
 
         reload(bd_headless_batch_creator)
         bd_headless_batch_creator.main(use_scene_range=arguments['scene_range'],
-                                       frame_range =arguments['range'],
-                                       passname =arguments['pass'],
-                                       batchsize =int(arguments['batchsize']),
-                                       pattern =arguments['pattern'])
+                                       frame_range=arguments['range'],
+                                       passname=arguments['pass'],
+                                       batchsize=int(arguments['batchsize']),
+                                       pattern=arguments['pattern'],
+                                       preview=arguments['preview'],
+                                       time=arguments['time'],
+                                       perFrame=arguments['perFrame'],
+                                       conv=arguments['conv'],
+                                       geoUpdate=arguments['geoUpdate']
+                                       )
 
 
 lx.bless(CommandClass, 'bd.headless_batch_creator')
