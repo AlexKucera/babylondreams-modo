@@ -105,7 +105,7 @@ def main():
                 pass
                 # lx.out('Skipping {} as it is either disabled or has no "PATH" filled in'.format(item.name))
 
-    bd_helpers.timer(start_timer, ' Overall')
+    bd_helpers.timer(start_timer, 'Render Path Update')
 
 
 # END MAIN PROGRAM -----------------------------------------------
