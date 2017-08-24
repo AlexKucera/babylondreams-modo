@@ -64,19 +64,25 @@ def main():
         if not os.path.exists(output):
             os.makedirs(output)
 
-        for item in scene.iterItemsFast('renderOutput'):
+        for item in scene.iterItemsFast(lx.symbol.sITYPE_RENDEROUTPUT):
 
-            outputtype = item.channel('effect').get()
-            filepath = item.channel('filename').get()
-            enabled = item.channel('enable').get()
+            outputtype = item.channel(lx.symbol.sICHAN_TEXTURELAYER_EFFECT).get()
+            filepath = item.channel(lx.symbol.sICHAN_RENDEROUTPUT_FILENAME).get()
+            enabled = item.channel(lx.symbol.sICHAN_TEXTURELAYER_ENABLE).get()
             if enabled:
                 if filepath:
 
-                    fileformat = enabled = item.channel('format').get()
+                    fileformat = enabled = item.channel(lx.symbol.sICHAN_RENDEROUTPUT_FORMAT).get()
 
                     if fileformat is None or "$FLEX":
-                        if outputtype == "shade.normal" or outputtype == "geo.world" or outputtype == "geo.uv" or outputtype == "depth" or outputtype == "motion":
+                        if outputtype == lx.symbol.s_FX_OUTPUT_SHADING_NORMAL \
+                                or outputtype == lx.symbol.s_FX_OUTPUT_WORLD_COORDINATES \
+                                or outputtype == lx.symbol.s_FX_OUTPUT_UV_COORDINATES\
+                                or outputtype == lx.symbol.s_FX_OUTPUT_DEPTH\
+                                or outputtype == lx.symbol.s_FX_OUTPUT_MOTION:
+
                             fileformat = "openexr_32"
+
                         else:
                             fileformat = "openexr"
 
@@ -91,9 +97,9 @@ def main():
                     if not os.path.exists(renderpasspath):
                         os.makedirs(renderpasspath)
                     lx.out("Setting Render Output path to: " + renderoutputpath)
-                    item.channel('filename').set(renderoutputpath)
+                    item.channel(lx.symbol.sICHAN_RENDEROUTPUT_FILENAME).set(renderoutputpath)
                     lx.out("Setting Render Output format to: " + fileformat)
-                    item.channel('format').set(fileformat)
+                    item.channel(lx.symbol.sICHAN_RENDEROUTPUT_FORMAT).set(fileformat)
 
             else:
                 pass
