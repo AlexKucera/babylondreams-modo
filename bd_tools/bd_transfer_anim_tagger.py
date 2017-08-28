@@ -80,22 +80,29 @@ def assign():
 
 def update():
     for item in selected:
+        createTag(item)
+        for child in item.children(recursive=True):
+            createTag(child)
 
-        createTag = False
 
-        if item.hasTag("anim"):
-            if not item.readTag("anim"):
-                createTag = True
-        else:
+def createTag(item):
+    createTag = False
+
+    if item.hasTag("anim"):
+        if not item.readTag("anim"):
             createTag = True
+    else:
+        createTag = True
 
-        if createTag:
-            tag(item)
+    if createTag:
+        tag(item)
 
 
 def overwrite():
     for item in selected:
         tag(item)
+        for child in item.children(recursive=True):
+            tag(child)
 
 
 def tag(item):
