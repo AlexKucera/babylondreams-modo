@@ -229,7 +229,7 @@ def main(proc='manual', use_scene_range=True, frame_range="1001-1250x1", passnam
     scene = modo.Scene()
     scene_path = scene.filename
 
-    if passname:
+    if passname != "None":
         passname = "group:{}".format(scene.item(passname).name)
     else:
         passname = ""
