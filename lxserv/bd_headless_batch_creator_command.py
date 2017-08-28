@@ -35,75 +35,75 @@ class CommandClass(babylondreams.CommanderClass):
     def commander_arguments(self):
         return [
             {
-                'name': 'proc',
-                'label': "Render Type",
-                'datatype': 'string',
-                'default': 'manual',
-                'values_list_type': 'popup',
-                'values_list': [('manual', 'Manual'), ('background', 'Background Process')]
+                babylondreams.NAME: 'proc',
+                babylondreams.LABEL: "Render Type",
+                babylondreams.DATATYPE: 'string',
+                babylondreams.VALUE: 'manual',
+                babylondreams.VALUES_LIST_TYPE: 'popup',
+                babylondreams.VALUES_LIST: [('manual', 'Manual'), ('background', 'Background Process')]
             },
             {
-                'name': 'scene_range',
-                'label': "Use Scene Range",
-                'datatype': 'boolean',
-                'default': True
+                babylondreams.NAME: 'scene_range',
+                babylondreams.LABEL: "Use Scene Range",
+                babylondreams.DATATYPE: 'boolean',
+                babylondreams.VALUE: True
             },
             {
-                'name': 'range',
-                'label': "Frame Range",
-                'datatype': 'string',
-                'default': bd_headless_batch_creator.get_scene_range()
+                babylondreams.NAME: 'range',
+                babylondreams.LABEL: "Frame Range",
+                babylondreams.DATATYPE: 'string',
+                babylondreams.VALUE: bd_headless_batch_creator.get_scene_range()
             },
             {
-                'name': 'pass',
-                'label': "Render Pass",
-                'datatype': 'string',
-                'values_list_type': 'popup',
-                'values_list': bd_headless_batch_creator.get_passes
+                babylondreams.NAME: 'pass',
+                babylondreams.LABEL: "Render Pass",
+                babylondreams.DATATYPE: 'string',
+                babylondreams.VALUES_LIST_TYPE: 'popup',
+                babylondreams.VALUES_LIST: bd_headless_batch_creator.get_passes
             },
             {
-                'name': 'batchsize',
-                'label': "Batch Size",
-                'datatype': 'integer',
-                'default': 20
+                babylondreams.NAME: 'batchsize',
+                babylondreams.LABEL: "Batch Size",
+                babylondreams.DATATYPE: 'integer',
+                babylondreams.VALUE: 20
             },
             {
-                'name': 'pattern',
-                'label': "Output Pattern",
-                'datatype': 'string',
-                'default': bd_headless_batch_creator.get_output_pattern()
+                babylondreams.NAME: 'pattern',
+                babylondreams.LABEL: "Output Pattern",
+                babylondreams.DATATYPE: 'string',
+                babylondreams.VALUE: bd_headless_batch_creator.get_output_pattern()
             },
             {
-                'name': 'preview',
-                'label': "Use Preview Rendering",
-                'datatype': 'boolean',
-                'default': True
+                babylondreams.NAME: 'preview',
+                babylondreams.LABEL: "Use Preview Rendering",
+                babylondreams.DATATYPE: 'boolean',
+                babylondreams.VALUE: True
             },
             {
-                'name': 'time',
-                'label': "Max Time (in minutes)",
-                'datatype': 'float',
-                'default': 5.0
+                babylondreams.NAME: 'time',
+                babylondreams.LABEL: "Max Time (in minutes)",
+                babylondreams.DATATYPE: 'float',
+                babylondreams.VALUE: 5.0
             },
             {
-                'name': 'perFrame',
-                'label': "Use Time for",
-                'datatype': 'string',
-                'default': 'frame',
-                'values_list_type': 'popup',
-                'values_list': [('frame', 'Frame'), ('sequence', 'Entire Sequence')]
+                babylondreams.NAME: 'perFrame',
+                babylondreams.LABEL: "Use Time for",
+                babylondreams.DATATYPE: 'string',
+                babylondreams.VALUE: 'frame',
+                babylondreams.VALUES_LIST_TYPE: 'popup',
+                babylondreams.VALUES_LIST: [('frame', 'Frame'), ('sequence', 'Entire Sequence')]
             },
             {
-                'name': 'conv',
-                'label': "Convergence Target",
-                'datatype': 'percent',
-                'default': 0.975
+                babylondreams.NAME: 'conv',
+                babylondreams.LABEL: "Convergence Target",
+                babylondreams.DATATYPE: 'percent',
+                babylondreams.VALUE: 0.975
             },
             {
-                'name': 'geoUpdate',
-                'label': "Force Geometry Update per Frame",
-                'datatype': 'boolean',
-                'default': False
+                babylondreams.NAME: 'geoUpdate',
+                babylondreams.LABEL: "Force Geometry Update per Frame",
+                babylondreams.DATATYPE: 'boolean',
+                babylondreams.VALUE: False
             }
         ]
 
