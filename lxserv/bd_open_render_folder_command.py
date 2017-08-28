@@ -31,13 +31,15 @@ __status__ = "Development"
 class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
-    #def commander_arguments(self):
-    #    return [
-    #         arg_commander 
-    #    ]
-
     def commander_execute(self, msg, flags):
-        subprocess.call(['open', os.path.dirname(modo.Scene().selected[-1:][0].channel('filename').get())])
+        subprocess.call(
+            [
+                'open',
+                os.path.dirname(
+                    modo.Scene().selected[-1:][0].channel(lx.symbol.sICHAN_RENDEROUTPUT_FILENAME).get()
+                )
+            ]
+        )
 
 
 lx.bless(CommandClass, 'bd.open_render_folder_command')
