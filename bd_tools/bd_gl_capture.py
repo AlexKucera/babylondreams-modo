@@ -42,6 +42,11 @@ import bd_globals
 
 
 def capture_path():
+    """
+    Gets the projects path and turns it into the preview output path.
+    Returns:
+
+    """
     scene = modo.Scene()
     scene_path = scene.filename
     output = os.path.expanduser('~') + "/"
@@ -65,8 +70,6 @@ def capture_path():
         os.makedirs(output)
 
     return {'output_path': output, 'filename': file}
-
-
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
@@ -74,9 +77,15 @@ def capture_path():
 
 def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rendercam', shading_style='advgl',
          filename='preview', filepath="", first_frame=1001, last_frame=1250, raygl='off', replicators=False,
-         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True,
-         capture_file='playblast', capture_path=HOME_DIR):
+         bg_style='environment', use_scene_range=True, automatic_naming=True, overwrite=True, bbox_toggle='full',
+         avp_shadows=True, avp_ao=True, capture_file='playblast', capture_path=HOME_DIR):
     scene = modo.Scene()
+
+    reload(bd_helpers)
+
+    # Start timer
+
+    start = bd_helpers.timer()
 
     # Initialize main variables
 
@@ -100,22 +109,16 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
 
     shading_style = shading_style
 
-    if use_scene_range:
-        first_frame = scene.renderItem.channel('first').get()
-        last_frame = scene.renderItem.channel('last').get()
-    else:
-        first_frame = first_frame
-        last_frame = last_frame
-
     if automatic_naming:
-        filename = capture_file
-        filepath = capture_path
+        filename = capture_path()['filename']
+        filepath = capture_path()['output_path']
 
     if gl_recording_type == 'movie':
-        filepath = '{}{}_{}.mov'.format(filepath, filename, capture_camera_name)
+        filepath = '{0}{3}{1}_{2}.mov'.format(filepath, filename, capture_camera_name, os.sep)
     else:
-        filepath = '{0}{1}{3}{1}_{2}.tga'.format(filepath, filename, capture_camera_name, os.sep)
+        filepath = '{0}{3}{1}{3}{1}_{2}.tga'.format(filepath, filename, capture_camera_name, os.sep)
 
+    print(filepath)
     if not overwrite:
         exists = True
         version = 1
@@ -148,6 +151,8 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
                 filepath = "{0}{1}{2}_v{3}{4}".format(new_path, os.sep, new_name, version, name[1])
             else:
                 exists = False
+
+    print(filepath)
 
     if not os.path.exists(os.path.dirname(filepath)):
         os.makedirs(os.path.dirname(filepath))
@@ -201,7 +206,6 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('view3d.drawDisp true')
     lx.eval('view3d.drawFur true')
     lx.eval('view3d.showSelectionRollover false')
-    lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.wireframeOverlay none active')
     lx.eval('view3d.showWireframeItemMode false')
     lx.eval('view3d.showWorkPlane no')
@@ -214,17 +218,30 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     else:
         lx.eval('view3d.cameraItem ' + capture_camera_name)
 
+    lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.shadingStyle ' + shading_style)
     lx.eval('view3d.sameAsActive true')
 
     if shading_style == "gnzgl":
+        lx.eval("view3d.setGnzMaterialMode full")
         lx.eval("view3d.showGnzFSAA x9")
+        lx.eval("view3d.setGnzLineAA full")
         lx.eval("view3d.setGnzTransparency correct")
         lx.eval("view3d.setGnzSSReflections blurry")
         lx.eval("view3d.setGnzDitherMode ordered")
-        lx.eval("view3d.showGnzSSAO true")
+        if avp_ao:
+            lx.eval("view3d.showGnzSSAO true")
+        else:
+            lx.eval("view3d.showGnzSSAO false")
         lx.eval("view3d.GnzVisOverride all")
-        lx.eval("view3d.showGnzShadows true")
+        if avp_shadows:
+            lx.eval("view3d.showGnzShadows true")
+            lx.eval("view3d.setGnzShadowsCSMLevels x4")
+            lx.eval("view3d.setGnzShadowsSize high")
+            lx.eval("view3d.setGnzShadowsFilter on")
+        else:
+            lx.eval("view3d.showGnzShadows false")
+
         lx.eval("view3d.useGnzNormalMaps true")
         lx.eval("view3d.useGnzBumpMaps true")
         lx.eval("view3d.setGnzVisibility render")
@@ -232,15 +249,26 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
         lx.eval("view3d.setGnzBackground environment")
 
     bbox = []
-    for item in scene.iterItemsFast(itype='mesh'):
-        if item.channel('drawShape').get() == 'custom':
-            bbox.append(item)
-            item.channel('drawShape').set('default')
+    if bbox_toggle == 'full':
+        for item in scene.iterItemsFast(itype='mesh'):
+            if item.channel('drawShape').get() == 'custom':
+                bbox.append(item)
+                item.channel('drawShape').set('default')
 
-    for item in scene.iterItemsFast(itype='meshInst'):
-        if item.channel('drawShape').get() == 'custom':
-            bbox.append(item)
-            item.channel('drawShape').set('default')
+        for item in scene.iterItemsFast(itype='meshInst'):
+            if item.channel('drawShape').get() == 'custom':
+                bbox.append(item)
+                item.channel('drawShape').set('default')
+    else:
+        for item in scene.iterItemsFast(itype='mesh'):
+            if item.channel('drawShape').get() == 'default':
+                bbox.append(item)
+                item.channel('drawShape').set('custom')
+
+        for item in scene.iterItemsFast(itype='meshInst'):
+            if item.channel('drawShape').get() == 'default':
+                bbox.append(item)
+                item.channel('drawShape').set('custom')
 
     if gl_type == "movie":
         gl_type = ""
@@ -252,12 +280,21 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     lx.eval('gl.capture {0} filename:"{1}" frameS:{2} frameE:{3} autoplay:true'.format(gl_type, filepath,
                                                                                        first_frame, last_frame))
 
-    for item in bbox:
-        item.channel('drawShape').set('custom')
+    if bbox_toggle == 'full':
+        for item in bbox:
+            item.channel('drawShape').set('custom')
+    else:
+        for item in bbox:
+            item.channel('drawShape').set('default')
 
     scene.select(selection)
 
     lx.eval("layout.closeWindow")
+
+    end = bd_helpers.timer(start, 'GL Recording')
+    per_frame = (end - start) / (last_frame - first_frame)
+    timestring = bd_helpers.secondsToHoursMinutesSeconds(per_frame)
+    print("That's {} per frame.".format(timestring))
 
 
 # END MAIN PROGRAM -----------------------------------------------

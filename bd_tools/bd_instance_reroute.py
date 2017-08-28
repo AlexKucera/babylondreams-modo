@@ -12,10 +12,6 @@ Release Notes:
     select as many instances as you want and execute the command. it will ask you for a new mesh source.
     pick one from the dropdown or put in a new name and an empty mesh will be created as new source.
 
-     Only works in modo 10.2v1 and lower for now.
-
-     Already bugged: http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=54793
-
 V0.1 Initial Release - 2017-02-23
 
 """
@@ -36,27 +32,27 @@ def main(new_source):
 
     scene = modo.Scene()
 
-    appversion = lx.eval('query platformservice "appversion" ?')
-
-    if appversion > 1021:
-        modo.dialogs.alert('Error',
-                           'This script only works in modo 10.2v1 and below. Sorry.',
-                           dtype='error')
-        sys.exit()
+    # appversion = lx.eval('query platformservice "appversion" ?')
+    #
+    # if appversion > 1021:
+    #     modo.dialogs.alert('Error',
+    #                        'This script only works in modo 10.2v1 and below. Sorry.',
+    #                        dtype='error')
+    #     sys.exit()
 
     items = scene.selected
     try:
         new_source = scene.item(new_source)  # find the item that is using the provided ID
     except:
-        new_source = scene.addItem('mesh', new_source)  # create empty mesh in case we don't find the new source yet
+        new_source = scene.addItem('mesh', new_source)  # create empty mesh in case we don't find the new source
 
-    source = []
+    sources = []
     instances = []
 
     # Check if we have instances selected and weed out any non-instances in the process
     for item in items:
         if not item.isAnInstance:
-            source.append(item.name)
+            sources.append(item.name)
         else:
             instances.append(item)
 
@@ -70,20 +66,28 @@ def main(new_source):
     print "selected source: {0} ({1})".format(new_source.name, new_source.id)
     for instance in instances:
 
-        # Re-route transform connections first
-        old_source = instance.itemGraph('source').forward()[0]
-        old_source.itemGraph('source').disconnectInput(instance)
-        new_source.itemGraph('source').connectInput(instance)
+        # Disconnect any existing meshInst graph connections.
+        for source in instance.itemGraph("meshInst").reverse():
+            source.itemGraph("meshInst") << instance
 
-        # Now Mesh Connections
-        instance.itemGraph('meshInst').disconnectInput(old_source)
-        instance.itemGraph('meshInst').connectInput(new_source)
+        # Disconnect any existing source graph connections.
+        # Note that the meshInst graph and the source graph go
+        # in different directions. That's why we cache the
+        # "sourceGraph" in advance.
+        sourceGraph = instance.itemGraph("source")
+        for source in sourceGraph.forward():
+            sourceGraph << source
 
-        print "re-routing {0} from {1} to {2}".format(instance.name, old_source.name, new_source.name)
+        # Connect new prototype. Again, notice how they go in
+        # different directions.
+        instance >> new_source.itemGraph("source")
+        new_source >> instance.itemGraph("meshInst")
 
-    if len(source) > 0:
+        print "re-routing {0} from {1} to {2}".format(instance.name, source.name, new_source.name)
+
+    if len(sources) > 0:
         modo.dialogs.alert('Warning',
-                           'The following items are no instances and were skipped:\n{0}'.format(source),
+                           'The following items are no instances and were skipped:\n{0}'.format(sources),
                            dtype='warning')
 
 
@@ -104,6 +108,6 @@ if __name__ == '__main__':
     argsAsTuple = lx.args()
 
     try:
-        main()
+        main("newMesh")
     except:
         print traceback.format_exc()

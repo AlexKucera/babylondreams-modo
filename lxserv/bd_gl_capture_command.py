@@ -26,7 +26,7 @@ __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
 __credits__ = ["Alexander Kucera"]
 __license__ = "GPL"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __maintainer__ = "Alexander Kucera"
 __email__ = "a.kucera@babylondreams.de"
 __status__ = "Development"
@@ -89,10 +89,31 @@ class CommandClass(babylondreams.CommanderClass):
             },
             {
                 'name': 'replicator_visibility',
+                'label': "Replicator/Locator Visibility",
                 'datatype': 'string',
-                'default': 'always',
+                'default': 'none',
                 'values_list_type': 'popup',
                 'values_list': [('always', 'Visible'), ('none', ' Hidden')]
+            },
+            {
+                'name': 'bbox_toggle',
+                'label': "Bounding Box Display",
+                'datatype': 'string',
+                'default': 'full',
+                'values_list_type': 'popup',
+                'values_list': [('full', 'Geo Visible'), ('bbox', 'BBox On')]
+            },
+            {
+                'name': 'avp_shadows',
+                'label': 'Enable AVP Shadows',
+                'datatype': 'boolean',
+                'default': True
+            },
+            {
+                'name': 'avp_ao',
+                'label': 'Enable AVP Ambient Occlusion',
+                'datatype': 'boolean',
+                'default': True
             },
             {
                 'name': 'automatic_naming',
@@ -128,12 +149,12 @@ class CommandClass(babylondreams.CommanderClass):
             {
                 'name': 'first_frame',
                 'datatype': 'integer',
-                'default': self.get_range('first'),
+                'default': self.get_range()['first'],
             },
             {
                 'name': 'last_frame',
                 'datatype': 'integer',
-                'default': self.get_range('last'),
+                'default': self.get_range()['last'],
             },
         ]
 
@@ -154,9 +175,10 @@ class CommandClass(babylondreams.CommanderClass):
 
         return all_cameras
 
-    def get_range(self, switch='first'):
+    def get_range(self):
         scene = modo.Scene()
-        frame = scene.renderItem.channel(switch).get()
+        frame_range = modo.Scene().currentRange
+        frame = {'first': frame_range[0], 'last': frame_range[1]}
         return frame
 
     def capture_file(self):
@@ -187,6 +209,9 @@ class CommandClass(babylondreams.CommanderClass):
                            use_scene_range=arguments['use_scene_range'],
                            automatic_naming=arguments['automatic_naming'],
                            overwrite=arguments['overwrite'],
+                           bbox_toggle=arguments['bbox_toggle'],
+                           avp_shadows=arguments['avp_shadows'],
+                           avp_ao=arguments['avp_ao'],
                            capture_file=self.capture_file()[0],
                            capture_path=self.capture_output()[0])
 

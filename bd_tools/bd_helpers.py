@@ -14,10 +14,12 @@ Release Notes:
 V0.1 Initial Release - 2017-02-20
 
 """
-
+import json
+import string
 import sys
 import os
-import time
+import timeit
+import traceback
 
 import lx
 import modo
@@ -26,6 +28,29 @@ from var import *
 
 sys.path.append(BD_PIPELINE)
 from bd_globals import *
+
+
+class QueryDict(dict):
+    """
+    Creates a Dictionary that is browseable by path.
+
+    Example:
+
+        query_dict = {'key': {'subkey': 'value'}}
+
+        print query_dict['key/subkey']
+
+    """
+
+    def __getitem__(self, key_string):
+        current = self
+        try:
+            for key in key_string.split('/'):
+                current = dict.__getitem__(current, key)
+            return current
+        except (TypeError, KeyError):
+
+            return None
 
 
 def selected(num=1):
@@ -44,12 +69,18 @@ def selected(num=1):
         else:
             filler = "items"
 
-        modo.dialogs.alert("Warning", "Please select at least one {0}.".format(filler), dtype='warning')
+        modo.dialogs.alert("Warning", "Please select at least {1} {0}.".format(filler, num), dtype='warning')
+
+        return None
 
     if len(selected) > num:
         selected = selected[-num:]
 
-    return selected
+        return selected
+
+    if len(selected) == num:
+
+        return selected
 
 
 def restoreSelection(listSelections):
@@ -95,14 +126,33 @@ def timer(elapsed=0.0, name=''):
         bd_helpers.timer(start, "test")
 
     """
-    running_timer = time.clock()
+    running_timer = timeit.default_timer()
     if elapsed != 0.0:
         running_time = running_timer - elapsed
+        timestring = secondsToHoursMinutesSeconds(running_time)
         if name is not '':
             name += ' '
-        print('{0}Running Time: {1:.2f} seconds'.format(name, running_time))
+        print('{0}Running Time: {1}'.format(name, timestring))
     return running_timer
 
+
+def secondsToHoursMinutesSeconds(seconds):
+    """ takes a seconds int or float and returns a string that breaks"""
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    if hours != 0:
+        hours = "{} hours ".format(int(hours))
+    else:
+        hours = ""
+    if minutes != 0:
+        minutes = "{} minutes ".format(int(minutes))
+    else:
+        minutes = ""
+    seconds = "{:.2f} seconds".format(seconds)
+
+    secondsToString = '{hours}{minutes}{seconds}'.format(hours=hours, minutes=minutes, seconds=seconds)
+
+    return secondsToString
 
 def walk_up(bottom):
 
@@ -145,3 +195,127 @@ def walk_up(bottom):
 
     for x in walk_up(new_path):
         yield x
+
+
+def load_json():
+    """
+    Returns a queryable dictionary from a JSON file.
+
+    :return: vars (QueryDict)
+
+    """
+
+    jsonpath = modo.dialogs.customFile('fileOpen', 'Open File', ('json',), ('JSON File',), ('*.json',))
+
+    if jsonpath is not None:
+        config_path = os.path.normpath(jsonpath)
+        with open(config_path) as json_data:
+            try:
+                vars = QueryDict(json.load(json_data))
+                return vars
+            except:
+                modo.dialogs.alert("Loading JSON failed",
+                                   "The provided file does not appear to be valid JSON.\n{}".format(
+                                       traceback.format_exc().splitlines()[-1]),
+                                   dtype='error')
+
+    else:
+
+        return None
+
+
+def save_json(dictdata="", prefix=""):
+    """
+    Saves a dictionary to a JSON file.
+
+    """
+
+    jsonpath = modo.dialogs.customFile('fileSave', 'Save File', ('json',), ('JSON File',), ext=('json',),
+                                       path=default_json_path(prefix))
+
+    if jsonpath is not None:
+        config_path = os.path.normpath(jsonpath)
+
+        if not os.path.exists(os.path.dirname(config_path)):
+            try:
+                os.makedirs(os.path.dirname(config_path))
+            except:
+                print(traceback.format_exc())
+
+        with open(config_path, 'w+') as outfile:
+            json.dump(dictdata, outfile, sort_keys=True, indent=4)
+
+            outfile.close()
+            print("{} written to {}".format(os.path.basename(config_path), os.path.dirname(config_path)))
+
+
+def default_json_path(prefix=""):
+    scene = modo.Scene()
+
+    filename = scene.filename
+    if not filename:
+        filedir = lx.eval("query platformservice path.path ? temp")
+        filename = "untitled"
+
+    else:
+        filedir = os.path.dirname(filename)
+        filename = os.path.splitext(filename)[0]
+
+    jsonpath = os.path.normpath(
+        os.path.join(
+            filedir,
+            "{}{}".format(prefix, filename)
+        )
+    )
+
+    return jsonpath
+
+
+def get_channels(item, type=None, forbidden_channels=[], isAnimated=False):
+    item_channels = []
+    for channel in item.channels():
+        if channel.name not in forbidden_channels:
+            if type is "name":
+                item_channels.append(channel.name)
+            if type is "index":
+                item_channels.append(channel.index)
+            if type is None:
+                pass
+    if type is None:
+        item_channels = item.channels()
+    return item_channels
+
+
+def channel_copy_paste(item_id, channel_name, cmd="copy"):
+    lx.eval("select.channel {{{0}:{1}}} set".format(item_id, channel_name))
+    if cmd is "paste":
+        lx.eval("channel.paste")
+    elif cmd is "copy":
+        print("Copying {}".format(channel_name))
+        lx.eval("channel.copy")
+
+
+def get_tags(item):
+    if item.hasTag("anim"):
+        if item.readTag("anim"):
+            tag = item.readTag("anim")
+            return tag
+    return None
+
+
+def format_filename(s):
+    """Take a string and return a valid filename constructed from the string.
+Uses a whitelist approach: any characters not present in valid_chars are
+removed. Also spaces are replaced with underscores.
+
+Note: this method may produce invalid filenames such as ``, `.` or `..`
+When I use this method I prepend a date string like '2009_01_15_19_46_32_'
+and append a file extension like '.txt', so I avoid the potential of using
+an invalid filename.
+
+https://gist.github.com/seanh/93666
+
+"""
+    valid_chars = "-_. %s%s" % (string.ascii_letters, string.digits)
+    filename = ''.join(c for c in s if c in valid_chars)
+    return filename
