@@ -35,6 +35,14 @@ class CommandClass(babylondreams.CommanderClass):
     def commander_arguments(self):
         return [
             {
+                'name': 'proc',
+                'label': "Render Type",
+                'datatype': 'string',
+                'default': 'manual',
+                'values_list_type': 'popup',
+                'values_list': [('manual', 'Manual'), ('background', 'Background Process')]
+            },
+            {
                 'name': 'scene_range',
                 'label': "Use Scene Range",
                 'datatype': 'boolean',
@@ -103,7 +111,8 @@ class CommandClass(babylondreams.CommanderClass):
         arguments = self.commander_args()
 
         reload(bd_headless_batch_creator)
-        bd_headless_batch_creator.main(use_scene_range=arguments['scene_range'],
+        bd_headless_batch_creator.main(proc=arguments['proc'],
+                                       use_scene_range=arguments['scene_range'],
                                        frame_range=arguments['range'],
                                        passname=arguments['pass'],
                                        batchsize=int(arguments['batchsize']),

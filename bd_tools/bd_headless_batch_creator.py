@@ -221,7 +221,7 @@ def format_filename(s, format):
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
-def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize=10, pattern="",
+def main(proc='manual', use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize=10, pattern="",
          preview=False, time=5.0, perFrame='frame', conv=0.975, geoUpdate=False):
 
     start_timer = bd_helpers.timer()
@@ -375,11 +375,22 @@ def main(use_scene_range=True, frame_range="1001-1250x1", passname="", batchsize
 
         lx.eval('scene.save')
 
-        if sys.platform == "darwin":
-            pyperclip.copy(bash_path)
-            subprocess.Popen(['open', '-a', '/Applications/Utilities/Terminal.app', '-n'])
-            # proc = subprocess.Popen([bash_path])
-            # print proc.pid
+        if proc == 'manual':
+
+            if sys.platform == "darwin":
+                pyperclip.copy(bash_path)
+                subprocess.Popen(['open', '-a', '/Applications/Utilities/Terminal.app', '-n'])
+            else:
+                pyperclip.copy(batch_path)
+                os.system("start /B start cmd.exe")
+
+        else:
+            if sys.platform == "darwin":
+                proc = subprocess.Popen([bash_path])
+                print proc.pid
+            else:
+                proc = subprocess.Popen([batch_path])
+                print proc.pid
 
     bd_helpers.timer(start_timer, 'Headless Batch Creator')
 
