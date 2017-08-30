@@ -87,6 +87,12 @@
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modeling.html">Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rigging.html">Rigging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shading.html">Shading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rendering.html">Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripting.html">Scripting</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">babylondreams</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="babylondreams.html">babylondreams package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="babylondreams.html#subpackages">Subpackages</a><ul class="current">
@@ -162,29 +168,30 @@
 command UI implementations, like popups, sPresetText fields, and
 Form Command Lists. Allows for virtually any type of command.</p>
 <p>See README.md for more examples.</p>
-<p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Extend the commander.CommandClass</span>
-<span class="k">class</span> <span class="nc">MyGreatCommandClass</span><span class="p">(</span><span class="n">commander</span><span class="o">.</span><span class="n">CommandClass</span><span class="p">):</span>
-
-    <span class="c1"># Optional method returns any command argument definitions</span>
-
-    <span class="n">commander_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span><span class="p">[{</span>
-            <span class="n">commander</span><span class="o">.</span><span class="n">NAME</span><span class="p">:</span> <span class="s1">&#39;myStringArgument&#39;</span><span class="p">,</span>
-            <span class="n">commander</span><span class="o">.</span><span class="n">DATATYPE</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span>
-        <span class="p">}]</span>
-
-    <span class="c1"># Required method contains the actual command code.</span>
-    <span class="c1"># Note: traceback is included by default; no need to add.</span>
-
-    <span class="n">commander_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="n">commander_args</span><span class="p">()</span>
-        <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;myStringArgument&#39;</span><span class="p">])</span>
-
-<span class="c1"># Bless the class as normal.</span>
-<span class="n">lx</span><span class="o">.</span><span class="n">bless</span><span class="p">(</span><span class="n">MyGreatCommandClass</span><span class="p">,</span> <span class="s2">&quot;myGreatCommand&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
+<p># Extend the commander.CommandClass
+class MyGreatCommandClass(commander.CommandClass):</p>
+<blockquote>
+<div><p># Optional method returns any command argument definitions</p>
+<dl class="docutils">
+<dt>commander_arguments(self):</dt>
+<dd><dl class="first docutils">
+<dt>return[{</dt>
+<dd>commander.NAME: &#8216;myStringArgument&#8217;,
+commander.DATATYPE: &#8216;string&#8217;</dd>
+</dl>
+<p class="last">}]</p>
+</dd>
+</dl>
+<p># Required method contains the actual command code.
+# Note: traceback is included by default; no need to add.</p>
+<dl class="docutils">
+<dt>commander_execute(self):</dt>
+<dd>args = commander_args()
+lx.out(args[&#8216;myStringArgument&#8217;])</dd>
+</dl>
+</div></blockquote>
+<p># Bless the class as normal.
+lx.bless(MyGreatCommandClass, &#8220;myGreatCommand&#8221;)</p>
 <dl class="method">
 <dt id="babylondreams.commander.Commander.CommanderClass.arg_UIHints">
 <code class="descname">arg_UIHints</code><span class="sig-paren">(</span><em>index</em>, <em>hints</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams/commander/Commander.html#CommanderClass.arg_UIHints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams.commander.Commander.CommanderClass.arg_UIHints" title="Permalink to this definition">¶</a></dt>
@@ -252,9 +259,9 @@ You should never need to touch this.</p>
 <dl class="method">
 <dt id="babylondreams.commander.Commander.CommanderClass.cmd_Query">
 <code class="descname">cmd_Query</code><span class="sig-paren">(</span><em>index</em>, <em>vaQuery</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams/commander/Commander.html#CommanderClass.cmd_Query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams.commander.Commander.CommanderClass.cmd_Query" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a value when a queriable argument is queried. If the argument
-is queriable, is not a Form Command List, and has a recent value, the query
-will return the most recent value.</p>
+<dd><p>Returns a value when a queriable argument is queried. It&#8217;s a bit weird
+to use, so commander wraps it up for you. Implement <cite>commander_query</cite> in
+your own sublcass to and return whatever you like based on the arg_index.</p>
 <p>You should never need to touch this.</p>
 </dd></dl>
 
@@ -324,6 +331,15 @@ a try/except statement with traceback, so you don&#8217;t need to add that.</p>
 <dd><p>To be overridden by subclasses.
 Should return a list of tuples, e
 [(&#8216;notifier.editAction&#8217;,&#8217;&#8216;), (&#8220;select.event&#8221;, &#8220;item +ldt&#8221;), (&#8220;tagger.notifier&#8221;, &#8220;&#8221;)]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="babylondreams.commander.Commander.CommanderClass.commander_query">
+<code class="descname">commander_query</code><span class="sig-paren">(</span><em>arg_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/babylondreams/commander/Commander.html#CommanderClass.commander_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#babylondreams.commander.Commander.CommanderClass.commander_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be overridden by subclasses.
+Should return a value based on the arg_index being queried. For toggle
+buttons and checkmarks, this should be a boolean. Can also return strings
+or floats as required.</p>
 </dd></dl>
 
 </dd></dl>

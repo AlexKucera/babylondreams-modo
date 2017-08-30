@@ -91,7 +91,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../shading.html">Shading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../rendering.html">Rendering</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripting.html">Scripting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">babylondreams</a></li>
 </ul>
 
             
@@ -153,13 +152,43 @@
 <span class="sd">V0.1 Initial Release - 2017-02-20</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">timeit</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="kn">import</span> <span class="nn">lx</span>
 <span class="kn">import</span> <span class="nn">modo</span>
+
+<span class="kn">from</span> <span class="nn">var</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BD_PIPELINE</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bd_globals</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="QueryDict"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.QueryDict">[docs]</a><span class="k">class</span> <span class="nc">QueryDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a Dictionary that is browseable by path.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        query_dict = {&#39;key&#39;: {&#39;subkey&#39;: &#39;value&#39;}}</span>
+
+<span class="sd">        print query_dict[&#39;key/subkey&#39;]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key_string</span><span class="p">):</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">key_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">current</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+
+            <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="selected"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.selected">[docs]</a><span class="k">def</span> <span class="nf">selected</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -178,12 +207,18 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">filler</span> <span class="o">=</span> <span class="s2">&quot;items&quot;</span>
 
-        <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="s2">&quot;Please select at least one </span><span class="si">{0}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filler</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+        <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="s2">&quot;Please select at least </span><span class="si">{1}</span><span class="s2"> </span><span class="si">{0}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filler</span><span class="p">,</span> <span class="n">num</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">num</span><span class="p">:</span>
         <span class="n">selected</span> <span class="o">=</span> <span class="n">selected</span><span class="p">[</span><span class="o">-</span><span class="n">num</span><span class="p">:]</span>
 
-    <span class="k">return</span> <span class="n">selected</span></div>
+        <span class="k">return</span> <span class="n">selected</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span> <span class="o">==</span> <span class="n">num</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="n">selected</span></div>
 
 
 <div class="viewcode-block" id="restoreSelection"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.restoreSelection">[docs]</a><span class="k">def</span> <span class="nf">restoreSelection</span><span class="p">(</span><span class="n">listSelections</span><span class="p">):</span>
@@ -298,6 +333,130 @@
 
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">walk_up</span><span class="p">(</span><span class="n">new_path</span><span class="p">):</span>
         <span class="k">yield</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="load_json"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.load_json">[docs]</a><span class="k">def</span> <span class="nf">load_json</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a queryable dictionary from a JSON file.</span>
+
+<span class="sd">    :return: vars (QueryDict)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">jsonpath</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">customFile</span><span class="p">(</span><span class="s1">&#39;fileOpen&#39;</span><span class="p">,</span> <span class="s1">&#39;Open File&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;JSON File&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;*.json&#39;</span><span class="p">,))</span>
+
+    <span class="k">if</span> <span class="n">jsonpath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">jsonpath</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_data</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">vars</span> <span class="o">=</span> <span class="n">QueryDict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_data</span><span class="p">))</span>
+                <span class="k">return</span> <span class="nb">vars</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s2">&quot;Loading JSON failed&quot;</span><span class="p">,</span>
+                                   <span class="s2">&quot;The provided file does not appear to be valid JSON.</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                       <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                                   <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="save_json"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.save_json">[docs]</a><span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="n">dictdata</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves a dictionary to a JSON file.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">jsonpath</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">customFile</span><span class="p">(</span><span class="s1">&#39;fileSave&#39;</span><span class="p">,</span> <span class="s1">&#39;Save File&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;JSON File&#39;</span><span class="p">,),</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">,),</span>
+                                       <span class="n">path</span><span class="o">=</span><span class="n">default_json_path</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">jsonpath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">jsonpath</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_path</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dictdata</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+            <span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> written to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">config_path</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config_path</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="default_json_path"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.default_json_path">[docs]</a><span class="k">def</span> <span class="nf">default_json_path</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">filename</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="n">filedir</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;query platformservice path.path ? temp&quot;</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;untitled&quot;</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">jsonpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">filedir</span><span class="p">,</span>
+            <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">jsonpath</span></div>
+
+
+<div class="viewcode-block" id="get_channels"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.get_channels">[docs]</a><span class="k">def</span> <span class="nf">get_channels</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forbidden_channels</span><span class="o">=</span><span class="p">[],</span> <span class="n">isAnimated</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">item_channels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">channels</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">channel</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">forbidden_channels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span>
+                <span class="n">item_channels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">channel</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span>
+                <span class="n">item_channels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">channel</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">pass</span>
+    <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">item_channels</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">item_channels</span></div>
+
+
+<div class="viewcode-block" id="channel_copy_paste"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.channel_copy_paste">[docs]</a><span class="k">def</span> <span class="nf">channel_copy_paste</span><span class="p">(</span><span class="n">item_id</span><span class="p">,</span> <span class="n">channel_name</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">):</span>
+    <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;select.channel {{</span><span class="si">{0}</span><span class="s2">:</span><span class="si">{1}</span><span class="s2">}} set&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item_id</span><span class="p">,</span> <span class="n">channel_name</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">cmd</span> <span class="ow">is</span> <span class="s2">&quot;paste&quot;</span><span class="p">:</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;channel.paste&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">cmd</span> <span class="ow">is</span> <span class="s2">&quot;copy&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Copying </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">channel_name</span><span class="p">))</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;channel.copy&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_tags"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.get_tags">[docs]</a><span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">hasTag</span><span class="p">(</span><span class="s2">&quot;anim&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">readTag</span><span class="p">(</span><span class="s2">&quot;anim&quot;</span><span class="p">):</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">readTag</span><span class="p">(</span><span class="s2">&quot;anim&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">tag</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="format_filename"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_helpers.format_filename">[docs]</a><span class="k">def</span> <span class="nf">format_filename</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a string and return a valid filename constructed from the string.</span>
+<span class="sd">Uses a whitelist approach: any characters not present in valid_chars are</span>
+<span class="sd">removed. Also spaces are replaced with underscores.</span>
+
+<span class="sd">Note: this method may produce invalid filenames such as ``, `.` or `..`</span>
+<span class="sd">When I use this method I prepend a date string like &#39;2009_01_15_19_46_32_&#39;</span>
+<span class="sd">and append a file extension like &#39;.txt&#39;, so I avoid the potential of using</span>
+<span class="sd">an invalid filename.</span>
+
+<span class="sd">https://gist.github.com/seanh/93666</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+    <span class="n">valid_chars</span> <span class="o">=</span> <span class="s2">&quot;-_. </span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">valid_chars</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">filename</span></div>
 </pre></div>
 
            </div>

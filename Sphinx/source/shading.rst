@@ -6,6 +6,11 @@ Fix Orphans
 
 Finds any Shader Tree items that have become unparented and parents them back to the Shader Tree.
 
+Create Per Material RenderOutputs
+---------------------------------
+
+Adds an Alpha and a Final Color output to any selected Material Group. The outputs will be named with the name of the Material Group plus the output type, e.g.: red_metal_alpha.
+
 Blend Hierarchy
 ---------------
 

@@ -90,12 +90,15 @@
 <li class="toctree-l1"><a class="reference internal" href="rigging.html">Rigging</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Animation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#record-gl">Record GL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#transfer-animation">Transfer Animation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bake-camera-hierarchy-and-export-as-fbx">Bake Camera Hierarchy and Export as FBX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transfer-animation-per-item">Transfer Animation (per Item)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transfer-animation-hierarchy-workflow">Transfer Animation Hierarchy Workflow</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="shading.html">Shading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rendering.html">Rendering</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripting.html">Scripting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">babylondreams</a></li>
 </ul>
 
             
@@ -161,10 +164,32 @@
 <li>Render range (by default dependent on the scene range (careful, this is different then the Render Range!!!))</li>
 </ul>
 </div>
-<div class="section" id="transfer-animation">
-<h2>Transfer Animation<a class="headerlink" href="#transfer-animation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bake-camera-hierarchy-and-export-as-fbx">
+<h2>Bake Camera Hierarchy and Export as FBX<a class="headerlink" href="#bake-camera-hierarchy-and-export-as-fbx" title="Permalink to this headline">¶</a></h2>
+<p>Bakes a camera animation of any complexity down to a simple camera path and exports it as FBX next to the scene file&#8217;s location.</p>
+<ul class="simple">
+<li>Select any camera</li>
+<li>Run the command</li>
+<li>It will pop up two bake range requests that you can just confirm (or adjust if needed)</li>
+<li>After it is done baking it will export the FBX and open the folder in Explorer/Finder.</li>
+</ul>
+</div>
+<div class="section" id="transfer-animation-per-item">
+<h2>Transfer Animation (per Item)<a class="headerlink" href="#transfer-animation-per-item" title="Permalink to this headline">¶</a></h2>
 <p>Copy the animation from one selected item to another. It will copy all animated channels from the first object to the second object. Any channels that are missing on the second object will be listed at the end for manual fixing.</p>
 <p>Please make sure you have Warning dialogs enabled in modo, otherwise the user won&#8217;t get a popup dialog.</p>
+</div>
+<div class="section" id="transfer-animation-hierarchy-workflow">
+<h2>Transfer Animation Hierarchy Workflow<a class="headerlink" href="#transfer-animation-hierarchy-workflow" title="Permalink to this headline">¶</a></h2>
+<p>This workflow consists of several steps and allows you to save out complete animation sets of a previously tagged hierarchy/rig.</p>
+<ul class="simple">
+<li>The first step is to prepare the asset for this workflow. This has to happen before any animation takes place!</li>
+<li>Select the asset (the topmost group or all individual items of the asset/rig).</li>
+<li>Run &#8220;Tag Hierarchy for Animation Transfer&#8221; with the dropdown set to &#8220;Create/Update Missing Tags&#8221;</li>
+<li>Import your tagged asset into your animation scenes and animate to your heart&#8217;s content.</li>
+<li>When you want to save out your animation, select the asset&#8217;s topmost folder and run &#8220;Save Animation Hierarchy&#8221;. This will save out the animation to a JSON file.</li>
+<li>This JSON file can then be applied to the asset in another scene or to an updated asset by selecting the asset&#8217;s topmost folder and and running &#8220;Load and Apply Animation Hierarchy&#8221;.</li>
+</ul>
 </div>
 </div>
 

@@ -91,7 +91,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../shading.html">Shading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../rendering.html">Rendering</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../scripting.html">Scripting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">babylondreams</a></li>
 </ul>
 
             
@@ -144,39 +143,39 @@
 <span class="kn">from</span> <span class="nn">operator</span> <span class="k">import</span> <span class="n">ior</span>
 <span class="kn">from</span> <span class="nn">Var</span> <span class="k">import</span> <span class="o">*</span>
 
-
 <div class="viewcode-block" id="CommanderClass"><a class="viewcode-back" href="../../../babylondreams.commander.html#babylondreams.commander.Commander.CommanderClass">[docs]</a><span class="k">class</span> <span class="nc">CommanderClass</span><span class="p">(</span><span class="n">lxu</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">BasicCommand</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Wrapper for lxu.command.BasicCommand. Improves and simplifies common</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper for lxu.command.BasicCommand. Improves and simplifies common</span>
 <span class="sd">    command UI implementations, like popups, sPresetText fields, and</span>
 <span class="sd">    Form Command Lists. Allows for virtually any type of command.</span>
 
 <span class="sd">    See README.md for more examples.</span>
 
-<span class="sd">    Example::</span>
+<span class="sd">    Example:</span>
+<span class="sd">    ****************</span>
 
-<span class="sd">        # Extend the commander.CommandClass</span>
-<span class="sd">        class MyGreatCommandClass(commander.CommandClass):</span>
+<span class="sd">    # Extend the commander.CommandClass</span>
+<span class="sd">    class MyGreatCommandClass(commander.CommandClass):</span>
 
-<span class="sd">            # Optional method returns any command argument definitions</span>
+<span class="sd">        # Optional method returns any command argument definitions</span>
 
-<span class="sd">            commander_arguments(self):</span>
-<span class="sd">                return[{</span>
-<span class="sd">                    commander.NAME: &#39;myStringArgument&#39;,</span>
-<span class="sd">                    commander.DATATYPE: &#39;string&#39;</span>
-<span class="sd">                }]</span>
+<span class="sd">        commander_arguments(self):</span>
+<span class="sd">            return[{</span>
+<span class="sd">                commander.NAME: &#39;myStringArgument&#39;,</span>
+<span class="sd">                commander.DATATYPE: &#39;string&#39;</span>
+<span class="sd">            }]</span>
 
-<span class="sd">            # Required method contains the actual command code.</span>
-<span class="sd">            # Note: traceback is included by default; no need to add.</span>
+<span class="sd">        # Required method contains the actual command code.</span>
+<span class="sd">        # Note: traceback is included by default; no need to add.</span>
 
-<span class="sd">            commander_execute(self):</span>
-<span class="sd">                args = commander_args()</span>
-<span class="sd">                lx.out(args[&#39;myStringArgument&#39;])</span>
+<span class="sd">        commander_execute(self):</span>
+<span class="sd">            args = commander_args()</span>
+<span class="sd">            lx.out(args[&#39;myStringArgument&#39;])</span>
 
-<span class="sd">        # Bless the class as normal.</span>
-<span class="sd">        lx.bless(MyGreatCommandClass, &quot;myGreatCommand&quot;)</span>
+<span class="sd">    # Bless the class as normal.</span>
+<span class="sd">    lx.bless(MyGreatCommandClass, &quot;myGreatCommand&quot;)</span>
 
+<span class="sd">    ****************</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -279,6 +278,14 @@
 <span class="sd">        a try/except statement with traceback, so you don&#39;t need to add that.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
+<div class="viewcode-block" id="CommanderClass.commander_query"><a class="viewcode-back" href="../../../babylondreams.commander.html#babylondreams.commander.Commander.CommanderClass.commander_query">[docs]</a>    <span class="k">def</span> <span class="nf">commander_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;To be overridden by subclasses.</span>
+<span class="sd">        Should return a value based on the arg_index being queried. For toggle</span>
+<span class="sd">        buttons and checkmarks, this should be a boolean. Can also return strings</span>
+<span class="sd">        or floats as required.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="CommanderClass.commander_default_values_init"><a class="viewcode-back" href="../../../babylondreams.commander.html#babylondreams.commander.Commander.CommanderClass.commander_default_values_init">[docs]</a>    <span class="k">def</span> <span class="nf">commander_default_values_init</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the class variable _commander_stored_values.</span>
@@ -308,25 +315,30 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_IsSet</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">default</span>
 
+        <span class="k">if</span> <span class="s1">&#39;variable&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">FLAGS</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">datatype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">basic_ArgType</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">datatype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            
         <span class="c1"># If it&#39;s a string, use dyna_String to grab it.</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">sTYPE_STRINGs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="n">sTYPE_STRINGs</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_String</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 
         <span class="c1"># If the value is a vector, use dyna_String to grab it, then parse it</span>
         <span class="c1"># into a list of float vlues.</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">sTYPE_STRING_vectors</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="n">sTYPE_STRING_vectors</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_String</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)]</span>
 
         <span class="c1"># If the value is an integer, use dyna_Int to grab it.</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">sTYPE_INTEGERs</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="n">sTYPE_INTEGERs</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_Int</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 
         <span class="c1"># If the value is a float, use dyna_Float to grab it.</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span> <span class="ow">in</span> <span class="n">sTYPE_FLOATs</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="n">sTYPE_FLOATs</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_Float</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 
         <span class="c1"># If the value is a boolean, use dyna_Bool to grab it.</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()[</span><span class="n">index</span><span class="p">][</span><span class="n">DATATYPE</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">sTYPE_BOOLEANs</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="n">sTYPE_BOOLEANs</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyna_Bool</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 
         <span class="c1"># If something bonkers is going on, use the default.</span>
@@ -501,25 +513,47 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="CommanderClass.cmd_Query"><a class="viewcode-back" href="../../../babylondreams.commander.html#babylondreams.commander.Commander.CommanderClass.cmd_Query">[docs]</a>    <span class="k">def</span> <span class="nf">cmd_Query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">,</span><span class="n">vaQuery</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a value when a queriable argument is queried. If the argument</span>
-<span class="sd">        is queriable, is not a Form Command List, and has a recent value, the query</span>
-<span class="sd">        will return the most recent value.</span>
+<div class="viewcode-block" id="CommanderClass.cmd_Query"><a class="viewcode-back" href="../../../babylondreams.commander.html#babylondreams.commander.Commander.CommanderClass.cmd_Query">[docs]</a>    <span class="k">def</span> <span class="nf">cmd_Query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">vaQuery</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a value when a queriable argument is queried. It&#39;s a bit weird</span>
+<span class="sd">        to use, so commander wraps it up for you. Implement `commander_query` in</span>
+<span class="sd">        your own sublcass to and return whatever you like based on the arg_index.</span>
 
 <span class="sd">        You should never need to touch this.&quot;&quot;&quot;</span>
 
+        <span class="c1"># Create the ValueArray object</span>
         <span class="n">va</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">ValueArray</span><span class="p">()</span>
         <span class="n">va</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vaQuery</span><span class="p">)</span>
 
         <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_arguments</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-            <span class="n">is_query</span> <span class="o">=</span> <span class="s1">&#39;query&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">FLAGS</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="n">is_not_fcl</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUES_LIST_TYPE</span><span class="p">)</span> <span class="o">!=</span> <span class="n">FCL</span>
-            <span class="n">has_recent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commander_stored_values</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="c1"># If index out of range, bail</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">OK</span>
 
-            <span class="k">if</span> <span class="n">is_query</span> <span class="ow">and</span> <span class="n">is_not_fcl</span> <span class="ow">and</span> <span class="n">has_recent_value</span><span class="p">:</span>
-                <span class="n">va</span><span class="o">.</span><span class="n">AddString</span><span class="p">(</span><span class="n">has_recent_value</span><span class="p">)</span>
+        <span class="c1"># If it&#39;s not a query, bail</span>
+        <span class="n">is_query</span> <span class="o">=</span> <span class="s1">&#39;query&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">FLAGS</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_query</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">OK</span>
+
+        <span class="c1"># If it&#39;s a Form Command List (FCL), bail</span>
+        <span class="n">is_fcl</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">VALUES_LIST_TYPE</span><span class="p">)</span> <span class="o">==</span> <span class="n">FCL</span>
+        <span class="k">if</span> <span class="n">is_fcl</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">OK</span>
+
+        <span class="c1"># To keep things simpler for commander users, let them return</span>
+        <span class="c1"># a value using only an index (no ValueArray nonsense)</span>
+        <span class="n">commander_query_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commander_query</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="c1"># Need to add the proper datatype based on result from commander_query</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">commander_query_result</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+            <span class="n">va</span><span class="o">.</span><span class="n">AddString</span><span class="p">(</span><span class="n">commander_query_result</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">commander_query_result</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">va</span><span class="o">.</span><span class="n">AddInt</span><span class="p">(</span><span class="n">commander_query_result</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">commander_query_result</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">va</span><span class="o">.</span><span class="n">AddFloat</span><span class="p">(</span><span class="n">commander_query_result</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">lx</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">OK</span></div></div>
 
