@@ -34,6 +34,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="index.html"/>
+        <link rel="next" title="babylondreams" href="modules.html"/>
         <link rel="prev" title="Rendering" href="rendering.html"/> 
 
   
@@ -91,10 +92,14 @@
 <li class="toctree-l1"><a class="reference internal" href="shading.html">Shading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rendering.html">Rendering</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Scripting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-up-scene">Version Up Scene</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-up-scene-with-comment">Version Up Scene with Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clear-log">Clear Log</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fix-orphans">Fix Orphans</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#docs">Docs</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">babylondreams</a></li>
 </ul>
 
             
@@ -141,6 +146,30 @@
             
   <div class="section" id="scripting">
 <h1>Scripting<a class="headerlink" href="#scripting" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="version-up-scene">
+<h2>Version Up Scene<a class="headerlink" href="#version-up-scene" title="Permalink to this headline">¶</a></h2>
+<p>Versions up the scene file. Tries to be smart about detecting the numbering. But generally it looks for a version of <cite>_v000</cite>, so an underscore, a <em>v</em> and some number.</p>
+<p>If it cannot find a version string it will offer to start versioning the file.</p>
+<p>For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">my_great_shot_v010</span><span class="o">.</span><span class="n">lxo</span> <span class="n">becomes</span> <span class="n">my_great_shot_v011</span><span class="o">.</span><span class="n">lxo</span>
+<span class="n">my_great_shot</span><span class="o">.</span><span class="n">lxo</span> <span class="n">becomes</span> <span class="n">my_great_shot_v01</span><span class="o">.</span><span class="n">lxo</span>
+<span class="n">my_great_shot_v4</span><span class="o">.</span><span class="n">lxo</span> <span class="n">becomes</span> <span class="n">my_great_shot_v5</span><span class="o">.</span><span class="n">lxo</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="version-up-scene-with-comment">
+<h2>Version Up Scene with Comment<a class="headerlink" href="#version-up-scene-with-comment" title="Permalink to this headline">¶</a></h2>
+<p>Same as version up, but asks for a short file comment. This will be appended to the file name.</p>
+<p>The comment is sanitized (turns spaces into underscores, all letters into lowercase and keeps only letters and digits) so there are no invalid strings in the file name.</p>
+<p>For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">my_great_shot_v010</span><span class="o">.</span><span class="n">lxo</span> <span class="n">becomes</span> <span class="n">my_great_shot_v010_awesome_comment</span><span class="o">.</span><span class="n">lxo</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="clear-log">
+<h2>Clear Log<a class="headerlink" href="#clear-log" title="Permalink to this headline">¶</a></h2>
+<p>Clears the Event Log witout any warning messages. Useful for development.</p>
+</div>
 <div class="section" id="fix-orphans">
 <h2>Fix Orphans<a class="headerlink" href="#fix-orphans" title="Permalink to this headline">¶</a></h2>
 <p>see <a class="reference internal" href="shading.html"><span class="doc">Shading</span></a></p>
@@ -157,6 +186,8 @@
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="modules.html" class="btn btn-neutral float-right" title="babylondreams" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="rendering.html" class="btn btn-neutral" title="Rendering" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

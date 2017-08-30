@@ -21,9 +21,31 @@ It allows you fine grained control over:
 * A switch to overwrite or version up old preview files
 * Render range (by default dependent on the scene range (careful, this is different then the Render Range!!!))
 
-Transfer Animation
-------------------
+Bake Camera Hierarchy and Export as FBX
+---------------------------------------
+
+Bakes a camera animation of any complexity down to a simple camera path and exports it as FBX next to the scene file's location.
+
+* Select any camera
+* Run the command
+* It will pop up two bake range requests that you can just confirm (or adjust if needed)
+* After it is done baking it will export the FBX and open the folder in Explorer/Finder.
+
+Transfer Animation (per Item)
+-----------------------------
 
 Copy the animation from one selected item to another. It will copy all animated channels from the first object to the second object. Any channels that are missing on the second object will be listed at the end for manual fixing.
 
 Please make sure you have Warning dialogs enabled in modo, otherwise the user won't get a popup dialog.
+
+Transfer Animation Hierarchy Workflow
+-------------------------------------
+
+This workflow consists of several steps and allows you to save out complete animation sets of a previously tagged hierarchy/rig.
+
+* The first step is to prepare the asset for this workflow. This has to happen before any animation takes place!
+* Select the asset (the topmost group or all individual items of the asset/rig).
+* Run "Tag Hierarchy for Animation Transfer" with the dropdown set to "Create/Update Missing Tags"
+* Import your tagged asset into your animation scenes and animate to your heart's content.
+* When you want to save out your animation, select the asset's topmost folder and run "Save Animation Hierarchy". This will save out the animation to a JSON file.
+* This JSON file can then be applied to the asset in another scene or to an updated asset by selecting the asset's topmost folder and and running "Load and Apply Animation Hierarchy".

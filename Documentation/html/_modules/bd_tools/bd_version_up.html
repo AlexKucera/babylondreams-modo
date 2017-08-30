@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bd_tools.bd_version_up &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> BabylonDreams modo Pipeline
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeling.html">Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rigging.html">Rigging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../shading.html">Shading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rendering.html">Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripting.html">Scripting</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">BabylonDreams modo Pipeline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>bd_tools.bd_version_up</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bd_tools.bd_version_up</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+<span class="c1"># Alexander Kucera</span>
+<span class="c1"># babylondreams.de</span>
+
+<span class="c1"># Description</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">babylondreams - bd_version_up</span>
+
+<span class="sd">Release Notes:</span>
+
+<span class="sd">V0.1 Initial Release - 2017-08-15</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">bd_helpers</span>
+<span class="kn">import</span> <span class="nn">modo</span>
+<span class="kn">import</span> <span class="nn">lx</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">import</span> <span class="nn">imp</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">imp</span><span class="o">.</span><span class="n">find_module</span><span class="p">(</span><span class="s1">&#39;lx.symbol&#39;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">lx.symbol</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span> <span class="nn">var</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<span class="c1"># FUNCTIONS -----------------------------------------------</span>
+<span class="c1"># END FUNCTIONS -----------------------------------------------</span>
+
+<span class="c1"># MAIN PROGRAM --------------------------------------------</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_version_up.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">comment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">commentstring</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">start_timer</span> <span class="o">=</span> <span class="n">bd_helpers</span><span class="o">.</span><span class="n">timer</span><span class="p">()</span>
+
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="s2">&quot;(.+)_v(\d+)(\w+)?&quot;</span>  <span class="c1"># Grab anything that has a character sequence followed by a _v and some number</span>
+
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">filename</span>
+    <span class="k">if</span> <span class="n">filepath</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="n">fileextension</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">filecomment</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;The provided file (</span><span class="si">{}{}</span><span class="s2">) contains no version info (we are looking for a &#39;_v000&#39; here).</span><span class="se">\n\n</span><span class="s2">&quot;</span> \
+                      <span class="s2">&quot;Do you want to start versioning this file?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">fileextension</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">yesNo</span><span class="p">(</span><span class="s2">&quot;Missing Version&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+                <span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;00&quot;</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Current file &quot;</span><span class="si">{}</span><span class="s1">&quot; is at Version </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">version</span><span class="p">))</span>
+
+            <span class="n">created</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">zfill</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">comment</span><span class="p">:</span>
+                <span class="n">filecomment</span> <span class="o">=</span> <span class="n">commentstring</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                <span class="n">filecomment</span> <span class="o">=</span> <span class="n">bd_helpers</span><span class="o">.</span><span class="n">format_filename</span><span class="p">(</span><span class="n">filecomment</span><span class="p">)</span>
+
+            <span class="k">while</span> <span class="n">created</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+
+                <span class="n">version</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">version</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">zfill</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">filecomment</span><span class="p">:</span>
+                    <span class="n">newfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_v</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">filecomment</span><span class="p">,</span> <span class="n">fileextension</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">newfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_v</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">fileextension</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">newfile</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Version &quot;</span> <span class="o">+</span> <span class="n">version</span> <span class="o">+</span> <span class="s2">&quot; already exists. Increasing version count.&quot;</span><span class="p">)</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saving as Version &quot;</span> <span class="o">+</span> <span class="n">version</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;scene.saveAs {</span><span class="si">%s</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="n">newfile</span><span class="p">)</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;layout.createOrClose EventLog &quot;Event Log_layout&quot; &#39;</span>
+                                <span class="s1">&#39;title:@macros.layouts@EventLog@ width:600 height:600 persistent:true &#39;</span>
+                                <span class="s1">&#39;open:true&#39;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR Scene save failed with &quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())</span>
+
+                    <span class="n">created</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;The provided file has not been saved yet.&quot;</span>
+        <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s2">&quot;Missing Version!&quot;</span><span class="p">,</span>
+                           <span class="n">message</span><span class="p">,</span>
+                           <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+    <span class="n">bd_helpers</span><span class="o">.</span><span class="n">timer</span><span class="p">(</span><span class="n">start_timer</span><span class="p">,</span> <span class="s1">&#39; Overall&#39;</span><span class="p">)</span></div>
+
+
+<span class="c1"># END MAIN PROGRAM -----------------------------------------------</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Argument parsing is available through the </span>
+    <span class="c1"># lx.arg and lx.args methods. lx.arg returns </span>
+    <span class="c1"># the raw argument string that was passed into </span>
+    <span class="c1"># the script. lx.args parses the argument string </span>
+    <span class="c1"># and returns an array of arguments for easier </span>
+    <span class="c1"># processing.</span>
+
+    <span class="n">argsAsString</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">arg</span><span class="p">()</span>
+    <span class="n">argsAsTuple</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">args</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">main</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alexander Kucera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

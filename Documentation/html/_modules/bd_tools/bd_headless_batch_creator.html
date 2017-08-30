@@ -1,0 +1,614 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bd_tools.bd_headless_batch_creator &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> BabylonDreams modo Pipeline
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeling.html">Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rigging.html">Rigging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../shading.html">Shading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rendering.html">Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripting.html">Scripting</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">BabylonDreams modo Pipeline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>bd_tools.bd_headless_batch_creator</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bd_tools.bd_headless_batch_creator</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+<span class="c1"># Alexander Kucera</span>
+<span class="c1"># babylondreams.de</span>
+
+<span class="c1"># Description</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">babylondreams - bd_headless_batch_creator</span>
+
+<span class="sd">Release Notes:</span>
+
+<span class="sd">V0.1 Initial Release - 2017-04-10</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="kn">import</span> <span class="nn">lx</span>
+<span class="kn">import</span> <span class="nn">modo</span>
+<span class="kn">import</span> <span class="nn">pyperclip</span>
+<span class="kn">from</span> <span class="nn">wheezy.template.engine</span> <span class="k">import</span> <span class="n">Engine</span>
+<span class="kn">from</span> <span class="nn">wheezy.template.ext.core</span> <span class="k">import</span> <span class="n">CoreExtension</span>
+<span class="kn">from</span> <span class="nn">wheezy.template.loader</span> <span class="k">import</span> <span class="n">FileLoader</span>
+
+<span class="kn">import</span> <span class="nn">bd_globals</span>
+<span class="kn">import</span> <span class="nn">bd_helpers</span>
+<span class="kn">from</span> <span class="nn">var</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<span class="c1"># FUNCTIONS -----------------------------------------------</span>
+<div class="viewcode-block" id="build_modo_render_command"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.build_modo_render_command">[docs]</a><span class="k">def</span> <span class="nf">build_modo_render_command</span><span class="p">(</span><span class="n">pathaliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scenes</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="n">searchpath</span> <span class="o">=</span> <span class="p">[</span><span class="n">TEMPLATES</span><span class="p">]</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span>
+        <span class="n">loader</span><span class="o">=</span><span class="n">FileLoader</span><span class="p">(</span><span class="n">searchpath</span><span class="p">),</span>
+        <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="n">CoreExtension</span><span class="p">()]</span>
+    <span class="p">)</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;modo_render_commands.txt&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pathaliases</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pathaliases</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">pathaliases</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">({</span><span class="s1">&#39;pathaliases&#39;</span><span class="p">:</span> <span class="n">pathaliases</span><span class="p">,</span> <span class="s1">&#39;scenes&#39;</span><span class="p">:</span> <span class="n">scenes</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="build_modo_preview_render_command"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.build_modo_preview_render_command">[docs]</a><span class="k">def</span> <span class="nf">build_modo_preview_render_command</span><span class="p">(</span><span class="n">pathaliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scenes</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="n">searchpath</span> <span class="o">=</span> <span class="p">[</span><span class="n">TEMPLATES</span><span class="p">]</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span>
+        <span class="n">loader</span><span class="o">=</span><span class="n">FileLoader</span><span class="p">(</span><span class="n">searchpath</span><span class="p">),</span>
+        <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="n">CoreExtension</span><span class="p">()]</span>
+    <span class="p">)</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;modo_preview_render_commands.txt&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pathaliases</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pathaliases</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">pathaliases</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">({</span><span class="s1">&#39;pathaliases&#39;</span><span class="p">:</span> <span class="n">pathaliases</span><span class="p">,</span> <span class="s1">&#39;scenes&#39;</span><span class="p">:</span> <span class="n">scenes</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="build_modo_render_command_win"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.build_modo_render_command_win">[docs]</a><span class="k">def</span> <span class="nf">build_modo_render_command_win</span><span class="p">(</span><span class="n">pathaliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scenes</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="n">searchpath</span> <span class="o">=</span> <span class="p">[</span><span class="n">TEMPLATES</span><span class="p">]</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span>
+        <span class="n">loader</span><span class="o">=</span><span class="n">FileLoader</span><span class="p">(</span><span class="n">searchpath</span><span class="p">),</span>
+        <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="n">CoreExtension</span><span class="p">()]</span>
+    <span class="p">)</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;modo_render_commands_win.txt&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pathaliases</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pathaliases</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">pathaliases</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+
+    <span class="k">for</span> <span class="n">scene</span> <span class="ow">in</span> <span class="n">scenes</span><span class="p">:</span>
+        <span class="n">scenes</span><span class="p">[</span><span class="n">scene</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">format_filename</span><span class="p">(</span><span class="n">scenes</span><span class="p">[</span><span class="n">scene</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="s1">&#39;win32&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">({</span><span class="s1">&#39;pathaliases&#39;</span><span class="p">:</span> <span class="n">pathaliases</span><span class="p">,</span> <span class="s1">&#39;scenes&#39;</span><span class="p">:</span> <span class="n">scenes</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="build_modo_preview_render_command_win"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.build_modo_preview_render_command_win">[docs]</a><span class="k">def</span> <span class="nf">build_modo_preview_render_command_win</span><span class="p">(</span><span class="n">pathaliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scenes</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="n">searchpath</span> <span class="o">=</span> <span class="p">[</span><span class="n">TEMPLATES</span><span class="p">]</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span>
+        <span class="n">loader</span><span class="o">=</span><span class="n">FileLoader</span><span class="p">(</span><span class="n">searchpath</span><span class="p">),</span>
+        <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="n">CoreExtension</span><span class="p">()]</span>
+    <span class="p">)</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;modo_preview_render_commands_win.txt&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pathaliases</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pathaliases</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">pathaliases</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+
+    <span class="k">for</span> <span class="n">scene</span> <span class="ow">in</span> <span class="n">scenes</span><span class="p">:</span>
+        <span class="n">scenes</span><span class="p">[</span><span class="n">scene</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">format_filename</span><span class="p">(</span><span class="n">scenes</span><span class="p">[</span><span class="n">scene</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="s1">&#39;win32&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">({</span><span class="s1">&#39;pathaliases&#39;</span><span class="p">:</span> <span class="n">pathaliases</span><span class="p">,</span> <span class="s1">&#39;scenes&#39;</span><span class="p">:</span> <span class="n">scenes</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="build_modo_batch"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.build_modo_batch">[docs]</a><span class="k">def</span> <span class="nf">build_modo_batch</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[],</span> <span class="n">headless</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">ntpath</span>
+    <span class="n">searchpath</span> <span class="o">=</span> <span class="p">[</span><span class="n">TEMPLATES</span><span class="p">]</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span>
+        <span class="n">loader</span><span class="o">=</span><span class="n">FileLoader</span><span class="p">(</span><span class="n">searchpath</span><span class="p">),</span>
+        <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="n">CoreExtension</span><span class="p">()]</span>
+    <span class="p">)</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;modo_batch.bat&#39;</span><span class="p">)</span>
+    <span class="n">win_commands</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">:</span>
+        <span class="n">win_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ntpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">format_filename</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s1">&#39;win32&#39;</span><span class="p">)))</span>
+
+    <span class="n">headless</span> <span class="o">=</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;C:\Program Files\Luxology\modo\11.0v1\modo_cl.exe&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">({</span><span class="s1">&#39;modo_cl&#39;</span><span class="p">:</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">headless</span><span class="p">),</span> <span class="s1">&#39;commands&#39;</span><span class="p">:</span> <span class="n">win_commands</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="build_modo_bash"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.build_modo_bash">[docs]</a><span class="k">def</span> <span class="nf">build_modo_bash</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[],</span> <span class="n">headless</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">render_range</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="n">searchpath</span> <span class="o">=</span> <span class="p">[</span><span class="n">TEMPLATES</span><span class="p">]</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span>
+        <span class="n">loader</span><span class="o">=</span><span class="n">FileLoader</span><span class="p">(</span><span class="n">searchpath</span><span class="p">),</span>
+        <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="n">CoreExtension</span><span class="p">()]</span>
+    <span class="p">)</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;modo_batch.sh&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">({</span><span class="s1">&#39;modo_cl&#39;</span><span class="p">:</span> <span class="n">headless</span><span class="p">,</span> <span class="s1">&#39;commands&#39;</span><span class="p">:</span> <span class="n">commands</span><span class="p">,</span> <span class="s1">&#39;render_range&#39;</span><span class="p">:</span> <span class="n">render_range</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="renderRegionCheck"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.renderRegionCheck">[docs]</a><span class="k">def</span> <span class="nf">renderRegionCheck</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span><span class="o">.</span><span class="n">renderItem</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sICHAN_POLYRENDER_REGION</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">yesNo</span><span class="p">(</span><span class="s1">&#39;Disable Render Region&#39;</span><span class="p">,</span> <span class="s2">&quot;Disable Render Region for batch render?&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+            <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="s2">&quot;Proceeding without Render Region.&quot;</span><span class="p">)</span>
+            <span class="n">region</span> <span class="o">=</span> <span class="s2">&quot;item.channel polyRender$region 0&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">region</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="s2">&quot;Proceeding with enabled Render Region.&quot;</span><span class="p">)</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">region</span></div>
+
+
+<div class="viewcode-block" id="get_scene_range"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.get_scene_range">[docs]</a><span class="k">def</span> <span class="nf">get_scene_range</span><span class="p">():</span>
+    <span class="n">frame_range</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span><span class="o">.</span><span class="n">currentRange</span>
+    <span class="n">first_frame</span> <span class="o">=</span> <span class="n">frame_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">last_frame</span> <span class="o">=</span> <span class="n">frame_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">frame_step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span><span class="o">.</span><span class="n">renderItem</span><span class="o">.</span><span class="n">channel</span><span class="p">(</span><span class="n">lx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">sICHAN_POLYRENDER_STEP</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">x</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first_frame</span><span class="p">,</span> <span class="n">last_frame</span><span class="p">,</span> <span class="n">frame_step</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_passes"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.get_passes">[docs]</a><span class="k">def</span> <span class="nf">get_passes</span><span class="p">():</span>
+    <span class="n">passes</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span><span class="o">.</span><span class="n">renderPassGroups</span>
+    <span class="n">render_passes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">passes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">pas</span> <span class="ow">in</span> <span class="n">passes</span><span class="p">:</span>
+            <span class="n">render_passes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">pas</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">pas</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">render_passes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;No passes&quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">render_passes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;No passes in scene&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">render_passes</span></div>
+
+
+<div class="viewcode-block" id="get_output_pattern"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.get_output_pattern">[docs]</a><span class="k">def</span> <span class="nf">get_output_pattern</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">get_passes</span><span class="p">():</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;[&lt;pass&gt;]_[&lt;output&gt;][&lt;LR&gt;].&lt;FFFF&gt;&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;[&lt;pass&gt;][&lt;output&gt;][&lt;LR&gt;].&lt;FFFF&gt;&quot;</span>
+    <span class="k">return</span> <span class="n">pattern</span></div>
+
+
+<div class="viewcode-block" id="get_input_range"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.get_input_range">[docs]</a><span class="k">def</span> <span class="nf">get_input_range</span><span class="p">(</span><span class="n">frame_range</span><span class="o">=</span><span class="s2">&quot;1001-1250x1&quot;</span><span class="p">):</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(\d+)[-x ]+(\d+)[-x ]+(\d+)&#39;</span><span class="p">)</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">frame_range</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="chunker"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.chunker">[docs]</a><span class="k">def</span> <span class="nf">chunker</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="n">pos</span><span class="p">:</span><span class="n">pos</span> <span class="o">+</span> <span class="n">size</span><span class="p">]</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">),</span> <span class="n">size</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="format_filename"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.format_filename">[docs]</a><span class="k">def</span> <span class="nf">format_filename</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">format</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a UNIX path and turns it into a Windows path.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+
+        <span class="n">unix_path</span> <span class="o">=</span> <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;projects dir&#39;</span><span class="p">]</span>
+        <span class="n">win_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;alt drive&#39;</span><span class="p">],</span>
+                <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;projects location&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+
+        <span class="n">win_path</span> <span class="o">=</span> <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;projects dir&#39;</span><span class="p">]</span>
+        <span class="n">unix_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;alt drive&#39;</span><span class="p">],</span>
+                <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;projects location&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">unix_path</span><span class="p">,</span> <span class="n">win_path</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filename</span>
+    <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">win_path</span><span class="p">,</span> <span class="n">unix_path</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filename</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;ERROR no valid OS given for path transform&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<span class="c1"># END FUNCTIONS -----------------------------------------------</span>
+
+<span class="c1"># MAIN PROGRAM --------------------------------------------</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_headless_batch_creator.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">proc</span><span class="o">=</span><span class="s1">&#39;manual&#39;</span><span class="p">,</span> <span class="n">use_scene_range</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frame_range</span><span class="o">=</span><span class="s2">&quot;1001-1250x1&quot;</span><span class="p">,</span> <span class="n">passname</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">batchsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+         <span class="n">preview</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">perFrame</span><span class="o">=</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="n">conv</span><span class="o">=</span><span class="mf">0.975</span><span class="p">,</span> <span class="n">geoUpdate</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="n">start_timer</span> <span class="o">=</span> <span class="n">bd_helpers</span><span class="o">.</span><span class="n">timer</span><span class="p">()</span>
+
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span>
+    <span class="n">scene_path</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">filename</span>
+
+    <span class="k">if</span> <span class="n">passname</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+        <span class="n">passname</span> <span class="o">=</span> <span class="s2">&quot;group:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">passname</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">passname</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+        <span class="n">headless_path</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;query platformservice path.path ? exename&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_cl&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">headless_path</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;query platformservice path.path ? exename&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_cl.exe&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">scene_path</span><span class="p">:</span>
+        <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s1">&#39;Warning&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Please save scene first!&#39;</span><span class="p">,</span>
+                           <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="c1"># bd_render_paths.main()</span>
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;bd.update_render_paths&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_scene_range</span><span class="p">:</span>
+            <span class="n">first_frame</span><span class="p">,</span> <span class="n">last_frame</span><span class="p">,</span> <span class="n">frame_step</span> <span class="o">=</span> <span class="n">get_input_range</span><span class="p">(</span><span class="n">get_scene_range</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">first_frame</span><span class="p">,</span> <span class="n">last_frame</span><span class="p">,</span> <span class="n">frame_step</span> <span class="o">=</span> <span class="n">get_input_range</span><span class="p">(</span><span class="n">frame_range</span><span class="p">)</span>
+
+        <span class="n">region</span> <span class="o">=</span> <span class="n">renderRegionCheck</span><span class="p">()</span>
+
+        <span class="n">batch_base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">scene_path</span><span class="p">),</span>
+            <span class="s2">&quot;_batch&quot;</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">scene_path</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="s2">&quot;_Frames</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first_frame</span><span class="p">,</span> <span class="n">last_frame</span><span class="p">)</span>
+        <span class="n">batch_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">.bat&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">batch_base_path</span><span class="p">,</span> <span class="n">frames</span><span class="p">))</span>
+        <span class="n">bash_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">.sh&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">batch_base_path</span><span class="p">,</span> <span class="n">frames</span><span class="p">))</span>
+
+        <span class="n">framelist</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">first_frame</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">last_frame</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">frame_step</span><span class="p">))</span>
+        <span class="n">framelist</span> <span class="o">=</span> <span class="n">chunker</span><span class="p">(</span><span class="n">framelist</span><span class="p">,</span> <span class="n">batchsize</span><span class="p">)</span>
+        <span class="n">all_commands</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_commands_win</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">framegroup</span> <span class="ow">in</span> <span class="n">framelist</span><span class="p">:</span>
+            <span class="n">scene_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">first_batch_frame</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">minframe</span><span class="p">)</span> <span class="k">for</span> <span class="n">minframe</span> <span class="ow">in</span> <span class="n">framegroup</span><span class="p">)</span>
+            <span class="n">last_batch_frame</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">maxframe</span><span class="p">)</span> <span class="k">for</span> <span class="n">maxframe</span> <span class="ow">in</span> <span class="n">framegroup</span><span class="p">)</span>
+
+            <span class="n">command_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">batch_base_path</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">{filename}</span><span class="s2">_batchrender_frames_</span><span class="si">{first}</span><span class="s2">-</span><span class="si">{last}</span><span class="s2">.txt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">scene_path</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">first</span><span class="o">=</span><span class="n">first_batch_frame</span><span class="p">,</span>
+                        <span class="n">last</span><span class="o">=</span><span class="n">last_batch_frame</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">command_path</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">command_path</span><span class="p">))</span>
+
+            <span class="n">command_path_win</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_win&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">batch_base_path</span><span class="p">),</span>
+                    <span class="s2">&quot;</span><span class="si">{filename}</span><span class="s2">_batchrender_frames_</span><span class="si">{first}</span><span class="s2">-</span><span class="si">{last}</span><span class="s2">.txt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">scene_path</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">first</span><span class="o">=</span><span class="n">first_batch_frame</span><span class="p">,</span>
+                        <span class="n">last</span><span class="o">=</span><span class="n">last_batch_frame</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">command_path_win</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">command_path_win</span><span class="p">))</span>
+
+            <span class="n">scene_dict</span><span class="p">[</span><span class="n">first_batch_frame</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">scene_path</span><span class="p">,</span>
+                <span class="s1">&#39;first&#39;</span><span class="p">:</span> <span class="n">first_batch_frame</span><span class="p">,</span>
+                <span class="s1">&#39;last&#39;</span><span class="p">:</span> <span class="n">last_batch_frame</span><span class="p">,</span>
+                <span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="n">frame_step</span><span class="p">,</span>
+                <span class="s1">&#39;pattern&#39;</span><span class="p">:</span> <span class="n">pattern</span><span class="p">,</span>
+                <span class="s1">&#39;passes&#39;</span><span class="p">:</span> <span class="n">passname</span><span class="p">,</span>
+                <span class="s1">&#39;region&#39;</span><span class="p">:</span> <span class="n">region</span><span class="p">,</span>
+                <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span>
+                <span class="s1">&#39;perFrame&#39;</span><span class="p">:</span> <span class="n">perFrame</span><span class="p">,</span>
+                <span class="s1">&#39;conv&#39;</span><span class="p">:</span> <span class="n">conv</span><span class="p">,</span>
+                <span class="s1">&#39;geoUpdate&#39;</span><span class="p">:</span> <span class="n">geoUpdate</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="n">preview</span><span class="p">:</span>
+                <span class="n">modo_command</span> <span class="o">=</span> <span class="n">build_modo_preview_render_command</span><span class="p">(</span><span class="n">scenes</span><span class="o">=</span><span class="n">scene_dict</span><span class="p">,</span>
+                                                                 <span class="n">pathaliases</span><span class="o">=</span><span class="p">{</span>
+                                                                     <span class="s1">&#39;WorkingProjects&#39;</span><span class="p">:</span> <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;projects dir&#39;</span><span class="p">]</span>
+                                                                 <span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">modo_command</span> <span class="o">=</span> <span class="n">build_modo_render_command</span><span class="p">(</span><span class="n">scenes</span><span class="o">=</span><span class="n">scene_dict</span><span class="p">,</span>
+                                                         <span class="n">pathaliases</span><span class="o">=</span><span class="p">{</span>
+                                                             <span class="s1">&#39;WorkingProjects&#39;</span><span class="p">:</span> <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;projects dir&#39;</span><span class="p">]</span>
+                                                         <span class="p">})</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">command_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">command</span><span class="p">:</span>
+                <span class="n">command</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">modo_command</span><span class="p">)</span>
+                <span class="n">command</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">all_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">command_path</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">preview</span><span class="p">:</span>
+                <span class="n">modo_command_win</span> <span class="o">=</span> <span class="n">build_modo_render_command_win</span><span class="p">(</span><span class="n">scenes</span><span class="o">=</span><span class="n">scene_dict</span><span class="p">,</span>
+                                                                 <span class="n">pathaliases</span><span class="o">=</span><span class="p">{</span>
+                                                                     <span class="s1">&#39;WorkingProjects&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+                                                                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                                                             <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;alt drive&#39;</span><span class="p">],</span>
+                                                                             <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;projects location&#39;</span><span class="p">]</span>
+                                                                         <span class="p">)</span>
+                                                                     <span class="p">)</span>
+                                                                 <span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">modo_command_win</span> <span class="o">=</span> <span class="n">build_modo_render_command_win</span><span class="p">(</span><span class="n">scenes</span><span class="o">=</span><span class="n">scene_dict</span><span class="p">,</span>
+                                                                 <span class="n">pathaliases</span><span class="o">=</span><span class="p">{</span>
+                                                                     <span class="s1">&#39;WorkingProjects&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+                                                                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                                                             <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;alt drive&#39;</span><span class="p">],</span>
+                                                                             <span class="n">bd_globals</span><span class="o">.</span><span class="n">bdconfig</span><span class="p">()[</span><span class="s1">&#39;projects location&#39;</span><span class="p">]</span>
+                                                                         <span class="p">)</span>
+                                                                     <span class="p">)</span>
+                                                                 <span class="p">})</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">command_path_win</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">command</span><span class="p">:</span>
+                <span class="n">command</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">modo_command_win</span><span class="p">)</span>
+                <span class="n">command</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">all_commands_win</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">command_path_win</span><span class="p">)</span>
+
+        <span class="n">modo_batch</span> <span class="o">=</span> <span class="n">build_modo_batch</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="n">all_commands_win</span><span class="p">)</span>
+        <span class="n">modo_bash</span> <span class="o">=</span> <span class="n">build_modo_bash</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="n">all_commands</span><span class="p">,</span> <span class="n">headless</span><span class="o">=</span><span class="n">headless_path</span><span class="p">,</span>
+                                    <span class="n">render_range</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;first&#39;</span><span class="p">:</span> <span class="n">first_frame</span><span class="p">,</span> <span class="s1">&#39;last&#39;</span><span class="p">:</span> <span class="n">last_frame</span><span class="p">})</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">batch_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">batch</span><span class="p">:</span>
+            <span class="n">batch</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">modo_batch</span><span class="p">)</span>
+            <span class="n">batch</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">bash_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bash</span><span class="p">:</span>
+            <span class="n">bash</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">modo_bash</span><span class="p">)</span>
+            <span class="n">bash</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">bash_path</span><span class="p">,</span> <span class="mi">0755</span><span class="p">)</span>
+
+        <span class="n">lx</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;scene.save&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">proc</span> <span class="o">==</span> <span class="s1">&#39;manual&#39;</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+                <span class="n">pyperclip</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">bash_path</span><span class="p">)</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;/Applications/Utilities/Terminal.app&#39;</span><span class="p">,</span> <span class="s1">&#39;-n&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pyperclip</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">batch_path</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;start /B start cmd.exe&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">bash_path</span><span class="p">])</span>
+                <span class="nb">print</span> <span class="n">proc</span><span class="o">.</span><span class="n">pid</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">batch_path</span><span class="p">])</span>
+                <span class="nb">print</span> <span class="n">proc</span><span class="o">.</span><span class="n">pid</span>
+
+    <span class="n">bd_helpers</span><span class="o">.</span><span class="n">timer</span><span class="p">(</span><span class="n">start_timer</span><span class="p">,</span> <span class="s1">&#39;Headless Batch Creator&#39;</span><span class="p">)</span></div>
+
+
+<span class="c1"># END MAIN PROGRAM -----------------------------------------------</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Argument parsing is available through the </span>
+    <span class="c1"># lx.arg and lx.args methods. lx.arg returns </span>
+    <span class="c1"># the raw argument string that was passed into </span>
+    <span class="c1"># the script. lx.args parses the argument string </span>
+    <span class="c1"># and returns an array of arguments for easier </span>
+    <span class="c1"># processing.</span>
+
+    <span class="n">argsAsString</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">arg</span><span class="p">()</span>
+    <span class="n">argsAsTuple</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">args</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">main</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alexander Kucera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

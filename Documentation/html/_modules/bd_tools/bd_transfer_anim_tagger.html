@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bd_tools.bd_transfer_anim_tagger &mdash; BabylonDreams modo Pipeline 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="BabylonDreams modo Pipeline 1.0.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> BabylonDreams modo Pipeline
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeling.html">Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rigging.html">Rigging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../shading.html">Shading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rendering.html">Rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripting.html">Scripting</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">BabylonDreams modo Pipeline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>bd_tools.bd_transfer_anim_tagger</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bd_tools.bd_transfer_anim_tagger</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+<span class="c1"># Alexander Kucera</span>
+<span class="c1"># babylondreams.de</span>
+
+<span class="c1"># Description</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">BabylonDreams-modo-Kit - bd_transfer_anim_tagger</span>
+
+<span class="sd">Release Notes:</span>
+<span class="sd">    Tag a bunch of items in a scene for automatic animation transfer.</span>
+
+<span class="sd">V0.1 Initial Release - 2017-02-13</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="kn">import</span> <span class="nn">lx</span>
+<span class="kn">import</span> <span class="nn">modo</span>
+
+<span class="c1"># These channels show up as animated even if there are no keys on them. Not a reliable source to determin animation.</span>
+<span class="n">forbidden_channels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;localMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;wposMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;wrotMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;wsclMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;wpivPosMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;wpivRotMatrix&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;worldMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;glstate&quot;</span><span class="p">,</span> <span class="s2">&quot;crvGroup&quot;</span><span class="p">,</span> <span class="s2">&quot;matrix&quot;</span><span class="p">,</span> <span class="s2">&quot;wParentMatrix&quot;</span><span class="p">,</span> <span class="s2">&quot;glsurf&quot;</span><span class="p">,</span> <span class="s2">&quot;mesh&quot;</span><span class="p">]</span>
+
+
+<span class="c1"># FUNCTIONS -----------------------------------------------</span>
+
+<div class="viewcode-block" id="list"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_transfer_anim_tagger.list">[docs]</a><span class="k">def</span> <span class="nf">list</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Listing animated items without an animation tag.&quot;</span><span class="p">)</span>
+
+    <span class="n">untagged</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+        <span class="n">animated</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># find only animated items as we don&#39;t want to tag static ones and make the scene unnecessarily heavy.</span>
+
+        <span class="c1"># first check the item&#39;s channels</span>
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">channels</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">channel</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">forbidden_channels</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">channel</span><span class="o">.</span><span class="n">isAnimated</span><span class="p">:</span>
+                    <span class="n">animated</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># then check any transforms connected to the item as they don&#39;t show up under the item&#39;s channels</span>
+        <span class="k">for</span> <span class="n">transform</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">transforms</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">transform</span><span class="o">.</span><span class="n">channels</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">channel</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">forbidden_channels</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">channel</span><span class="o">.</span><span class="n">isAnimated</span><span class="p">:</span>
+                        <span class="n">animated</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">animated</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">hasTag</span><span class="p">(</span><span class="s2">&quot;anim&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">readTag</span><span class="p">(</span><span class="s2">&quot;anim&quot;</span><span class="p">):</span>
+                    <span class="n">untagged</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">untagged</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">untagged</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">untagged</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s2">&quot;List of untagged items&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;The following items have animation on them, but are not tagged. &quot;</span>
+                       <span class="s2">&quot;You might want to update your asset before importing it.</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="p">),</span>
+                       <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s2">&quot;You are good to go!&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;Congratulations. All animated items have tags on them.&quot;</span><span class="p">,</span>
+                           <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="assign"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_transfer_anim_tagger.assign">[docs]</a><span class="k">def</span> <span class="nf">assign</span><span class="p">():</span>
+    <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s2">&quot;Not done yet!&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;Sorry. This function is not implemented yet.&quot;</span><span class="p">,</span>
+                       <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">)</span></div>
+    <span class="c1">#modo.dialogs.fileOpen(&#39;text&#39;, title=&#39;Open List of Tags&#39;, multi=False)</span>
+
+
+<div class="viewcode-block" id="update"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_transfer_anim_tagger.update">[docs]</a><span class="k">def</span> <span class="nf">update</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+        <span class="n">createTag</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">children</span><span class="p">(</span><span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">createTag</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="createTag"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_transfer_anim_tagger.createTag">[docs]</a><span class="k">def</span> <span class="nf">createTag</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">createTag</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">hasTag</span><span class="p">(</span><span class="s2">&quot;anim&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">readTag</span><span class="p">(</span><span class="s2">&quot;anim&quot;</span><span class="p">):</span>
+            <span class="n">createTag</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">createTag</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">createTag</span><span class="p">:</span>
+        <span class="n">tag</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="overwrite"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_transfer_anim_tagger.overwrite">[docs]</a><span class="k">def</span> <span class="nf">overwrite</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+        <span class="n">tag</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">children</span><span class="p">(</span><span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">tag</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="tag"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_transfer_anim_tagger.tag">[docs]</a><span class="k">def</span> <span class="nf">tag</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating unique identifier.&quot;</span><span class="p">)</span>
+    <span class="c1"># Creating unique identifier with a hash and the current time</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">()</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="n">digest</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+    <span class="c1"># item.setTag(&quot;anim&quot;, &quot;{}_{}&quot;.format(item.name, digest[:4]))</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">setTag</span><span class="p">(</span><span class="s2">&quot;anim&quot;</span><span class="p">,</span> <span class="n">digest</span><span class="p">[:</span><span class="mi">16</span><span class="p">])</span></div>
+
+
+<span class="c1"># END FUNCTIONS -----------------------------------------------</span>
+
+<span class="c1"># MAIN PROGRAM --------------------------------------------</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bd_tools.html#bd_tools.bd_transfer_anim_tagger.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">scene</span>
+    <span class="k">global</span> <span class="n">selected</span>
+
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">selected</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;assign&quot;</span><span class="p">:</span>
+        <span class="n">assign</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;list&quot;</span><span class="p">:</span>
+        <span class="nb">list</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="s2">&quot;Please select at least one item.&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+
+        <span class="n">update</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;overwrite&quot;</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">modo</span><span class="o">.</span><span class="n">dialogs</span><span class="o">.</span><span class="n">alert</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="s2">&quot;Please select at least one item.&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+
+        <span class="n">overwrite</span><span class="p">()</span></div>
+
+
+<span class="c1"># END MAIN PROGRAM -----------------------------------------------</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Argument parsing is available through the</span>
+    <span class="c1"># lx.arg and lx.args methods. lx.arg returns</span>
+    <span class="c1"># the raw argument string that was passed into</span>
+    <span class="c1"># the script. lx.args parses the argument string</span>
+    <span class="c1"># and returns an array of arguments for easier</span>
+    <span class="c1"># processing.</span>
+
+    <span class="n">argsAsString</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">arg</span><span class="p">()</span>
+    <span class="n">argsAsTuple</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">args</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">main</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alexander Kucera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

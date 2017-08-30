@@ -91,7 +91,6 @@
 <li class="toctree-l1"><a class="reference internal" href="shading.html">Shading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rendering.html">Rendering</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripting.html">Scripting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">babylondreams</a></li>
 </ul>
 
             
@@ -138,6 +137,12 @@
             
   <div class="section" id="welcome-to-babylondreams-modo-pipeline-kit-s-documentation">
 <h1>Welcome to BabylonDreams modo Pipeline Kit&#8217;s documentation!<a class="headerlink" href="#welcome-to-babylondreams-modo-pipeline-kit-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>The BabylonDreams modo Pipeline kit contains scripts, configs and functions to make working in modo smoother.</p>
+<p>It relies on <a class="reference external" href="https://github.com/AlexKucera/bd_pipeline">bd_pipeline</a>, our pipeline wide connective glue library. Please see the <a href="#id1"><span class="problematic" id="id2">`bd_pipline documentation`_</span></a> for more details.</p>
+<div class="section" id="disclaimer">
+<h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Permalink to this headline">¶</a></h2>
+<p>I am not a trained programmer and I usually don&#8217;t have much time to code. So be prepared for ugly code, quick hacks and stuff that is half finished. You have been warned.</p>
+<p>For Release Notes see <a class="reference internal" href="releasenotes.html"><span class="doc">Release Notes</span></a></p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -154,11 +159,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="animation.html">Animation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="animation.html#record-gl">Record GL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="animation.html#transfer-animation">Transfer Animation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animation.html#bake-camera-hierarchy-and-export-as-fbx">Bake Camera Hierarchy and Export as FBX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animation.html#transfer-animation-per-item">Transfer Animation (per Item)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="animation.html#transfer-animation-hierarchy-workflow">Transfer Animation Hierarchy Workflow</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="shading.html">Shading</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="shading.html#fix-orphans">Fix Orphans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shading.html#create-per-material-renderoutputs">Create Per Material RenderOutputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shading.html#blend-hierarchy">Blend Hierarchy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shading.html#blend-arbitrary">Blend Arbitrary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shading.html#bbox-instance-toggle">BBox Instance Toggle</a></li>
@@ -167,51 +175,30 @@
 <li class="toctree-l1"><a class="reference internal" href="rendering.html">Rendering</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="rendering.html#record-gl">Record GL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rendering.html#split-blends-into-passes">Split Blends into Passes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rendering.html#create-per-material-renderoutputs">Create Per Material RenderOutputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rendering.html#adjust-overscan">Adjust Overscan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rendering.html#update-render-paths">Update Render Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rendering.html#headless-batch-creator">Headless Batch Creator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rendering.html#open-selected-renderoutput-s-folder">Open Selected renderOutput&#8217;s Folder</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="scripting.html">Scripting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#version-up-scene">Version Up Scene</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#version-up-scene-with-comment">Version Up Scene with Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#clear-log">Clear Log</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripting.html#fix-orphans">Fix Orphans</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripting.html#docs">Docs</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">babylondreams</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="babylondreams.html">babylondreams package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="babylondreams.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="babylondreams.commander.html">babylondreams.commander package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="babylondreams.html#module-babylondreams">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="bd_tools.html">bd_tools package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_bbox_toggle">bd_tools.bd_bbox_toggle module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_blend_hierarchy">bd_tools.bd_blend_hierarchy module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_blend_hierarchy_split_passes">bd_tools.bd_blend_hierarchy_split_passes module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_deinstance">bd_tools.bd_deinstance module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_fix_orphans">bd_tools.bd_fix_orphans module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_gl_capture">bd_tools.bd_gl_capture module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_helpers">bd_tools.bd_helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_instance_reroute">bd_tools.bd_instance_reroute module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_instance_source_center_adjust">bd_tools.bd_instance_source_center_adjust module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.bd_transfer_anim">bd_tools.bd_transfer_anim module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools.var">bd_tools.var module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="bd_tools.html#module-bd_tools">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </div>
+</div>
+<div class="section" id="useful-links">
+<h2>Useful Links<a class="headerlink" href="#useful-links" title="Permalink to this headline">¶</a></h2>
 <p>Commander Help: <a class="reference external" href="https://github.com/adamohern/commander">https://github.com/adamohern/commander</a></p>
 <p>TD SDK: <a class="reference external" href="http://modo.sdk.thefoundry.co.uk//td-sdk/">http://modo.sdk.thefoundry.co.uk//td-sdk/</a></p>
 <p>Full SDK: <a class="reference external" href="http://sdk.luxology.com/wiki/Main_Page">http://sdk.luxology.com/wiki/Main_Page</a></p>
-<p>The BabylonDreams modo Pipeline kit contains scripts, configs and functions to make working in modo smoother.</p>
-<p>It is pretty much hard coded for our internal pipeline at the moment and very much in flux. But it may contain a few useful functions or ways of doing things. Feel free to adapt or improve upon my work.</p>
 </div>
-<div class="section" id="disclaimer">
-<h1>Disclaimer<a class="headerlink" href="#disclaimer" title="Permalink to this headline">¶</a></h1>
-<p>I am not a trained programmer and I usually don&#8217;t have much time to code. So be prepared for ugly code, quick hacks and stuff that is half finished. You have been warned.</p>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>

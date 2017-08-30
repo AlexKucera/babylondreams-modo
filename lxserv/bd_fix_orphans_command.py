@@ -45,4 +45,4 @@ class CommandClass(babylondreams.CommanderClass):
         bd_fix_orphans.main()
 
 
-lx.bless(CommandClass, 'bd.bd_fix_orphans')
+lx.bless(CommandClass, 'bd.fix_orphans')
