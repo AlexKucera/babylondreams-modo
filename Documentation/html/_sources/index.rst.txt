@@ -11,7 +11,7 @@ The BabylonDreams modo Pipeline kit contains scripts, configs and functions to m
 It relies on bd_pipeline_, our pipeline wide connective glue library. Please see the `bd_pipline documentation`_ for more details.
 
 .. _bd_pipeline: https://github.com/AlexKucera/bd_pipeline
-.. _bd_pipline docs: https://cdn.rawgit.com/AlexKucera/bd_pipeline/c5c269d8/Documentation/html/index.html
+.. _bd_pipline documentation: https://cdn.rawgit.com/AlexKucera/bd_pipeline/c5c269d8/Documentation/html/index.html
 
 Disclaimer
 ----------
