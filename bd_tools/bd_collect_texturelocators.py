@@ -32,13 +32,14 @@ def main():
     scene = modo.Scene()
 
     try:
-        group = scene.select('textureLocators_group')
+        group = scene.item('textureLocators_group')
     except:
         group = scene.addItem(lx.symbol.sITYPE_GROUPLOCATOR, name='textureLocators_group')
 
     for i in scene.iterItemsFast(lx.symbol.sITYPE_TEXTURELOC):
-        print i.name
-        i.setParent(newParent=group)
+        if not i.parent == group:
+            print("Re-parenting {} to {}".format(i.name, group.name))
+            i.setParent(newParent=group)
 
     bd_helpers.timer(start_timer, os.path.splitext(os.path.basename(__file__))[0])
 
