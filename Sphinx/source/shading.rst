@@ -6,6 +6,13 @@ Fix Orphans
 
 Finds any Shader Tree items that have become unparented and parents them back to the Shader Tree.
 
+Collect TextureLocators
+-----------------------
+
+Modo used to have this built in. Now it's back. Call the command and every Texture Locator in the scene will get put into a top level folder caller textureLocator_group. Keeps your scene nice and clena even if you have imported tons of individual scenes and have Texture Locators all over the Item list.
+
+I use this to not accidentally delete any Texture Locators when deleting entire Item list hierarchies.
+
 Create Per Material RenderOutputs
 ---------------------------------
 
