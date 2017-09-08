@@ -31,19 +31,10 @@ Copyright 2017 - BabylonDreams - Alexander Kucera & Monika Kucera GbR
 
 """
 
-import lx
-import lxu.command
-
-import imp
 import time
 
-try:
-    imp.find_module('lx.symbol')
-    import lx.symbol
-except ImportError:
-    pass
-
-import modo
+import lx
+import lxu.command
 
 __author__ = "Alexander Kucera"
 __copyright__ = "Copyright 2017, BabylonDreams - Alexander & Monika Kucera GbR"
