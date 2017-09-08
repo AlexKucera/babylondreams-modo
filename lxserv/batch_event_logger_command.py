@@ -51,14 +51,16 @@ class MyCommand_Cmd(lxu.command.BasicCommand):
         lxu.command.BasicCommand.__init__(self)
 
         self.dyna_Add("Event String", lx.symbol.sTYPE_STRING)
+
         self.dyna_Add("Log Path", lx.symbol.sTYPE_STRING)
+        self.basic_SetFlags(1, lx.symbol.fCMDARG_OPTIONAL)
 
     def arg_UIHints(self, index, hints):
         if index == 0:
             hints.Label("A string that will be printed to the Event Log.")
 
         if index == 1:
-            hints.Label("The path to a log file on disk.")
+            hints.Label("The path to a log file on disk. (Optional)")
 
     def cmd_Flags(self):
         return lx.symbol.fCMD_UNDO | lx.symbol.fCMD_UI
@@ -73,8 +75,9 @@ class MyCommand_Cmd(lxu.command.BasicCommand):
         log_path = self.dyna_String(1, "")
 
         lx.out(cmd_string)
-        with open(log_path, "a+") as log:
-            log.write("{} - {}\r\n".format(time.strftime("%Y-%m-%d %H:%M:%S"), cmd_string))
-            log.close
+        if log_path != "":
+            with open(log_path, "a+") as log:
+                log.write("{} - {}\r\n".format(time.strftime("%Y-%m-%d %H:%M:%S"), cmd_string))
+                log.close
 
 lx.bless(MyCommand_Cmd, 'bd.event_logger')
