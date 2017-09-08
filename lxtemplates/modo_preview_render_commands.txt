@@ -1,6 +1,7 @@
+log.subEnable preview true
 log.toConsole true
 log.toConsoleRolling true
-log.subEnable preview true
+
 iview.logging
 
 @require(pathaliases, scenes)
