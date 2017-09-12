@@ -47,7 +47,7 @@ def addmask(mask, mask_type):
 
 
 # MAIN PROGRAM --------------------------------------------
-def main():
+def main(type="alpha"):
     start_timer = bd_helpers.timer()
 
     scene = modo.Scene()
@@ -73,11 +73,13 @@ def main():
                         color = True
 
             if not color:
-                print('Adding RGB output to {}'.format(mask.name))
-                outputs.append(addmask(mask, lx.symbol.s_FX_OUTPUT_FINAL_COLOR))
+                if type == "both" or type == "color":
+                    print('Adding RGB output to {}'.format(mask.name))
+                    outputs.append(addmask(mask, lx.symbol.s_FX_OUTPUT_FINAL_COLOR))
             if not alpha:
-                outputs.append(addmask(mask, lx.symbol.s_FX_OUTPUT_ALPHA))
-                print('Adding Alpha output to {}'.format(mask.name))
+                if type == "both" or type == "alpha":
+                    outputs.append(addmask(mask, lx.symbol.s_FX_OUTPUT_ALPHA))
+                    print('Adding Alpha output to {}'.format(mask.name))
 
         scene.select(outputs, add=False)
 
