@@ -73,6 +73,8 @@ def main(comment=False, commentstring=""):
             if comment:
                 filecomment = commentstring.replace(" ","_").lower()
                 filecomment = bd_helpers.format_filename(filecomment)
+            else:
+                filecomment = False
 
             while created is False:
 
