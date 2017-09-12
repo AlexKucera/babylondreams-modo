@@ -34,10 +34,22 @@ __status__ = "Development"
 class CommandClass(babylondreams.CommanderClass):
     _commander_last_used = []
 
-    def commander_execute(self, msg, flags):
+    def commander_arguments(self):
+        return [
+            {
+                'name': 'outtype',
+                'label': "Create Final Color, Alpha or Both:",
+                'datatype': 'string',
+                'default': "alpha",
+                'values_list_type': 'popup',
+                'values_list': [("alpha", "Alpha Only"), ("color", "Final Color Only"), ("both", "both")]
+            }
+        ]
 
+    def commander_execute(self, msg, flags):
+        arguments = self.commander_args()
         reload(bd_create_material_outputs)
-        bd_create_material_outputs.main()
+        bd_create_material_outputs.main(arguments["outtype"])
 
 
 lx.bless(CommandClass, 'bd.create_material_outputs')
