@@ -54,7 +54,7 @@ def main():
             project['project_dir'],
             project_config['images/parent folder'],
             project_config['images/3d'],
-            "{}_{}".format(shot['sequence'], shot['shot']),
+            shot['sequence'],
             shot['shotname'],
             os.path.splitext(file)[0]
         )
