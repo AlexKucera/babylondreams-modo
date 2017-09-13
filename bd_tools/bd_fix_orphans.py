@@ -17,9 +17,13 @@ V0.1 Initial Release - 2017-02-22
 
 """
 
-import modo
-import lx
+import os
 import traceback
+
+import lx
+import modo
+
+from bd_tools import bd_helpers
 
 
 # FUNCTIONS -----------------------------------------------
@@ -27,13 +31,22 @@ import traceback
 
 # MAIN PROGRAM --------------------------------------------
 def main():
-
+    start = bd_helpers.timer()
     scene = modo.Scene()
-    for item in scene.items():
-        if item.superType == 'textureLayer' and item.type != 'shaderFolder':
-            print item, item.parent
+
+    # for item in scene.items():
+    #     if item.superType == 'textureLayer' and item.type != 'shaderFolder':
+    #         if not item.parent:
+    #             print("Re-parenting {} to Shader Tree.".format(item.name))
+    #             item.setParent(scene.renderItem)
+
+    for item in scene.iterItemsFast(lx.symbol.sITYPE_TEXTURELAYER):
+        if item.superType == lx.symbol.sITYPE_TEXTURELAYER and item.type != 'shaderFolder':
             if not item.parent:
+                print("Re-parenting {} to Shader Tree.".format(item.name))
                 item.setParent(scene.renderItem)
+
+    bd_helpers.timer(start, os.path.splitext(os.path.basename(__file__))[0])
 
 
 # END MAIN PROGRAM -----------------------------------------------
