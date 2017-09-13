@@ -34,14 +34,8 @@ def main():
     start = bd_helpers.timer()
     scene = modo.Scene()
 
-    # for item in scene.items():
-    #     if item.superType == 'textureLayer' and item.type != 'shaderFolder':
-    #         if not item.parent:
-    #             print("Re-parenting {} to Shader Tree.".format(item.name))
-    #             item.setParent(scene.renderItem)
-
     for item in scene.iterItemsFast(lx.symbol.sITYPE_TEXTURELAYER):
-        if item.superType == lx.symbol.sITYPE_TEXTURELAYER and item.type != 'shaderFolder':
+        if item.superType == lx.symbol.sITYPE_TEXTURELAYER and item.type != lx.symbol.sITYPE_SHADERFOLDER:
             if not item.parent:
                 print("Re-parenting {} to Shader Tree.".format(item.name))
                 item.setParent(scene.renderItem)
