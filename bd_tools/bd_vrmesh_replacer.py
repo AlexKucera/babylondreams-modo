@@ -83,10 +83,14 @@ def main():
             if len(children) > 0:
                 all_items += children
 
+        all_items = set(all_items)
+
         # Filter out any non-meshes
         for i in all_items:
             if i.type == lx.symbol.sITYPE_MESH:
                 meshes.append(i)
+
+        meshes = set(meshes)
 
         if len(meshes) > 0:
 
@@ -99,6 +103,7 @@ def main():
 
                 regex = ".*{}.*".format(re.escape(proxy))
                 m.step(1)
+
                 for i in meshes:
 
                     match = re.match(regex, i.name)
