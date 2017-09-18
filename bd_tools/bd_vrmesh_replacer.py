@@ -114,22 +114,22 @@ def main():
                         try:
                             print("Converting item {} to V-Ray Proxy ({}).".format(i.name, proxy))
                             scene.select(i)
+                            if scene.selected[0].type == lx.symbol.sITYPE_MESH:
+                                lx.eval("item.setType vray.proxy locator")
+                                if len(scene.selected) > 1:
+                                   lx.eval("select.itemSourceSelected")
+                                vrproxy = scene.selected[0]
 
-                            lx.eval("item.setType vray.proxy locator")
-                            if len(scene.selected) > 1:
-                               lx.eval("select.itemSourceSelected")
-                            vrproxy = scene.selected[0]
+                                # print("Creating V-Ray Proxy and moving it into place.")
+                                # vrproxy = scene.addItem('vray.proxy', name=proxy)
+                                # vrproxy = modo.item.LocatorSuperType(item=vrproxy)
+                                # vrproxy.setParent(i.parent, i.parentIndex)
+                                # vrproxy.position.set(i.position.get())
+                                # vrproxy.rotation.set(i.rotation.get())
+                                # vrproxy.scale.set(i.scale.get())
 
-                            # print("Creating V-Ray Proxy and moving it into place.")
-                            # vrproxy = scene.addItem('vray.proxy', name=proxy)
-                            # vrproxy = modo.item.LocatorSuperType(item=vrproxy)
-                            # vrproxy.setParent(i.parent, i.parentIndex)
-                            # vrproxy.position.set(i.position.get())
-                            # vrproxy.rotation.set(i.rotation.get())
-                            # vrproxy.scale.set(i.scale.get())
-
-                            print("Setting item {} to vrmesh {}.".format(i.name, proxy))
-                            vrproxy.channel('vray_file').set(os.path.join(path, proxy + ".vrmesh"))
+                                print("Setting item {} to vrmesh {}.".format(i.name, proxy))
+                                vrproxy.channel('vray_file').set(os.path.join(path, proxy + ".vrmesh"))
 
                         except:
                             pass
