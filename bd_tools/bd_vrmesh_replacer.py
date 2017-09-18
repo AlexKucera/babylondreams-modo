@@ -58,7 +58,26 @@ def get_proxies(path=None):
 
     return set(proxies)
 
+def convert_proxy(item, proxy, path):
+    scene= modo.Scene()
+    print("Converting item {} to V-Ray Proxy ({}).".format(item.name, proxy))
+    scene.select(item)
+    if scene.selected[0].type == lx.symbol.sITYPE_MESH:
+        lx.eval("item.setType vray.proxy locator")
+        if len(scene.selected) > 1:
+            lx.eval("select.itemSourceSelected")
+        vrproxy = scene.selected[0]
 
+        # print("Creating V-Ray Proxy and moving it into place.")
+        # vrproxy = scene.addItem('vray.proxy', name=proxy)
+        # vrproxy = modo.item.LocatorSuperType(item=vrproxy)
+        # vrproxy.setParent(i.parent, i.parentIndex)
+        # vrproxy.position.set(i.position.get())
+        # vrproxy.rotation.set(i.rotation.get())
+        # vrproxy.scale.set(i.scale.get())
+
+        print("Setting item {} to vrmesh {}.".format(item.name, proxy))
+        vrproxy.channel('vray_file').set(os.path.join(path, proxy + ".vrmesh"))
 # END FUNCTIONS -----------------------------------------------
 
 # MAIN PROGRAM --------------------------------------------
@@ -97,7 +116,7 @@ def main():
             found = False
 
             m = lx.Monitor(len(proxies))
-            m.init(len(proxies))
+            m.init(len(proxies) * 2)
             # Go through all proxy files and compare their names to the mesh names
             for proxy in proxies:
 
@@ -105,38 +124,47 @@ def main():
                 m.step(1)
 
                 for i in meshes:
-
                     match = re.match(regex, i.name)
-
-
                     if match:
                         found = True
 
-                        print i
-                        print proxy
-
                         try:
-                            print("Converting item {} to V-Ray Proxy ({}).".format(i.name, proxy))
-                            scene.select(i)
-                            if scene.selected[0].type == lx.symbol.sITYPE_MESH:
-                                lx.eval("item.setType vray.proxy locator")
-                                if len(scene.selected) > 1:
-                                   lx.eval("select.itemSourceSelected")
-                                vrproxy = scene.selected[0]
-
-                                # print("Creating V-Ray Proxy and moving it into place.")
-                                # vrproxy = scene.addItem('vray.proxy', name=proxy)
-                                # vrproxy = modo.item.LocatorSuperType(item=vrproxy)
-                                # vrproxy.setParent(i.parent, i.parentIndex)
-                                # vrproxy.position.set(i.position.get())
-                                # vrproxy.rotation.set(i.rotation.get())
-                                # vrproxy.scale.set(i.scale.get())
-
-                                print("Setting item {} to vrmesh {}.".format(i.name, proxy))
-                                vrproxy.channel('vray_file').set(os.path.join(path, proxy + ".vrmesh"))
+                            convert_proxy(i, proxy, path)
 
                         except:
                             pass
+
+            # Second round with looser regex to catch any misses
+            reduced = []
+            for i in meshes:
+                if i.type == lx.symbol.sITYPE_MESH:
+                    reduced.append(i)
+
+            meshes = set(reduced)
+
+            if len(meshes) > 0:
+                for proxy in proxies:
+
+                    regex = "{}[ _\d]*$".format(re.escape(proxy))
+                    m.step(1)
+
+                    for i in meshes:
+
+                        match = re.match(regex, i.name)
+
+                        if match:
+                            found = True
+
+                            print i
+                            print proxy
+
+                            try:
+                                convert_proxy(i, proxy, path)
+
+                            except:
+                                pass
+                else:
+                    m.step(len(proxies))
 
             if not found:
                 print("No V-Ray Proxies found for the selected meshes.")
