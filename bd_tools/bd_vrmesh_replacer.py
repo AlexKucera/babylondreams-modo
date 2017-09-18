@@ -101,15 +101,19 @@ def main():
             # Go through all proxy files and compare their names to the mesh names
             for proxy in proxies:
 
-                regex = "{}[ _\d]*$".format(re.escape(proxy))
+                regex = "{}".format(re.escape(proxy))
                 m.step(1)
 
                 for i in meshes:
 
                     match = re.match(regex, i.name)
 
+
                     if match:
                         found = True
+
+                        print i
+                        print proxy
 
                         try:
                             print("Converting item {} to V-Ray Proxy ({}).".format(i.name, proxy))
