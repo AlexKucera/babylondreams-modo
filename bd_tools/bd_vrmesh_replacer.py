@@ -101,7 +101,7 @@ def main():
             # Go through all proxy files and compare their names to the mesh names
             for proxy in proxies:
 
-                regex = ".*{}.*".format(re.escape(proxy))
+                regex = "{}[ _\d]*$".format(re.escape(proxy))
                 m.step(1)
 
                 for i in meshes:
@@ -110,12 +110,14 @@ def main():
 
                     if match:
                         found = True
+
                         try:
-                            print("Converting item {} to V-Ray Proxy.".format(i.name))
+                            print("Converting item {} to V-Ray Proxy ({}).".format(i.name, proxy))
                             scene.select(i)
+
                             lx.eval("item.setType vray.proxy locator")
                             if len(scene.selected) > 1:
-                                lx.eval("select.itemSourceSelected")
+                               lx.eval("select.itemSourceSelected")
                             vrproxy = scene.selected[0]
 
                             # print("Creating V-Ray Proxy and moving it into place.")
@@ -131,7 +133,6 @@ def main():
 
                         except:
                             pass
-
 
             if not found:
                 print("No V-Ray Proxies found for the selected meshes.")
