@@ -69,36 +69,73 @@ def main():
     sel = scene.selected
 
     path = modo.dialogs.dirBrowse(" V-Ray Proxy Path")
-    proxies = get_proxies(path)
 
-    all_items = []
-    meshes = []
-    for i in sel:
-        all_items.append(i)
-        children = i.children(recursive=True, itemType=lx.symbol.sITYPE_MESH)
-        if len(children) > 0:
-            all_items.append(children)
+    if path:
+        proxies = get_proxies(path)
 
-    for i in all_items:
-        if i.type == lx.symbol.sITYPE_MESH:
-            meshes.append(i)
+        all_items = []
+        meshes = []
 
-    for proxy in proxies:
-        regex = ".*{}.*".format(re.escape(proxy))
+        # Get all mesh items in the selected hierarchy
+        for i in sel:
+            all_items.append(i)
+            children = i.children(recursive=True, itemType=lx.symbol.sITYPE_MESH)
+            if len(children) > 0:
+                all_items += children
 
-        for i in meshes:
-            match = re.match(regex, i.name)
-            if match:
-                print("Converting item {} to V-Ray Proxy.".format(i.name))
-                vrproxy = scene.addItem('vray.proxy', name=proxy)
-                vrproxy.setParent(i.parent, i.parentIndex)
-                vrproxy.position.set(i.position.get())
-                vrproxy.rotation.set(i.rotation.get())
-                vrproxy.scale.set(i.scale.get())
-                print("Setting item {} to vrmesh {}.".format(i.name, proxy))
-                vrproxy.channel('vray_file').set(os.path.join(path, proxy + ".vrmesh"))
+        # Filter out any non-meshes
+        for i in all_items:
+            if i.type == lx.symbol.sITYPE_MESH:
+                meshes.append(i)
 
-    bd_helpers.timer(start_timer, os.path.splitext(os.path.basename(__file__))[0])
+        if len(meshes) > 0:
+
+            found = False
+
+            m = lx.Monitor(len(proxies))
+            m.init(len(proxies))
+            # Go through all proxy files and compare their names to the mesh names
+            for proxy in proxies:
+
+                regex = ".*{}.*".format(re.escape(proxy))
+                m.step(1)
+                for i in meshes:
+
+                    match = re.match(regex, i.name)
+
+                    if match:
+                        found = True
+                        try:
+                            print("Converting item {} to V-Ray Proxy.".format(i.name))
+                            scene.select(i)
+                            lx.eval("item.setType vray.proxy locator")
+                            if len(scene.selected) > 1:
+                                lx.eval("select.itemSourceSelected")
+                            vrproxy = scene.selected[0]
+
+                            # print("Creating V-Ray Proxy and moving it into place.")
+                            # vrproxy = scene.addItem('vray.proxy', name=proxy)
+                            # vrproxy = modo.item.LocatorSuperType(item=vrproxy)
+                            # vrproxy.setParent(i.parent, i.parentIndex)
+                            # vrproxy.position.set(i.position.get())
+                            # vrproxy.rotation.set(i.rotation.get())
+                            # vrproxy.scale.set(i.scale.get())
+
+                            print("Setting item {} to vrmesh {}.".format(i.name, proxy))
+                            vrproxy.channel('vray_file').set(os.path.join(path, proxy + ".vrmesh"))
+
+                        except:
+                            pass
+
+
+            if not found:
+                print("No V-Ray Proxies found for the selected meshes.")
+
+        else:
+
+            print("No meshes to replace. Please select some meshes first.")
+
+        bd_helpers.timer(start_timer, os.path.splitext(os.path.basename(__file__))[0])
 
 
 # END MAIN PROGRAM -----------------------------------------------
