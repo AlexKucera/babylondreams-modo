@@ -44,4 +44,4 @@ class CommandClass(babylondreams.CommanderClass):
                 dtype="info"
             )
 
-lx.bless(CommandClass, 'bd.open_render_folder_command')
+lx.bless(CommandClass, 'bd.open_render_folder')

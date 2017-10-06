@@ -36,6 +36,14 @@ bd_tools.bd_blend_hierarchy_split_passes module
     :undoc-members:
     :show-inheritance:
 
+bd_tools.bd_collect_texturelocators module
+------------------------------------------
+
+.. automodule:: bd_tools.bd_collect_texturelocators
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 bd_tools.bd_create_material_outputs module
 ------------------------------------------
 
@@ -160,6 +168,14 @@ bd_tools.bd_version_up module
 -----------------------------
 
 .. automodule:: bd_tools.bd_version_up
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+bd_tools.bd_vrmesh_replacer module
+----------------------------------
+
+.. automodule:: bd_tools.bd_vrmesh_replacer
     :members:
     :undoc-members:
     :show-inheritance:

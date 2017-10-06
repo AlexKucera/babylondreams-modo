@@ -1,5 +1,27 @@
 Release Notes
 =============
+1.1.1 - 2017-10-06
+------------------
+New:
+
+* Added vrmesh Replacer
+* Added old universe creator scripts
+* Added bd_collect_texturelocators
+* First stab at a Python controller for headless rendering
+* Added: Choice of Renderoutputs for Material Groups
+* Increased processing speed and reduced log output of Fix Orphans
+* Refactoring with lx.symbols
+* Added progress monitor to de-instance
+* Added bd_pipeline as submodule
+* Made log path optional
+
+Fixed:
+
+* Fixed Preview Log Output
+* Fixed open render folder command typo
+* Fix for missing file comment in version up
+* Fixed: Remove shot number from sequence folder
+
 
 1.1.0 - 2017-08-30
 ------------------

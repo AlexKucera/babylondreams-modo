@@ -44,3 +44,8 @@ Open Selected renderOutput's Folder
 -----------------------------------
 
 Select a render output and run the command and a Finder/Explorer window will open at the path the output writes to.
+
+Replace Hierarchy's Meshes with vrmeshes
+----------------------------------------
+
+Select a hierarchy and point this command to a folder of vrmeshes and it will try and match the mesh items to the vrmeshes thereby replacing all matching meh items with V-Ray Proxies. It is not 100% perfect yet, but works well enough for most cases.

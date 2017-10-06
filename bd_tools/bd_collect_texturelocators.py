@@ -5,25 +5,21 @@
 
 # Description
 """
-babylondreams - bd_fix_orphans
+babylondreams - bd_collect_texturelocators
 
 Release Notes:
 
-    Finds any Shader Tree items that have become unparented had parents them back to the Shader Tree.
-
-    Workaround for http://modo.beta.thefoundry.co.uk/bug/view.aspx?TaskID=50149
-
-V0.1 Initial Release - 2017-02-22
+V0.1 Initial Release - 2017-09-01
 
 """
 
-import os
 import traceback
 
 import lx
 import modo
 
-from bd_tools import bd_helpers
+import bd_helpers
+from var import *
 
 
 # FUNCTIONS -----------------------------------------------
@@ -31,16 +27,21 @@ from bd_tools import bd_helpers
 
 # MAIN PROGRAM --------------------------------------------
 def main():
-    start = bd_helpers.timer()
+    start_timer = bd_helpers.timer()
+
     scene = modo.Scene()
 
-    for item in scene.iterItemsFast(lx.symbol.sITYPE_TEXTURELAYER):
-        if item.superType == lx.symbol.sITYPE_TEXTURELAYER and item.type != lx.symbol.sITYPE_SHADERFOLDER:
-            if not item.parent:
-                print("Re-parenting {} to Shader Tree.".format(item.name))
-                item.setParent(scene.renderItem)
+    try:
+        group = scene.item('textureLocators_group')
+    except:
+        group = scene.addItem(lx.symbol.sITYPE_GROUPLOCATOR, name='textureLocators_group')
 
-    bd_helpers.timer(start, os.path.splitext(os.path.basename(__file__))[0])
+    for i in scene.iterItemsFast(lx.symbol.sITYPE_TEXTURELOC):
+        if not i.parent == group:
+            print("Re-parenting {} to {}".format(i.name, group.name))
+            i.setParent(newParent=group)
+
+    bd_helpers.timer(start_timer, os.path.splitext(os.path.basename(__file__))[0])
 
 
 # END MAIN PROGRAM -----------------------------------------------

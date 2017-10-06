@@ -1,0 +1,3 @@
+[submodule "modules/bd_pipeline"]
+	path = modules/bd_pipeline
+	url = https://AlexKucera@github.com/AlexKucera/bd_pipeline.git
