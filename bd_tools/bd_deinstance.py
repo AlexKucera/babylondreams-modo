@@ -28,7 +28,11 @@ def main():
     i = 0
     instance_types = []
     items = []
+
     for item in scene.selected:
+        m = lx.Monitor(len(scene.selected))
+        m.init(len(scene.selected))
+
         if item.isAnInstance:
             scene.select(item)
 
@@ -41,10 +45,15 @@ def main():
             i += 1
             items.append(item.name)
             instance_types.append(item.type)
+
+        m.step()
+
     output = ["{0} Instances de-instanced.\n\n".format(i)]
+
     for instance_type in set(instance_types):
         out = "{0} {1}s".format(instance_types.count(instance_type), instance_type)
         output.append(out)
+
     message = "\n".join(output)
     modo.dialogs.alert("De-instance complete", message, dtype='info')
 
