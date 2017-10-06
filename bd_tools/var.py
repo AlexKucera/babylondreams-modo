@@ -22,7 +22,13 @@ sys.path.append('/usr/local/lib/python2.7/site-packages/')
 current_dir = os.path.dirname(__file__)
 
 # Config
-BD_PIPELINE = "/Volumes/ProjectsRaid/x_Pipeline/x_AppPlugins/bd_pipeline"
+BD_PIPELINE_PATH = os.path.abspath('{path}/{parent}/modules/bd_pipeline'.format(parent=os.pardir, path=current_dir))
+
+if os.path.exists(BD_PIPELINE_PATH):
+    BD_PIPELINE = BD_PIPELINE_PATH
+else:
+    BD_PIPELINE = "/Volumes/ProjectsRaid/x_Pipeline/x_AppPlugins/bd_pipeline"
+
 DEBUG = True
 
 
