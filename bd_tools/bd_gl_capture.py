@@ -103,9 +103,11 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     if viewport_camera == 'rendercam':
         capture_camera = viewport_camera
         capture_camera_name = scene.renderCamera.name
+        capture_camera_id = scene.renderCamera.id
     else:
         capture_camera = scene.item(viewport_camera)
         capture_camera_name = capture_camera.name
+        capture_camera_id = capture_camera.id
 
     shading_style = shading_style
 
@@ -216,7 +218,7 @@ def main(gl_recording_size=1.0, gl_recording_type='image', viewport_camera='rend
     if capture_camera == 'rendercam':
         lx.eval('view3d.renderCamera')
     else:
-        lx.eval('view3d.cameraItem ' + capture_camera_name)
+        lx.eval('view3d.cameraItem ' + capture_camera_id)
 
     lx.eval('view3d.shadingStyle ' + shading_style + ' active')
     lx.eval('view3d.shadingStyle ' + shading_style)
