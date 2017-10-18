@@ -212,8 +212,8 @@ class CommandClass(babylondreams.CommanderClass):
                            bbox_toggle=arguments['bbox_toggle'],
                            avp_shadows=arguments['avp_shadows'],
                            avp_ao=arguments['avp_ao'],
-                           capture_file=self.capture_file()[0],
-                           capture_path=self.capture_output()[0])
+                           capturefile=self.capture_file()[0],
+                           capturepath=self.capture_output()[0])
 
 
 lx.bless(CommandClass, 'bd.gl_capture')
