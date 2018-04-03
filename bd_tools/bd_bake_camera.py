@@ -97,7 +97,7 @@ def main():
             filename = scene.filename
         else:
             filename = os.path.join(os.path.expanduser('~'), "untitled.lxo")
-        newpath = os.path.splitext(filename)[0] + "_camera_bake.fbx"
+        newpath = "{}_{}_bake.fbx".format(os.path.splitext(filename)[0], cam.name.replace(" ", "_"))
         print "Exporting to {0}".format(newpath)
         lx.eval("scene.saveAs {0} fbx true".format(newpath))
 
