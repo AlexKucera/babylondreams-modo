@@ -67,12 +67,18 @@ class CommandClass(babylondreams.CommanderClass):
                 'name': 'size',
                 'label': 'Size',
                 'datatype': 'distance',
-                'default': '0.02'
+                'default': 0.02
             },
             {
                 'name': 'invert',
                 'label': 'Invert Selection',
                 'datatype': 'boolean',
+            },
+            {
+                'name': 'instances',
+                'label': 'Include Instances',
+                'datatype': 'boolean',
+                'default': True
             }
         ]
 
@@ -80,7 +86,11 @@ class CommandClass(babylondreams.CommanderClass):
         arguments = self.commander_args()
 
         reload(bd_select_by_size)
-        bd_select_by_size.main(mode=arguments['mode'], size=arguments['size'], invert=arguments['invert'])
+        bd_select_by_size.main(
+            mode=arguments['mode'],
+            size=arguments['size'],
+            invert=arguments['invert'],
+            instances=arguments['instances'])
 
 
 lx.bless(CommandClass, 'bd.select_by_size')

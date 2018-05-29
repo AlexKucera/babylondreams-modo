@@ -71,23 +71,23 @@ def get_bbox_info(mesh):
 # MAIN PROGRAM --------------------------------------------
 
 
-def main(mode='volume', size='0.02', invert=False):
+def main(mode='volume', size='0.02', invert=False, instances=True):
     start_timer = bd_helpers.timer()
 
     scene = modo.Scene()
 
-    print(mode)
-    print(size)
-    print(invert)
     filtered_meshes = []
 
-    for mesh in scene.meshes:
-        if invert:
-            if get_bbox_info(mesh)[mode] > size:
-                filtered_meshes.append(mesh)
-        else:
-            if get_bbox_info(mesh)[mode] < size:
-                filtered_meshes.append(mesh)
+    for mesh in scene.iterItems(lx.symbol.sITYPE_MESH):
+
+        mesh_info = get_bbox_info(mesh)[mode]
+        if mesh_info > size and invert or mesh_info < size and not invert:
+            filtered_meshes.append(mesh)
+            if instances:
+                graph = mesh.itemGraph(lx.symbol.sITYPE_MESHINST).forward()
+                if len(graph) > 0:
+                    for instance in graph:
+                        filtered_meshes.append(instance)
 
     scene.select(filtered_meshes)
 
