@@ -18,6 +18,7 @@ sTYPE_FLOATs = [
         'angle',
         'axis',
         'color1',
+        'distance',
         'float',
         'force',
         'light',
