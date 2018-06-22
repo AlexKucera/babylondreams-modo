@@ -61,4 +61,4 @@ class CommandClass(babylondreams.CommanderClass):
         bd_texture_effect_chooser.main(args['texture_id'], args['channel_fx'])
 
 
-lx.bless(CommandClass, 'bd_texture_effect_chooser')
+lx.bless(CommandClass, 'bd.texture_effect_chooser')
