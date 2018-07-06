@@ -27,7 +27,6 @@ import traceback
 # MAIN PROGRAM --------------------------------------------
 
 
-
 def main(new_source):
 
     scene = modo.Scene()
@@ -68,40 +67,47 @@ def main(new_source):
 
         # Disconnect any existing meshInst graph connections.
         for source in instance.itemGraph("meshInst").reverse():
-            source.itemGraph("meshInst") << instance
+            # << and disconnectInput do the same thing theoretically,
+            # but I had one or the other break on me in the past, so
+            # now I am including both just to make sure
+            try:
+                source.itemGraph("meshInst") << instance
+            except:
+                pass
+            try:
+                instance.itemGraph("meshInst").disconnectInput(source)
+            except:
+                pass
 
-        # Disconnect any existing source graph connections.
-        # Note that the meshInst graph and the source graph go
-        # in different directions. That's why we cache the
-        # "sourceGraph" in advance.
-        sourceGraph = instance.itemGraph("source")
-        for source in sourceGraph.forward():
-            sourceGraph << source
+            # Disconnect any existing source graph connections.
+            # Note that the meshInst graph and the source graph go
+            # in different directions. That's why we cache the
+            # "sourceGraph" in advance.
+            sourceGraph = instance.itemGraph("source")
+            for source in sourceGraph.forward():
+                sourceGraph << source
 
-        # Connect new prototype. Again, notice how they go in
-        # different directions.
-        instance >> new_source.itemGraph("source")
-        new_source >> instance.itemGraph("meshInst")
+            # Connect new prototype. Again, notice how they go in
+            # different directions.
+            instance >> new_source.itemGraph("source")
+            new_source >> instance.itemGraph("meshInst")
 
-        print "re-routing {0} from {1} to {2}".format(instance.name, source.name, new_source.name)
+            print "re-routing {0} from {1} to {2}".format(instance.name, source.name, new_source.name)
 
     if len(sources) > 0:
         modo.dialogs.alert('Warning',
                            'The following items are no instances and were skipped:\n{0}'.format(sources),
                            dtype='warning')
 
-
-
-
-
 # END MAIN PROGRAM -----------------------------------------------
 
+
 if __name__ == '__main__':
-    # Argument parsing is available through the 
-    # lx.arg and lx.args methods. lx.arg returns 
-    # the raw argument string that was passed into 
-    # the script. lx.args parses the argument string 
-    # and returns an array of arguments for easier 
+    # Argument parsing is available through the
+    # lx.arg and lx.args methods. lx.arg returns
+    # the raw argument string that was passed into
+    # the script. lx.args parses the argument string
+    # and returns an array of arguments for easier
     # processing.
 
     argsAsString = lx.arg()
